@@ -37,7 +37,8 @@ const LoginPage = () => {
     const errs = {};
     const igError = validateInstagram(userForm.instagram);
     if (igError) errs.instagram = igError;
-    if (!userForm.phone || userForm.phone.length < 7) errs.phone = 'Valid phone number required';
+    if (!userForm.email && !userForm.phone) errs.email = 'Email or phone number is required';
+    if (userForm.phone && userForm.phone.length < 7) errs.phone = 'Enter a valid phone number';
     setUserErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -138,7 +139,16 @@ const LoginPage = () => {
                 {/* User Tab */}
                 {tab === 'user' && (
                   <form onSubmit={handleUserSubmit} className="luxury-card p-6 sm:p-8 space-y-5">
-                    <p className="text-xs text-[#F1E5AC]/70 -mt-1">Enter your phone number to sign in or create an account.</p>
+                    <p className="text-xs text-[#F1E5AC]/70 -mt-1">Sign in or create an account with your email. Phone is optional.</p>
+                    <FormInput
+                      label={<>Email <span className="text-red-400">*</span></>}
+                      name="email"
+                      type="email"
+                      value={userForm.email}
+                      onChange={e => setUserForm(p => ({ ...p, email: e.target.value }))}
+                      placeholder="you@example.com"
+                      error={userErrors.email}
+                    />
                     <FormInput
                       label={<>Name <span className="luxury-text-accent font-normal">(Optional)</span></>}
                       name="name"
@@ -154,16 +164,8 @@ const LoginPage = () => {
                       placeholder="@username"
                       error={userErrors.instagram}
                     />
-                    <FormInput
-                      label={<>Email <span className="luxury-text-accent font-normal">(Optional)</span></>}
-                      name="email"
-                      type="email"
-                      value={userForm.email}
-                      onChange={e => setUserForm(p => ({ ...p, email: e.target.value }))}
-                      placeholder="you@example.com"
-                    />
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-[#FFFDD0]">Phone Number <span className="text-red-400">*</span></label>
+                      <label className="text-sm font-medium text-[#FFFDD0]">Phone <span className="luxury-text-accent font-normal">(Optional)</span></label>
                       <div className="flex gap-3">
                         <div className="w-[140px]">
                           <select

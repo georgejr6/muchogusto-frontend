@@ -43,9 +43,8 @@ const SignupPage = () => {
     const newErrors = {};
     const instagramError = validateInstagram(formData.instagram);
     if (instagramError) newErrors.instagram = instagramError;
-    if (!formData.phone || formData.phone.length < 7) {
-      newErrors.phone = 'Valid phone number required';
-    }
+    if (!formData.email && !formData.phone) newErrors.email = 'Email or phone number is required';
+    if (formData.phone && formData.phone.length < 7) newErrors.phone = 'Enter a valid phone number';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
