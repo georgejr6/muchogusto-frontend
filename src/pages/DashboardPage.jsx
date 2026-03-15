@@ -91,19 +91,27 @@ const DashboardPage = () => {
             {/* Right Column: Profile Status */}
             <div className="space-y-6">
               <div className="luxury-card p-6 overflow-hidden relative">
-                <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
-                  <User className="w-24 h-24 text-[#D4AF37]" />
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-16 h-16 rounded-full bg-[rgba(212,175,55,0.1)] border-2 border-[#D4AF37]/60 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-[0_0_15px_rgba(212,175,55,0.2)]">
+                    {userProfile?.photo_url ? (
+                      <img src={userProfile.photo_url} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <User className="w-8 h-8 text-[#D4AF37]" />
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-xl font-bold text-[#FFFDD0] truncate">{userProfile?.name || 'Anonymous VIP'}</h3>
+                    {userProfile?.instagram && (
+                      <p className="text-[#D4AF37] font-mono text-sm">@{userProfile?.instagram}</p>
+                    )}
+                    <p className="luxury-text-accent text-xs mt-0.5">{userProfile?.phone}</p>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-[#FFFDD0] mb-1">{userProfile?.name || 'Anonymous VIP'}</h3>
-                {userProfile?.instagram && (
-                  <p className="text-[#D4AF37] font-mono text-sm mb-4">@{userProfile?.instagram}</p>
-                )}
-                <p className="luxury-text-accent text-sm mb-6 mt-2">{userProfile?.phone}</p>
                 <button
                   onClick={() => navigate('/profile-edit')}
                   className="luxury-button-outline w-full py-2 flex items-center justify-center gap-2"
                 >
-                  <Settings className="w-4 h-4" /> Edit Basic Info
+                  <Settings className="w-4 h-4" /> Edit Profile
                 </button>
               </div>
 

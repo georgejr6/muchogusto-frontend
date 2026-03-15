@@ -20,6 +20,7 @@ import ProfileEditPage from '@/pages/ProfileEditPage';
 
 // Admin Pages
 import AdminLoginPage from '@/pages/AdminLoginPage';
+import LoginPage from '@/pages/LoginPage';
 import AdminDashboard from '@/pages/AdminDashboard';
 import EventPage from '@/pages/EventPage';
 import UserProfilePage from '@/pages/UserProfilePage';
@@ -55,6 +56,9 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+
+            {/* Login */}
+            <Route path="/login" element={<LoginPage />} />
 
             {/* Admin Routes */}
             <Route path="/admin-login" element={<AdminLoginPage />} />

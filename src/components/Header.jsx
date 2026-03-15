@@ -1,12 +1,14 @@
-
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Sparkles, Shield, Globe, ChevronDown, Users } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Sparkles, Globe, ChevronDown, Users, User, LogOut, LogIn } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n.jsx';
+import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Header = ({ rightContent }) => {
   const { language, setLanguage } = useTranslation();
+  const { isUserAuthenticated, userProfile, logoutUser } = useAuth();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -16,14 +18,12 @@ const Header = ({ rightContent }) => {
     { code: 'th', label: 'ไทย' }
   ];
 
-  // Manual translation for RSVPs link based on current language
   const rsvpsText = {
-    en: 'RSVPs',
-    es: 'Lista de Usuarios',
-    th: 'รายชื่อผู้ใช้'
-  }[language] || 'RSVPs';
+    en: 'Community',
+    es: 'Comunidad',
+    th: 'ชุมชน'
+  }[language] || 'Community';
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -34,6 +34,11 @@ const Header = ({ rightContent }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const handleLogout = () => {
+    logoutUser();
+    navigate('/');
+  };
+
   return (
     <header className="navbar">
       <Link to="/" className="navbar-brand group">
@@ -42,9 +47,9 @@ const Header = ({ rightContent }) => {
       </Link>
 
       <div className="navbar-actions">
-        {/* RSVPs Public Link */}
-        <Link 
-          to="/rsvps" 
+        {/* Community Link */}
+        <Link
+          to="/rsvps"
           className="flex items-center gap-1.5 text-[#D4AF37] hover:text-[#F1E5AC] hover:drop-shadow-[0_0_8px_rgba(212,175,55,0.5)] transition-all duration-300 font-bold text-sm sm:text-base mr-1 sm:mr-2"
         >
           <Users className="w-4 h-4" />
@@ -77,8 +82,8 @@ const Header = ({ rightContent }) => {
                     key={lang.code}
                     onClick={() => { setLanguage(lang.code); setIsOpen(false); }}
                     className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
-                      language === lang.code 
-                        ? 'bg-[#D4AF37]/20 text-[#D4AF37] font-bold' 
+                      language === lang.code
+                        ? 'bg-[#D4AF37]/20 text-[#D4AF37] font-bold'
                         : 'text-[#FFFDD0] hover:bg-[#D4AF37]/10 hover:text-[#F1E5AC]'
                     }`}
                   >
@@ -90,16 +95,43 @@ const Header = ({ rightContent }) => {
           </AnimatePresence>
         </div>
 
-        {/* Admin Login Link */}
-        <Link 
-          to="/admin-login"
-          className="admin-login-link flex items-center gap-1.5"
-        >
-          <Shield className="w-4 h-4" />
-          <span className="hidden sm:inline">Admin Login</span>
-        </Link>
+        {/* Auth Button */}
+        {isUserAuthenticated ? (
+          <div className="flex items-center gap-2">
+            <Link to="/dashboard" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              {userProfile?.photo_url ? (
+                <img
+                  src={userProfile.photo_url}
+                  alt="Profile"
+                  className="w-7 h-7 rounded-full object-cover border border-[#D4AF37]/60"
+                />
+              ) : (
+                <div className="w-7 h-7 rounded-full bg-[rgba(212,175,55,0.15)] border border-[#D4AF37]/60 flex items-center justify-center">
+                  <User className="w-4 h-4 text-[#D4AF37]" />
+                </div>
+              )}
+              <span className="text-xs text-[#F1E5AC] hidden sm:block">
+                @{userProfile?.instagram || userProfile?.name || 'Me'}
+              </span>
+            </Link>
+            <button
+              onClick={handleLogout}
+              title="Log out"
+              className="text-[#F1E5AC] hover:text-[#D4AF37] p-1.5 rounded-full hover:bg-[rgba(212,175,55,0.1)] transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
+        ) : (
+          <Link
+            to="/login"
+            className="flex items-center gap-1.5 text-[#F1E5AC] hover:text-[#D4AF37] transition-colors text-sm font-medium"
+          >
+            <LogIn className="w-4 h-4" />
+            <span className="hidden sm:inline">Login</span>
+          </Link>
+        )}
 
-        {/* Dynamic Right Content (e.g., Logout for users) */}
         {rightContent && (
           <div className="pl-3 sm:pl-4 ml-1 sm:ml-2 border-l border-[#D4AF37]/30 flex items-center h-6">
             {rightContent}
