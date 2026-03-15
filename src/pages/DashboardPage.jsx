@@ -113,6 +113,12 @@ const DashboardPage = () => {
                 >
                   <Settings className="w-4 h-4" /> Edit Profile
                 </button>
+                <button
+                  onClick={() => navigate('/my-profile')}
+                  className="luxury-button-outline w-full py-2 flex items-center justify-center gap-2 mt-2"
+                >
+                  <User className="w-4 h-4" /> View My Profile
+                </button>
               </div>
 
               <div className="luxury-card p-6 relative overflow-hidden">

@@ -20,6 +20,7 @@ const EventManagement = () => {
     time: '',
     location: '',
     description: '',
+    visibility: 'public',
     invitedUsers: [],
   });
 
@@ -57,7 +58,7 @@ const EventManagement = () => {
   const selectAllUsers = () => setFormData(prev => ({ ...prev, invitedUsers: users.map(u => u.id) }));
   const clearUserSelection = () => setFormData(prev => ({ ...prev, invitedUsers: [] }));
 
-  const resetForm = () => setFormData({ id: '', name: '', date: '', time: '', location: '', description: '', invitedUsers: [] });
+  const resetForm = () => setFormData({ id: '', name: '', date: '', time: '', location: '', description: '', visibility: 'public', invitedUsers: [] });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -92,6 +93,7 @@ const EventManagement = () => {
       time: event.time || '',
       location: event.location || '',
       description: event.description || '',
+      visibility: event.visibility || 'public',
       invitedUsers: event.invitedUsers || [],
     });
     setActiveTab('create');
@@ -154,6 +156,15 @@ const EventManagement = () => {
           <div className="space-y-2">
             <label className="text-sm font-medium text-[#FFFDD0]">{t('events.desc')}</label>
             <textarea name="description" value={formData.description} onChange={handleInputChange} className="luxury-input min-h-[100px]" placeholder={t('events.desc_ph')} />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-[#FFFDD0]">Visibility</label>
+            <select name="visibility" value={formData.visibility} onChange={handleInputChange} className="luxury-input appearance-none bg-[rgba(15,0,26,0.9)]">
+              <option value="public">Public — visible to everyone</option>
+              <option value="members_only">Members Only — logged-in users</option>
+              <option value="invited_only">Invited Only — invited users only</option>
+            </select>
           </div>
 
           <div className="space-y-3">

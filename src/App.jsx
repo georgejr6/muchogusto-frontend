@@ -17,6 +17,7 @@ import RSVPsPage from '@/pages/RSVPsPage';
 // User Protected Pages
 import DashboardPage from '@/pages/DashboardPage';
 import ProfileEditPage from '@/pages/ProfileEditPage';
+import MyProfilePage from '@/pages/MyProfilePage';
 
 // Admin Pages
 import AdminLoginPage from '@/pages/AdminLoginPage';
@@ -48,13 +49,21 @@ function App() {
                 </ProtectedRoute>
               } 
             />
-            <Route 
-              path="/profile-edit" 
+            <Route
+              path="/profile-edit"
               element={
                 <ProtectedRoute>
                   <ProfileEditPage />
                 </ProtectedRoute>
-              } 
+              }
+            />
+            <Route
+              path="/my-profile"
+              element={
+                <ProtectedRoute>
+                  <MyProfilePage />
+                </ProtectedRoute>
+              }
             />
 
             {/* Login */}

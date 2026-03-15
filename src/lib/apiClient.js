@@ -107,6 +107,10 @@ export async function getEvents() {
   return request('/api/events');
 }
 
+export async function getPublicEvents() {
+  return request('/api/events/public');
+}
+
 export async function getEvent(id) {
   return request(`/api/events/${id}`);
 }
