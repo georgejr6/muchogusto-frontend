@@ -5,7 +5,7 @@ import { Search, Users, ArrowLeft, Home } from 'lucide-react';
 import MemberCard from '@/components/MemberCard';
 import Header from '@/components/Header';
 import { useAuth } from '@/contexts/AuthContext';
-import { getUsers, setUserBlur } from '@/lib/apiClient';
+import { getUsers, getPublicUsers, setUserBlur } from '@/lib/apiClient';
 
 const RSVPsPage = () => {
   const navigate = useNavigate();
@@ -16,11 +16,12 @@ const RSVPsPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getUsers()
+    const fetch = isAdminAuthenticated ? getUsers() : getPublicUsers();
+    fetch
       .then(setMembers)
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, []);
+  }, [isAdminAuthenticated]);
 
   const handleBlurToggle = async (userId, newStatus) => {
     try {

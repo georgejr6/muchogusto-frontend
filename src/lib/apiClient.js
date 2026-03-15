@@ -33,10 +33,10 @@ async function request(path, options = {}) {
 
 // ─── Auth ────────────────────────────────────────────────────────────────────
 
-export async function signup({ name, instagram, phone }) {
+export async function signup({ name, instagram, phone, email }) {
   return request('/api/auth/signup', {
     method: 'POST',
-    body: JSON.stringify({ name, instagram, phone }),
+    body: JSON.stringify({ name, instagram, phone, email }),
   });
 }
 
@@ -84,6 +84,10 @@ export async function respondToInvitation(invitationId, status) {
 
 export async function getUsers() {
   return request('/api/users');
+}
+
+export async function getPublicUsers() {
+  return request('/api/users/public');
 }
 
 export async function getUser(id) {

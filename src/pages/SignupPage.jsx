@@ -22,6 +22,7 @@ const SignupPage = () => {
     name: '',
     instagram: '',
     phone: '',
+    email: '',
     countryCode: '+57',
   });
   const [errors, setErrors] = useState({});
@@ -61,6 +62,7 @@ const SignupPage = () => {
         name: formData.name,
         instagram: formData.instagram ? formData.instagram.replace(/^@/, '') : '',
         phone: `${formData.countryCode}${formData.phone}`,
+        email: formData.email || undefined,
       });
 
       setSuccess(true);
@@ -117,6 +119,15 @@ const SignupPage = () => {
                     onChange={handleInputChange}
                     placeholder="@username"
                     error={errors.instagram}
+                  />
+
+                  <FormInput
+                    label={<>Email <span className="luxury-text-accent font-normal">(Optional)</span></>}
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="you@example.com"
                   />
 
                   <div className="space-y-2">
