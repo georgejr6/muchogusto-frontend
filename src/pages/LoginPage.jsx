@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, CheckCircle, Lock, LogIn } from 'lucide-react';
@@ -196,6 +196,15 @@ const LoginPage = () => {
                       ) : 'Sign In / Join'}
                     </button>
                   </form>
+                )}
+
+                {tab === 'user' && (
+                  <p className="text-center text-sm luxury-text-accent mt-4">
+                    New to Mucho Gusto Xo?{' '}
+                    <Link to="/signup" className="text-[#D4AF37] hover:underline font-medium">
+                      Create a full account
+                    </Link>
+                  </p>
                 )}
 
                 {/* Admin Tab */}
