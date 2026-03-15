@@ -7,8 +7,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const Header = ({ rightContent }) => {
   const { language, setLanguage } = useTranslation();
-  const { isUserAuthenticated, userProfile, logoutUser } = useAuth();
+  const { isUserAuthenticated, isAdminAuthenticated, userProfile, logoutUser, logoutAdmin } = useAuth();
   const navigate = useNavigate();
+  const isLoggedIn = isUserAuthenticated || isAdminAuthenticated;
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -35,7 +36,8 @@ const Header = ({ rightContent }) => {
   }, []);
 
   const handleLogout = () => {
-    logoutUser();
+    if (isAdminAuthenticated) logoutAdmin();
+    else logoutUser();
     navigate('/');
   };
 
@@ -96,9 +98,9 @@ const Header = ({ rightContent }) => {
         </div>
 
         {/* Auth Button */}
-        {isUserAuthenticated ? (
+        {isLoggedIn ? (
           <div className="flex items-center gap-2">
-            <Link to="/dashboard" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <Link to={isAdminAuthenticated ? '/admin-dashboard' : '/dashboard'} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               {userProfile?.photo_url ? (
                 <img
                   src={userProfile.photo_url}
@@ -111,7 +113,7 @@ const Header = ({ rightContent }) => {
                 </div>
               )}
               <span className="text-xs text-[#F1E5AC] hidden sm:block">
-                @{userProfile?.instagram || userProfile?.name || 'Me'}
+                {isAdminAuthenticated ? 'Admin' : `@${userProfile?.instagram || userProfile?.name || 'Me'}`}
               </span>
             </Link>
             <button
