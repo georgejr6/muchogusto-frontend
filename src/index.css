@@ -1,0 +1,173 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Mucho Gusto Xo Design System (Light Mode fallback) */
+    --background: 275 100% 5%;
+    --foreground: 56 100% 91%;
+    
+    /* Core */
+    --border: 46 65% 52%;
+    --input: 275 100% 5%;
+    --ring: 46 65% 52%;
+    
+    /* Semantic */
+    --primary: 263 48% 20%; /* Dark Purple #2D1B4E */
+    --primary-foreground: 56 100% 91%;
+    
+    --secondary: 46 65% 52%; /* Gold #D4AF37 */
+    --secondary-foreground: 275 100% 5%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 56 100% 91%;
+    
+    --muted: 275 50% 15%;
+    --muted-foreground: 49 70% 81%;
+    
+    --accent: 49 70% 81%;
+    --accent-foreground: 275 100% 5%;
+    
+    --card: 275 100% 5%;
+    --card-foreground: 56 100% 91%;
+    
+    --popover: 275 100% 5%;
+    --popover-foreground: 56 100% 91%;
+    
+    --radius: 0.75rem;
+
+    /* Custom Gilded Gold - used directly via HEX in classes to support opacity */
+    --gilded-gold: #D4AF37;
+  }
+
+  .dark {
+    /* Mucho Gusto Xo Design System (Dark Mode) */
+    --background: 275 100% 5%;
+    --foreground: 56 100% 91%;
+    
+    --border: 46 65% 52%;
+    --input: 275 100% 5%;
+    --ring: 46 65% 52%;
+    
+    --primary: 263 48% 20%;
+    --primary-foreground: 56 100% 91%;
+    
+    --secondary: 46 65% 52%;
+    --secondary-foreground: 275 100% 5%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 56 100% 91%;
+    
+    --muted: 275 50% 15%;
+    --muted-foreground: 49 70% 81%;
+    
+    --accent: 49 70% 81%;
+    --accent-foreground: 275 100% 5%;
+    
+    --card: 275 100% 5%;
+    --card-foreground: 56 100% 91%;
+    
+    --popover: 275 100% 5%;
+    --popover-foreground: 56 100% 91%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-[#0f001a] text-[#FFFDD0];
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    /* Star Pattern Background */
+    background-image: radial-gradient(circle at center, rgba(212, 175, 55, 0.2) 1px, transparent 1px),
+                      radial-gradient(circle at center, rgba(212, 175, 55, 0.15) 1.5px, transparent 1.5px);
+    background-size: 60px 60px, 100px 100px;
+    background-position: 0 0, 30px 30px;
+    background-attachment: fixed;
+  }
+}
+
+@layer components {
+  /* Navbar Styles */
+  .navbar {
+    @apply sticky top-0 z-50 bg-[rgba(15,0,26,0.85)] backdrop-blur-[12px] border-b border-[#D4AF37]/30 px-4 sm:px-6 py-3 shadow-[0_4px_20px_rgba(212,175,55,0.1)] flex justify-between items-center w-full;
+  }
+
+  .navbar-brand {
+    @apply flex items-center gap-2;
+  }
+
+  .navbar-actions {
+    @apply flex items-center gap-4 sm:gap-6;
+  }
+
+  .admin-login-link {
+    @apply text-[#D4AF37] text-sm font-medium transition-all duration-300;
+  }
+
+  .admin-login-link:hover {
+    @apply text-[#F1E5AC] drop-shadow-[0_0_8px_rgba(212,175,55,0.5)];
+  }
+
+  /* Cards & UI Elements */
+  .luxury-card {
+    @apply bg-[rgba(15,0,26,0.85)] backdrop-blur-[12px] border-[2px] border-[#D4AF37] shadow-[0_4px_20px_rgba(212,175,55,0.15)] rounded-xl text-[#FFFDD0] transition-all duration-300;
+  }
+
+  .luxury-button {
+    @apply bg-[#D4AF37] text-[#0f001a] font-bold border-[2px] border-[#D4AF37] rounded-lg 
+           hover:bg-[rgba(212,175,55,0.85)] hover:shadow-[0_0_15px_rgba(212,175,55,0.5)] 
+           transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .luxury-button-outline {
+    @apply bg-transparent text-[#D4AF37] font-bold border-[2px] border-[#D4AF37] rounded-lg 
+           hover:bg-[rgba(212,175,55,0.15)] hover:shadow-[0_0_15px_rgba(212,175,55,0.3)] 
+           transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .luxury-input {
+    @apply w-full bg-transparent border-[2px] border-[#D4AF37] text-[#FFFDD0] rounded-lg px-4 py-3
+           focus:outline-none focus:ring-0 focus:border-[#D4AF37] focus:shadow-[0_0_15px_rgba(212,175,55,0.4)] 
+           transition-all duration-300 placeholder:text-[#F1E5AC]/50;
+  }
+
+  .luxury-text-accent {
+    @apply text-[#F1E5AC];
+  }
+
+  .profile-section {
+    @apply p-6 border-b border-[#D4AF37]/20 last:border-0;
+  }
+
+  .stats-card {
+    @apply bg-[rgba(212,175,55,0.05)] border border-[#D4AF37]/30 rounded-lg p-4 text-center flex flex-col items-center justify-center;
+  }
+
+  button, a, input, textarea, select {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-[#0f001a];
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-[#D4AF37] rounded-full hover:bg-[#F1E5AC];
+  }
+
+  ::selection {
+    @apply bg-[#D4AF37] text-[#0f001a];
+  }
+}
