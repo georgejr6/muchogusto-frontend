@@ -16,8 +16,7 @@ const RSVPsPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetch = isAdminAuthenticated ? getUsers() : getPublicUsers();
-    fetch
+    (isAdminAuthenticated ? getUsers() : getPublicUsers())
       .then(setMembers)
       .catch(console.error)
       .finally(() => setLoading(false));
