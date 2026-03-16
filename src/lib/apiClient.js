@@ -94,6 +94,13 @@ export async function getUser(id) {
   return request(`/api/users/${id}`);
 }
 
+export async function inviteUser(data) {
+  return request('/api/users/invite', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
 export async function setUserBlur(userId, is_blurred) {
   return request(`/api/users/${userId}/blur`, {
     method: 'PUT',

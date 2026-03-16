@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Users, Phone, Mail, Instagram, User } from 'lucide-react';
+import { Search, Users, Phone, Mail, Instagram, User, UserPlus, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { getUsers, setUserBlur } from '@/lib/apiClient';
+import { getUsers, setUserBlur, inviteUser } from '@/lib/apiClient';
+
+const INVITE_DEFAULTS = { name: '', instagram: '', phone: '', email: '' };
 
 const MemberManagement = () => {
   const { toast } = useToast();
@@ -9,6 +11,9 @@ const MemberManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [loading, setLoading] = useState(true);
+  const [showInvite, setShowInvite] = useState(false);
+  const [inviteForm, setInviteForm] = useState(INVITE_DEFAULTS);
+  const [inviting, setInviting] = useState(false);
 
   useEffect(() => {
     getUsers()
@@ -16,6 +21,26 @@ const MemberManagement = () => {
       .catch(() => toast({ title: 'Failed to load members', variant: 'destructive' }))
       .finally(() => setLoading(false));
   }, []);
+
+  const handleInvite = async (e) => {
+    e.preventDefault();
+    if (!inviteForm.email && !inviteForm.phone) {
+      toast({ title: 'Email or phone is required', variant: 'destructive' });
+      return;
+    }
+    setInviting(true);
+    try {
+      const newMember = await inviteUser(inviteForm);
+      setMembers(prev => [newMember, ...prev]);
+      setInviteForm(INVITE_DEFAULTS);
+      setShowInvite(false);
+      toast({ title: `${newMember.name || 'Member'} added${inviteForm.email ? ' — invite email sent' : ''}` });
+    } catch (err) {
+      toast({ title: err.message, variant: 'destructive' });
+    } finally {
+      setInviting(false);
+    }
+  };
 
   const handleBlurToggle = async (userId, newStatus) => {
     try {
@@ -47,7 +72,7 @@ const MemberManagement = () => {
 
   return (
     <div className="space-y-6">
-      {/* Search + Sort */}
+      {/* Search + Sort + Invite */}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#D4AF37]" />
@@ -68,7 +93,74 @@ const MemberManagement = () => {
           <option value="completion">Completion %</option>
           <option value="name">Name A-Z</option>
         </select>
+        <button
+          onClick={() => setShowInvite(v => !v)}
+          className="luxury-button flex items-center gap-2 px-4 whitespace-nowrap"
+        >
+          <UserPlus className="w-4 h-4" />
+          Invite Member
+        </button>
       </div>
+
+      {/* Invite Form */}
+      {showInvite && (
+        <div className="luxury-card p-6 border border-[#D4AF37]/40">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-bold text-[#FFFDD0]">Invite New Member</h3>
+            <button onClick={() => { setShowInvite(false); setInviteForm(INVITE_DEFAULTS); }} className="text-muted-foreground hover:text-[#D4AF37]">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <form onSubmit={handleInvite} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1">Name</label>
+              <input
+                type="text"
+                placeholder="Full name"
+                value={inviteForm.name}
+                onChange={e => setInviteForm(p => ({ ...p, name: e.target.value }))}
+                className="luxury-input w-full"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1">Instagram</label>
+              <input
+                type="text"
+                placeholder="@handle"
+                value={inviteForm.instagram}
+                onChange={e => setInviteForm(p => ({ ...p, instagram: e.target.value }))}
+                className="luxury-input w-full"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1">Phone</label>
+              <input
+                type="tel"
+                placeholder="+1 555 000 0000"
+                value={inviteForm.phone}
+                onChange={e => setInviteForm(p => ({ ...p, phone: e.target.value }))}
+                className="luxury-input w-full"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1">Email <span className="text-[#D4AF37]">*</span></label>
+              <input
+                type="email"
+                placeholder="email@example.com"
+                value={inviteForm.email}
+                onChange={e => setInviteForm(p => ({ ...p, email: e.target.value }))}
+                className="luxury-input w-full"
+              />
+            </div>
+            <div className="sm:col-span-2 flex items-center gap-3">
+              <button type="submit" disabled={inviting} className="luxury-button px-6 disabled:opacity-50">
+                {inviting ? 'Sending...' : 'Create & Send Invite'}
+              </button>
+              <p className="text-xs text-muted-foreground">An invite email will be sent if email is provided. They can log in and complete their profile.</p>
+            </div>
+          </form>
+        </div>
+      )}
 
       <div className="flex items-center gap-3">
         <span className="text-2xl font-bold text-[#D4AF37]">{members.length}</span>

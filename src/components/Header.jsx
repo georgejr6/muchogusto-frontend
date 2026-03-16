@@ -43,7 +43,7 @@ const Header = ({ rightContent }) => {
 
   return (
     <header className="navbar">
-      <Link to="/" className="navbar-brand group">
+      <Link to={isAdminAuthenticated ? '/admin-dashboard' : isUserAuthenticated ? '/dashboard' : '/'} className="navbar-brand group">
         <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-[#D4AF37] group-hover:scale-110 transition-transform" />
         <span className="font-bold text-[#FFFDD0] hidden sm:block tracking-tight text-lg">Mucho Gusto Xo</span>
       </Link>
