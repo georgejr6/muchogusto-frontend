@@ -27,6 +27,7 @@ import LoginPage from '@/pages/LoginPage';
 import AdminDashboard from '@/pages/AdminDashboard';
 import EventPage from '@/pages/EventPage';
 import UserProfilePage from '@/pages/UserProfilePage';
+import SettingsPage from '@/pages/SettingsPage';
 
 function App() {
   return (
@@ -69,6 +70,9 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            {/* Settings */}
+            <Route path="/settings" element={<SettingsPage />} />
 
             {/* Login */}
             <Route path="/login" element={<LoginPage />} />

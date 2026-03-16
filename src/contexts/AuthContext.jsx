@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { signup, adminLogin, getMe, updateMe, uploadPhoto } from '@/lib/apiClient';
+import { signup, adminLogin, loginUser as loginUserApi, getMe, updateMe, uploadPhoto } from '@/lib/apiClient';
 
 const AuthContext = createContext();
 
@@ -68,11 +68,22 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signupUser = async ({ name, instagram, phone }) => {
-    const { token, user } = await signup({ name, instagram, phone });
+  const signupUser = async ({ name, instagram, phone, email }) => {
+    const { token, user } = await signup({ name, instagram, phone, email });
     localStorage.setItem('token', token);
     setUserProfile(user);
     return user;
+  };
+
+  const loginUser = async ({ phone, email }) => {
+    try {
+      const { token, user } = await loginUserApi({ phone, email });
+      localStorage.setItem('token', token);
+      setUserProfile(user);
+      return { success: true, user };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
   };
 
   const updateProfileData = async (updates) => {
@@ -110,6 +121,7 @@ export const AuthProvider = ({ children }) => {
     loginAdmin,
     logoutAdmin,
     signupUser,
+    loginUser,
     updateProfileData,
     logoutUser,
     isAdminAuthenticated: !!adminUser,

@@ -154,6 +154,44 @@ export async function getUserInbox() {
   return request('/api/messages/inbox');
 }
 
+// ─── Auth ─────────────────────────────────────────────────────────────────────
+
+export async function loginUser({ phone, email }) {
+  return request('/api/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ phone, email }),
+  });
+}
+
+export async function changeAdminPassword(currentPassword, newPassword) {
+  return request('/api/auth/admin/change-password', {
+    method: 'PUT',
+    body: JSON.stringify({ currentPassword, newPassword }),
+  });
+}
+
+// ─── User settings ────────────────────────────────────────────────────────────
+
+export async function updateSettings(data) {
+  return request('/api/users/me/settings', {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+}
+
+// ─── Messages (user) ──────────────────────────────────────────────────────────
+
+export async function replyToMessage(content) {
+  return request('/api/messages/reply', {
+    method: 'POST',
+    body: JSON.stringify({ content }),
+  });
+}
+
+export async function markConversationRead(userId) {
+  return request(`/api/messages/${userId}/mark-read`, { method: 'POST' });
+}
+
 // ─── Email (admin) ─────────────────────────────────────────────────────────────
 
 export async function sendInvitationEmail(data) {

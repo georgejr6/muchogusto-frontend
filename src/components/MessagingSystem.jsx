@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Search, Send, User, MessageSquare } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from '@/lib/i18n.jsx';
-import { getMessagingUsers, getConversation, sendMessage } from '@/lib/apiClient';
+import { getMessagingUsers, getConversation, sendMessage, markConversationRead } from '@/lib/apiClient';
+import { getSocket } from '@/lib/socket';
 
 const MessagingSystem = () => {
   const { t } = useTranslation();
@@ -20,6 +21,26 @@ const MessagingSystem = () => {
       .then(setUsers)
       .catch(() => toast({ title: 'Failed to load users', variant: 'destructive' }))
       .finally(() => setLoading(false));
+
+    // Admin joins global room to get notified of new user messages
+    const socket = getSocket();
+    socket.emit('join_admin');
+    socket.on('user_message', ({ userId, message }) => {
+      setUsers(prev => prev.map(u =>
+        u.id === userId
+          ? { ...u, last_message: message.content, last_message_at: message.created_at, unread_count: (parseInt(u.unread_count || 0) + 1).toString() }
+          : u
+      ));
+      // If this conversation is open, append the message
+      setSelectedUser(sel => {
+        if (sel?.id === userId) {
+          setMessages(msgs => msgs.find(m => m.id === message.id) ? msgs : [...msgs, message]);
+        }
+        return sel;
+      });
+    });
+
+    return () => { socket.off('user_message'); };
   }, []);
 
   useEffect(() => {
@@ -27,7 +48,24 @@ const MessagingSystem = () => {
     getConversation(selectedUser.id)
       .then(setMessages)
       .catch(() => toast({ title: 'Failed to load messages', variant: 'destructive' }));
-  }, [selectedUser]);
+
+    // Join the conversation room for real-time
+    const socket = getSocket();
+    socket.emit('join_conversation', selectedUser.id);
+
+    socket.on('message', (msg) => {
+      setMessages(prev => prev.find(m => m.id === msg.id) ? prev : [...prev, msg]);
+    });
+
+    // Mark user replies as read
+    markConversationRead(selectedUser.id).catch(() => {});
+    setUsers(prev => prev.map(u => u.id === selectedUser.id ? { ...u, unread_count: '0' } : u));
+
+    return () => {
+      socket.off('message');
+      socket.emit('leave_conversation', selectedUser.id);
+    };
+  }, [selectedUser?.id]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -96,9 +134,16 @@ const MessagingSystem = () => {
                 >
                   <div className="flex justify-between items-start mb-1">
                     <span className="font-bold text-[#FFFDD0] text-sm truncate">@{user.instagram || 'unknown'}</span>
-                    {user.last_message_at && (
-                      <span className="text-[10px] luxury-text-accent whitespace-nowrap">{formatTime(user.last_message_at)}</span>
-                    )}
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      {parseInt(user.unread_count) > 0 && (
+                        <span className="bg-[#D4AF37] text-[#0f001a] text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                          {user.unread_count}
+                        </span>
+                      )}
+                      {user.last_message_at && (
+                        <span className="text-[10px] luxury-text-accent whitespace-nowrap">{formatTime(user.last_message_at)}</span>
+                      )}
+                    </div>
                   </div>
                   <span className="text-xs text-muted-foreground truncate block">{user.name || 'User'}</span>
                   {user.last_message && (
@@ -133,14 +178,15 @@ const MessagingSystem = () => {
                 </div>
               ) : (
                 messages.map(msg => {
-                  const isAdmin = !!msg.from_admin_id;
+                  const isAdmin = !!msg.from_admin_id; // admin sent = show on right
                   return (
                     <div key={msg.id} className={`flex ${isAdmin ? 'justify-end' : 'justify-start'}`}>
                       <div className={`max-w-[70%] rounded-2xl p-3 ${
                         isAdmin
                           ? 'bg-[#2D1B4E] border border-[#D4AF37]/50 text-[#FFFDD0] rounded-tr-none shadow-[0_0_15px_rgba(212,175,55,0.1)]'
-                          : 'bg-[rgba(255,255,255,0.1)] text-[#FFFDD0] rounded-tl-none'
+                          : 'bg-[rgba(212,175,55,0.12)] border border-[#D4AF37]/20 text-[#FFFDD0] rounded-tl-none'
                       }`}>
+                        {!isAdmin && <p className="text-[10px] text-[#D4AF37]/70 mb-1 font-medium uppercase tracking-wider">Member</p>}
                         <p className="text-sm">{msg.content}</p>
                         <p className={`text-[10px] mt-1 text-right ${isAdmin ? 'text-[#D4AF37]/70' : 'text-muted-foreground'}`}>
                           {formatTime(msg.created_at)}
