@@ -49,22 +49,12 @@ const MessagingSystem = () => {
       .then(setMessages)
       .catch(() => toast({ title: 'Failed to load messages', variant: 'destructive' }));
 
-    // Join the conversation room for real-time
-    const socket = getSocket();
-    socket.emit('join_conversation', selectedUser.id);
-
-    socket.on('message', (msg) => {
-      setMessages(prev => prev.find(m => m.id === msg.id) ? prev : [...prev, msg]);
-    });
+    // Admin does NOT join conversation room — own messages come from HTTP response only.
+    // User replies arrive via the 'user_message' event in the first useEffect.
 
     // Mark user replies as read
     markConversationRead(selectedUser.id).catch(() => {});
     setUsers(prev => prev.map(u => u.id === selectedUser.id ? { ...u, unread_count: '0' } : u));
-
-    return () => {
-      socket.off('message');
-      socket.emit('leave_conversation', selectedUser.id);
-    };
   }, [selectedUser?.id]);
 
   useEffect(() => {

@@ -38,34 +38,14 @@ const RSVPCard = ({ user, rsvpStatus, rsvpDate, isAdmin = false, onBlurToggle })
   };
 
   return (
-    <div 
+    <div
       onClick={handleClick}
-      className={`bg-[rgba(15,0,26,0.6)] border border-[#D4AF37]/30 rounded-lg p-3 relative group transition-colors ${
+      className={`bg-[rgba(15,0,26,0.6)] border border-[#D4AF37]/30 rounded-lg p-3 group transition-colors ${
         isAdmin || !isBlurred ? 'cursor-pointer hover:bg-[rgba(212,175,55,0.1)]' : ''
       }`}
     >
-      {/* Admin Blur Toggle */}
-      {isAdmin && (
-        <div className="absolute top-2 right-2 z-10">
-          <BlurToggleButton 
-            userId={user.id} 
-            isBlurred={isBlurred} 
-            onToggle={onBlurToggle} 
-            isAdmin={isAdmin}
-            adminStatus={user.admin_blur_status}
-          />
-        </div>
-      )}
-
-      {/* Blurred Indicator for Public */}
-      {!isAdmin && isBlurred && (
-        <div className="absolute top-2 right-2 z-10">
-          <EyeOff className="w-4 h-4 text-muted-foreground opacity-50" />
-        </div>
-      )}
-
-      <div className={`flex items-center justify-between ${isAdmin ? 'group-hover:opacity-100 group-hover:blur-none transition-all duration-300' : ''}`}>
-        <div className="flex items-center gap-3">
+      <div className={`flex items-center justify-between gap-2 ${isAdmin ? 'group-hover:opacity-100 group-hover:blur-none transition-all duration-300' : ''}`}>
+        <div className="flex items-center gap-3 min-w-0">
           <div className={`w-10 h-10 rounded-full bg-[rgba(212,175,55,0.2)] border border-[#D4AF37]/50 flex items-center justify-center overflow-hidden shrink-0 ${isBlurred ? 'blur-[8px]' : ''}`}>
             {user.photoUrl ? (
               <img src={user.photoUrl} alt={user.name} className="w-full h-full object-cover" />
@@ -73,15 +53,31 @@ const RSVPCard = ({ user, rsvpStatus, rsvpDate, isAdmin = false, onBlurToggle })
               <User className="w-5 h-5 text-[#D4AF37]" />
             )}
           </div>
-          <div className={`${isBlurred ? 'opacity-50 blur-sm select-none' : ''}`}>
-            <h4 className="font-bold text-[#FFFDD0] text-sm">{user.name || 'Unknown'}</h4>
+          <div className={`min-w-0 ${isBlurred ? 'opacity-50 blur-sm select-none' : ''}`}>
+            <h4 className="font-bold text-[#FFFDD0] text-sm truncate">{user.name || 'Unknown'}</h4>
             {user.nickname && <p className="text-xs luxury-text-accent">"{user.nickname}"</p>}
           </div>
         </div>
-        
-        <div className="flex flex-col items-end gap-1 mt-6 sm:mt-0">
+
+        <div className="flex flex-col items-end gap-1 shrink-0">
           {getStatusBadge(rsvpStatus)}
           {rsvpDate && <span className="text-[10px] text-muted-foreground">{new Date(rsvpDate).toLocaleDateString()}</span>}
+          {/* Admin Blur Toggle */}
+          {isAdmin && (
+            <div onClick={e => e.stopPropagation()}>
+              <BlurToggleButton
+                userId={user.id}
+                isBlurred={isBlurred}
+                onToggle={onBlurToggle}
+                isAdmin={isAdmin}
+                adminStatus={user.admin_blur_status}
+              />
+            </div>
+          )}
+          {/* Blurred Indicator for Public */}
+          {!isAdmin && isBlurred && (
+            <EyeOff className="w-4 h-4 text-muted-foreground opacity-50" />
+          )}
         </div>
       </div>
     </div>
