@@ -154,6 +154,74 @@ export async function getUserInbox() {
   return request('/api/messages/inbox');
 }
 
+// ─── Email (admin) ─────────────────────────────────────────────────────────────
+
+export async function sendInvitationEmail(data) {
+  return request('/api/emails/invitation', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function getEmailList(eventId) {
+  const qs = eventId ? `?eventId=${eventId}` : '';
+  return request(`/api/emails/list${qs}`);
+}
+
+export async function getEmailSends(eventId) {
+  const qs = eventId ? `?eventId=${eventId}` : '';
+  return request(`/api/emails/sends${qs}`);
+}
+
+// ─── Event media upload (admin) ───────────────────────────────────────────────
+
+export async function uploadEventMedia(file) {
+  const formData = new FormData();
+  formData.append('image', file);
+  return request('/api/events/upload-media', {
+    method: 'POST',
+    body: formData,
+  });
+}
+
+// ─── Public event (no auth) ───────────────────────────────────────────────────
+
+export async function getPublicEventByToken(shareToken) {
+  const res = await fetch(`${API_URL}/api/public/events/${shareToken}`);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Not found');
+  return data;
+}
+
+export async function subscribeToEvent(shareToken, email, name) {
+  const res = await fetch(`${API_URL}/api/public/events/${shareToken}/subscribe`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, name }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed');
+  return data;
+}
+
+export async function submitEventFeedback(shareToken, { rating, comment, email }) {
+  const res = await fetch(`${API_URL}/api/public/events/${shareToken}/feedback`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ rating, comment, email }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed');
+  return data;
+}
+
+export async function getEventFeedbackMeta(shareToken) {
+  const res = await fetch(`${API_URL}/api/public/events/${shareToken}/feedback-meta`);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Not found');
+  return data;
+}
+
 // ─── Backward-compatible shims (for any remaining supabaseClient imports) ─────
 
 export const supabase = null;

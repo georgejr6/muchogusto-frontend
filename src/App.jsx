@@ -9,6 +9,8 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 
 // Public Pages
 import HomePage from '@/pages/HomePage';
+import PublicEventPage from '@/pages/PublicEventPage';
+import EventFeedbackPage from '@/pages/EventFeedbackPage';
 import SignupPage from '@/pages/SignupPage';
 import QRCodePage from '@/pages/QRCodePage';
 import UserInbox from '@/pages/UserInbox';
@@ -34,6 +36,8 @@ function App() {
           <ScrollToTop />
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/e/:shareToken" element={<PublicEventPage />} />
+            <Route path="/feedback/:shareToken" element={<EventFeedbackPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/qr-code" element={<QRCodePage />} />
             <Route path="/inbox" element={<UserInbox />} />

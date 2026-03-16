@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { ArrowLeft, Calendar, MapPin, Clock, Users, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Calendar, MapPin, Clock, Users, ExternalLink, Youtube, Copy, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import RSVPCard from '@/components/RSVPCard';
 import Header from '@/components/Header';
 import { getEvent, setUserBlur } from '@/lib/apiClient';
+
+function extractYouTubeId(url) {
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s?#]+)/);
+  return match ? match[1] : null;
+}
 
 const EventPage = () => {
   const { eventname } = useParams();
@@ -16,6 +21,7 @@ const EventPage = () => {
 
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [copiedLink, setCopiedLink] = useState(false);
 
   useEffect(() => {
     getEvent(eventname)
@@ -41,6 +47,15 @@ const EventPage = () => {
     }
   };
 
+  const copyShareLink = () => {
+    if (!event?.share_token) return;
+    const url = `${window.location.origin}/e/${event.share_token}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2000);
+    });
+  };
+
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-[#0f001a] luxury-text-accent">
       Loading event...
@@ -49,6 +64,9 @@ const EventPage = () => {
   if (!event) return null;
 
   const rsvps = event.rsvps || [];
+  const mediaItems = event.media || [];
+  const youtubeItems = mediaItems.filter(m => m.type === 'youtube');
+  const imageItems   = mediaItems.filter(m => m.type === 'image');
   const interested = rsvps.filter(r => r.status === 'interested').length;
   const notInterested = rsvps.filter(r => r.status === 'not_interested').length;
   const totalInvited = (event.invitedUsers || []).length;
@@ -84,12 +102,25 @@ const EventPage = () => {
                 <ArrowLeft className="w-5 h-5" /> Back
               </button>
               {isAdminAuthenticated && (
-                <button
-                  onClick={() => navigate('/admin-dashboard')}
-                  className="text-sm text-[#D4AF37] hover:underline flex items-center gap-1"
-                >
-                  Manage Event <ExternalLink className="w-3 h-3" />
-                </button>
+                <div className="flex items-center gap-3">
+                  {event.share_token && (
+                    <button
+                      onClick={copyShareLink}
+                      className="flex items-center gap-1.5 text-sm border border-[#D4AF37]/40 text-[#D4AF37] px-3 py-1.5 rounded-lg hover:bg-[rgba(212,175,55,0.1)] transition-colors"
+                    >
+                      {copiedLink ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                      {copiedLink ? 'Copied!' : 'Share Link'}
+                    </button>
+                  )}
+                  {isAdminAuthenticated && (
+                    <button
+                      onClick={() => navigate('/admin-dashboard')}
+                      className="text-sm text-[#D4AF37] hover:underline flex items-center gap-1"
+                    >
+                      Manage Event <ExternalLink className="w-3 h-3" />
+                    </button>
+                  )}
+                </div>
               )}
             </div>
 
@@ -131,6 +162,40 @@ const EventPage = () => {
                     </div>
                   </div>
                 </div>
+
+                {/* YouTube embeds */}
+                {youtubeItems.length > 0 && (
+                  <div className="luxury-card p-6 space-y-4">
+                    <h3 className="text-lg font-semibold text-[#FFFDD0] flex items-center gap-2">
+                      <Youtube className="w-5 h-5 text-red-500" /> Videos
+                    </h3>
+                    {youtubeItems.map((item, idx) => {
+                      const videoId = item.videoId || extractYouTubeId(item.url);
+                      return videoId ? (
+                        <div key={idx} className="rounded-lg overflow-hidden aspect-video">
+                          <iframe
+                            src={`https://www.youtube.com/embed/${videoId}`}
+                            title={`Video ${idx + 1}`}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen className="w-full h-full"
+                          />
+                        </div>
+                      ) : null;
+                    })}
+                  </div>
+                )}
+
+                {/* Image gallery */}
+                {imageItems.length > 0 && (
+                  <div className="luxury-card p-6 space-y-3">
+                    <h3 className="text-lg font-semibold text-[#FFFDD0]">Photos</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {imageItems.map((item, idx) => (
+                        <img key={idx} src={item.url} alt="" className="rounded-lg object-cover aspect-square w-full" />
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Attendee List */}
                 <div className="luxury-card p-6">
