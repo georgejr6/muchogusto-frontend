@@ -101,6 +101,29 @@ export async function inviteUser(data) {
   });
 }
 
+export async function adminUpdateUser(id, data) {
+  return request(`/api/users/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function adminUploadUserPhoto(id, file) {
+  const formData = new FormData();
+  formData.append('photo', file);
+  return request(`/api/users/${id}/photo`, {
+    method: 'POST',
+    body: formData,
+  });
+}
+
+export async function broadcastMessage(content) {
+  return request('/api/messages/broadcast', {
+    method: 'POST',
+    body: JSON.stringify({ content }),
+  });
+}
+
 export async function setUserBlur(userId, is_blurred) {
   return request(`/api/users/${userId}/blur`, {
     method: 'PUT',

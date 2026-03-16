@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Send, User, MessageSquare } from 'lucide-react';
+import { Search, Send, User, MessageSquare, Radio, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from '@/lib/i18n.jsx';
-import { getMessagingUsers, getConversation, sendMessage, markConversationRead } from '@/lib/apiClient';
+import { getMessagingUsers, getConversation, sendMessage, markConversationRead, broadcastMessage } from '@/lib/apiClient';
 import { getSocket } from '@/lib/socket';
 
 const MessagingSystem = () => {
@@ -14,6 +14,9 @@ const MessagingSystem = () => {
   const [newMessage, setNewMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [showBroadcast, setShowBroadcast] = useState(false);
+  const [broadcastText, setBroadcastText] = useState('');
+  const [broadcasting, setBroadcasting] = useState(false);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -85,6 +88,24 @@ const MessagingSystem = () => {
     }
   };
 
+  const handleBroadcast = async (e) => {
+    e.preventDefault();
+    if (!broadcastText.trim()) return;
+    setBroadcasting(true);
+    try {
+      const { count } = await broadcastMessage(broadcastText.trim());
+      toast({ title: `Broadcast sent to ${count} member${count !== 1 ? 's' : ''}` });
+      setBroadcastText('');
+      setShowBroadcast(false);
+      // Refresh sidebar so last_message previews update
+      getMessagingUsers().then(setUsers).catch(() => {});
+    } catch (err) {
+      toast({ title: err.message, variant: 'destructive' });
+    } finally {
+      setBroadcasting(false);
+    }
+  };
+
   const formatTime = (isoString) => {
     if (!isoString) return '';
     return new Date(isoString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -93,6 +114,46 @@ const MessagingSystem = () => {
   if (loading) return <div className="text-center py-12 luxury-text-accent">Loading...</div>;
 
   return (
+    <div className="space-y-4">
+
+    {/* Broadcast Panel */}
+    {showBroadcast ? (
+      <div className="luxury-card p-5 border border-[#D4AF37]/40">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <Radio className="w-4 h-4 text-[#D4AF37]" />
+            <h3 className="font-bold text-[#FFFDD0]">Broadcast to All Members</h3>
+          </div>
+          <button onClick={() => { setShowBroadcast(false); setBroadcastText(''); }} className="text-muted-foreground hover:text-[#D4AF37]">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+        <form onSubmit={handleBroadcast} className="space-y-3">
+          <textarea
+            rows={4}
+            placeholder="Write your message to all members..."
+            value={broadcastText}
+            onChange={e => setBroadcastText(e.target.value)}
+            className="luxury-input w-full resize-none"
+          />
+          <div className="flex items-center gap-3">
+            <button type="submit" disabled={!broadcastText.trim() || broadcasting} className="luxury-button px-6 flex items-center gap-2 disabled:opacity-50">
+              <Radio className="w-4 h-4" />
+              {broadcasting ? 'Sending...' : 'Send to All Members'}
+            </button>
+            <p className="text-xs text-muted-foreground">Sends a message in every member's inbox + email notification</p>
+          </div>
+        </form>
+      </div>
+    ) : (
+      <button
+        onClick={() => setShowBroadcast(true)}
+        className="flex items-center gap-2 text-sm text-[#D4AF37] hover:text-[#F1E5AC] transition-colors border border-[#D4AF37]/30 hover:border-[#D4AF37]/60 rounded-lg px-4 py-2"
+      >
+        <Radio className="w-4 h-4" /> Broadcast to All Members
+      </button>
+    )}
+
     <div className="luxury-card h-[600px] flex overflow-hidden">
 
       {/* Sidebar — Users List */}
@@ -215,6 +276,7 @@ const MessagingSystem = () => {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, Users, Phone, Mail, Instagram, User, UserPlus, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { getUsers, setUserBlur, inviteUser } from '@/lib/apiClient';
@@ -6,6 +7,7 @@ import { getUsers, setUserBlur, inviteUser } from '@/lib/apiClient';
 const INVITE_DEFAULTS = { name: '', instagram: '', phone: '', email: '' };
 
 const MemberManagement = () => {
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [members, setMembers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -175,7 +177,11 @@ const MemberManagement = () => {
       ) : (
         <div className="space-y-3">
           {filtered.map(member => (
-            <div key={member.id} className="luxury-card p-4 flex items-center gap-4">
+            <div
+              key={member.id}
+              onClick={() => navigate(`/user/${member.id}`)}
+              className="luxury-card p-4 flex items-center gap-4 cursor-pointer hover:border-[#D4AF37]/60 transition-colors"
+            >
               {/* Avatar */}
               <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] border-2 border-[#D4AF37]/40 overflow-hidden flex-shrink-0 flex items-center justify-center">
                 {member.photo_url
@@ -217,7 +223,7 @@ const MemberManagement = () => {
               </div>
 
               {/* Blur toggle */}
-              <div className="flex flex-col items-end gap-2 flex-shrink-0">
+              <div className="flex flex-col items-end gap-2 flex-shrink-0" onClick={e => e.stopPropagation()}>
                 <span className={`text-xs px-2 py-0.5 rounded border ${
                   member.is_blurred
                     ? 'border-yellow-500/40 text-yellow-400'
