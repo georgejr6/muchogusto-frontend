@@ -2,16 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, CheckCircle, Lock, Phone } from 'lucide-react';
+import { Sparkles, CheckCircle, Lock } from 'lucide-react';
 import Header from '@/components/Header';
+import PhoneInput from '@/components/PhoneInput';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-
-const countryCodes = [
-  { value: '+57', label: 'Colombia (+57)' },
-  { value: '+1',  label: 'USA (+1)' },
-  { value: '+66', label: 'Thailand (+66)' },
-];
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -19,9 +14,10 @@ const LoginPage = () => {
   const { loginUser, loginAdmin } = useAuth();
   const [tab, setTab] = useState('member');
 
-  // Member login
+  // Member login — phone OR email
   const [phone, setPhone] = useState('');
   const [countryCode, setCountryCode] = useState('+57');
+  const [email, setEmail] = useState('');
   const [memberLoading, setMemberLoading] = useState(false);
   const [memberError, setMemberError] = useState('');
   const [memberSuccess, setMemberSuccess] = useState(false);
@@ -33,11 +29,22 @@ const LoginPage = () => {
 
   const handleMemberLogin = async (e) => {
     e.preventDefault();
-    if (!phone.trim()) { setMemberError('Phone number is required'); return; }
+    const trimmedPhone = phone.trim();
+    const trimmedEmail = email.trim();
+
+    if (!trimmedPhone && !trimmedEmail) {
+      setMemberError('Enter your phone number or email to sign in.');
+      return;
+    }
+
     setMemberLoading(true);
     setMemberError('');
 
-    const result = await loginUser({ phone: `${countryCode}${phone.trim()}` });
+    const payload = {};
+    if (trimmedPhone) payload.phone = `${countryCode}${trimmedPhone}`;
+    if (trimmedEmail) payload.email = trimmedEmail;
+
+    const result = await loginUser(payload);
     if (result.success) {
       setMemberSuccess(true);
       setTimeout(() => navigate('/dashboard'), 1500);
@@ -121,38 +128,42 @@ const LoginPage = () => {
                 {tab === 'member' && (
                   <>
                     <form onSubmit={handleMemberLogin} className="luxury-card p-6 sm:p-8 space-y-5">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Phone className="w-4 h-4 text-[#D4AF37]" />
-                        <p className="text-xs text-[#F1E5AC]/70">Enter the phone number on your account.</p>
+                      <p className="text-xs text-[#F1E5AC]/70">
+                        Enter the phone number <span className="text-[#D4AF37]">or</span> email address on your account.
+                      </p>
+
+                      {/* Email field */}
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-[#FFFDD0]">Email</label>
+                        <input
+                          type="email"
+                          value={email}
+                          onChange={e => { setEmail(e.target.value); setMemberError(''); }}
+                          placeholder="you@example.com"
+                          className="luxury-input w-full"
+                        />
                       </div>
 
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-[#FFFDD0]">Phone Number</label>
-                        <div className="flex gap-3">
-                          <select
-                            value={countryCode}
-                            onChange={e => setCountryCode(e.target.value)}
-                            className="luxury-input appearance-none bg-[rgba(15,0,26,0.9)] w-[150px]"
-                          >
-                            {countryCodes.map(c => (
-                              <option key={c.value} value={c.value}>{c.label}</option>
-                            ))}
-                          </select>
-                          <input
-                            type="tel"
-                            value={phone}
-                            onChange={e => setPhone(e.target.value)}
-                            placeholder="Phone number"
-                            className="luxury-input flex-1"
-                            autoFocus
-                          />
-                        </div>
+                      {/* Divider */}
+                      <div className="flex items-center gap-3">
+                        <div className="flex-1 h-px bg-[#D4AF37]/20" />
+                        <span className="text-xs text-muted-foreground uppercase tracking-widest">or</span>
+                        <div className="flex-1 h-px bg-[#D4AF37]/20" />
                       </div>
+
+                      {/* Phone field */}
+                      <PhoneInput
+                        label="Phone Number"
+                        countryCode={countryCode}
+                        onCountryChange={setCountryCode}
+                        phone={phone}
+                        onPhoneChange={val => { setPhone(val); setMemberError(''); }}
+                      />
 
                       {memberError && (
                         <div className="text-sm text-red-400 text-center">
                           {memberError}
-                          {memberError.includes('sign up') && (
+                          {memberError.toLowerCase().includes('sign up') && (
                             <span> <Link to="/signup" className="text-[#D4AF37] underline">Sign up here</Link></span>
                           )}
                         </div>
@@ -160,7 +171,10 @@ const LoginPage = () => {
 
                       <button type="submit" disabled={memberLoading} className="luxury-button w-full py-4 text-lg">
                         {memberLoading
-                          ? <span className="flex items-center justify-center gap-2"><span className="w-5 h-5 border-2 border-[#0f001a] border-t-transparent rounded-full animate-spin" /> Signing in...</span>
+                          ? <span className="flex items-center justify-center gap-2">
+                              <span className="w-5 h-5 border-2 border-[#0f001a] border-t-transparent rounded-full animate-spin" />
+                              Signing in...
+                            </span>
                           : 'Sign In'
                         }
                       </button>

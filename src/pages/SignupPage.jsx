@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, CheckCircle } from 'lucide-react';
 import Header from '@/components/Header';
 import FormInput from '@/components/FormInput';
+import PhoneInput from '@/components/PhoneInput';
 import { useTranslation } from '@/lib/i18n.jsx';
 import { validateInstagram } from '@/lib/formValidation';
 import { useAuth } from '@/contexts/AuthContext';
@@ -27,12 +28,6 @@ const SignupPage = () => {
   });
   const [errors, setErrors] = useState({});
 
-  const countryCodes = [
-    { value: '+57', label: 'Colombia (+57)' },
-    { value: '+1', label: 'USA (+1)' },
-    { value: '+66', label: 'Thailand (+66)' },
-  ];
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -41,10 +36,26 @@ const SignupPage = () => {
 
   const validateForm = () => {
     const newErrors = {};
+
     const instagramError = validateInstagram(formData.instagram);
     if (instagramError) newErrors.instagram = instagramError;
-    if (!formData.email && !formData.phone) newErrors.email = 'Email or phone number is required';
-    if (formData.phone && formData.phone.length < 7) newErrors.phone = 'Enter a valid phone number';
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      newErrors.email = 'Enter a valid email address';
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone number is required';
+    } else if (formData.phone.trim().length < 5) {
+      newErrors.phone = 'Enter a valid phone number';
+    }
+
+    if (!formData.countryCode) {
+      newErrors.phone = 'Enter a country code';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -58,10 +69,10 @@ const SignupPage = () => {
 
     try {
       await signupUser({
-        name: formData.name,
-        instagram: formData.instagram ? formData.instagram.replace(/^@/, '') : '',
-        phone: `${formData.countryCode}${formData.phone}`,
-        email: formData.email || undefined,
+        name: formData.name || undefined,
+        instagram: formData.instagram ? formData.instagram.replace(/^@/, '') : undefined,
+        phone: `${formData.countryCode}${formData.phone.trim()}`,
+        email: formData.email.trim(),
       });
 
       setSuccess(true);
@@ -103,6 +114,7 @@ const SignupPage = () => {
                 </div>
 
                 <form onSubmit={handleSubmit} className="luxury-card p-6 sm:p-8 space-y-6">
+
                   <FormInput
                     label={<>Name <span className="luxury-text-accent font-normal">(Optional)</span></>}
                     name="name"
@@ -121,44 +133,28 @@ const SignupPage = () => {
                   />
 
                   <FormInput
-                    label={<>Email <span className="luxury-text-accent font-normal">(Optional)</span></>}
+                    label="Email"
                     name="email"
                     type="email"
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="you@example.com"
+                    required
+                    error={errors.email}
                   />
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-[#FFFDD0]">
-                      Phone Number <span className="text-red-400">*</span>
-                    </label>
-                    <div className="flex gap-3">
-                      <div className="w-[140px]">
-                        <select
-                          name="countryCode"
-                          value={formData.countryCode}
-                          onChange={handleInputChange}
-                          className="luxury-input appearance-none bg-[rgba(15,0,26,0.9)]"
-                        >
-                          {countryCodes.map(c => (
-                            <option key={c.value} value={c.value}>{c.label}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="flex-1">
-                        <input
-                          name="phone"
-                          type="tel"
-                          value={formData.phone}
-                          onChange={handleInputChange}
-                          placeholder="Phone number"
-                          className={`luxury-input w-full ${errors.phone ? 'border-red-500 focus:shadow-[0_0_15px_rgba(239,68,68,0.4)]' : ''}`}
-                        />
-                      </div>
-                    </div>
-                    {errors.phone && <p className="text-sm text-red-400 mt-1">{errors.phone}</p>}
-                  </div>
+                  <PhoneInput
+                    label="Phone Number"
+                    required
+                    countryCode={formData.countryCode}
+                    onCountryChange={code => setFormData(p => ({ ...p, countryCode: code }))}
+                    phone={formData.phone}
+                    onPhoneChange={val => {
+                      setFormData(p => ({ ...p, phone: val }));
+                      if (errors.phone) setErrors(p => ({ ...p, phone: '' }));
+                    }}
+                    error={errors.phone}
+                  />
 
                   {error && (
                     <p className="text-sm text-red-400 text-center">{error}</p>
@@ -167,7 +163,7 @@ const SignupPage = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="luxury-button w-full py-4 text-lg mt-6"
+                    className="luxury-button w-full py-4 text-lg mt-2"
                   >
                     {loading ? (
                       <div className="flex items-center justify-center gap-2">
