@@ -130,7 +130,7 @@ const LoginPage = () => {
                     {/* OAuth buttons */}
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <a
-                        href={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/auth/discord`}
+                        href={`${import.meta.env.VITE_CB_URL || 'https://centralbilling-backend.vercel.app'}/oauth/social/discord?client_id=muchogusto&redirect_uri=${encodeURIComponent((import.meta.env.VITE_API_URL || 'https://muchogusto-backend-production.up.railway.app') + '/api/auth/social/callback')}`}
                         className="flex items-center justify-center gap-2 h-12 rounded-lg bg-[#5865F2] hover:bg-[#4752C4] text-white text-sm font-semibold transition-colors"
                       >
                         <svg className="h-4 w-4 fill-white shrink-0" viewBox="0 0 24 24">
@@ -139,7 +139,7 @@ const LoginPage = () => {
                         Discord
                       </a>
                       <a
-                        href={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/auth/google`}
+                        href={`${import.meta.env.VITE_CB_URL || 'https://centralbilling-backend.vercel.app'}/oauth/social/google?client_id=muchogusto&redirect_uri=${encodeURIComponent((import.meta.env.VITE_API_URL || 'https://muchogusto-backend-production.up.railway.app') + '/api/auth/social/callback')}`}
                         className="flex items-center justify-center gap-2 h-12 rounded-lg bg-white hover:bg-gray-100 text-gray-800 text-sm font-semibold transition-colors border border-gray-200"
                       >
                         <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24">
