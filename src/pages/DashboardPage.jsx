@@ -51,6 +51,9 @@ const DashboardPage = () => {
   const formattedInvitations = invitations.map(inv => ({
     id: inv.id,
     status: inv.status,
+    consent_status: inv.consent_status,
+    consent_url: inv.consent_url,
+    requires_consent: inv.requires_consent,
     event: {
       id: inv.event_id,
       name: inv.event_name,

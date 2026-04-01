@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { ArrowLeft, Calendar, MapPin, Clock, Users, ExternalLink, Youtube, Copy, Check } from 'lucide-react';
+import { ArrowLeft, Calendar, MapPin, Clock, Users, ExternalLink, Youtube, Copy, Check, FileText, Send } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import RSVPCard from '@/components/RSVPCard';
 import Header from '@/components/Header';
-import { getEvent, setUserBlur } from '@/lib/apiClient';
+import { getEvent, setUserBlur, resendConsentEmail } from '@/lib/apiClient';
 
 function extractYouTubeId(url) {
   const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s?#]+)/);
@@ -22,6 +22,7 @@ const EventPage = () => {
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [resendingConsent, setResendingConsent] = useState({});
 
   useEffect(() => {
     getEvent(eventname)
@@ -47,6 +48,18 @@ const EventPage = () => {
     }
   };
 
+  const handleResendConsent = async (invitationId) => {
+    setResendingConsent(prev => ({ ...prev, [invitationId]: true }));
+    try {
+      await resendConsentEmail(invitationId);
+      toast({ title: 'Consent email sent' });
+    } catch (err) {
+      toast({ title: err.message, variant: 'destructive' });
+    } finally {
+      setResendingConsent(prev => ({ ...prev, [invitationId]: false }));
+    }
+  };
+
   const copyShareLink = () => {
     if (!event?.share_token) return;
     const url = `${window.location.origin}/e/${event.share_token}`;
@@ -64,6 +77,9 @@ const EventPage = () => {
   if (!event) return null;
 
   const rsvps = event.rsvps || [];
+  const consentRequired = event.requires_consent;
+  const consentPending = rsvps.filter(r => r.consent_status === 'not_submitted').length;
+  const consentSubmitted = rsvps.filter(r => r.consent_status === 'submitted' || r.consent_status === 'verified').length;
   const mediaItems = event.media || [];
   const youtubeItems = mediaItems.filter(m => m.type === 'youtube');
   const imageItems   = mediaItems.filter(m => m.type === 'image');
@@ -223,6 +239,47 @@ const EventPage = () => {
                     </div>
                   )}
                 </div>
+
+                {/* Consent pending list — admin only */}
+                {consentRequired && isAdminAuthenticated && (
+                  <div className="luxury-card p-6">
+                    <h3 className="text-xl font-bold text-[#FFFDD0] mb-4 flex items-center gap-2">
+                      <FileText className="w-5 h-5 text-[#D4AF37]" />
+                      Consent Pending ({consentPending})
+                    </h3>
+                    {consentPending === 0 ? (
+                      <p className="text-sm text-[rgba(255,253,208,0.4)] text-center py-4">All forms submitted.</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {rsvps.filter(r => r.consent_status === 'not_submitted').map(r => (
+                          <div key={r.invitationId} className="flex items-center justify-between p-3 rounded-lg bg-[rgba(15,0,26,0.5)] border border-[#D4AF37]/20">
+                            <div className="min-w-0">
+                              <p className="text-sm font-medium text-[#FFFDD0] truncate">
+                                {r.user.name || r.user.instagram || `User #${r.userId}`}
+                              </p>
+                              {r.user.email && (
+                                <p className="text-xs text-[rgba(255,253,208,0.4)] truncate">{r.user.email}</p>
+                              )}
+                              <p className="text-xs text-yellow-400 mt-0.5">
+                                {r.consent_invite_sent_at
+                                  ? `Invite sent ${new Date(r.consent_invite_sent_at).toLocaleDateString()}`
+                                  : 'No invite sent yet'}
+                              </p>
+                            </div>
+                            <button
+                              onClick={() => handleResendConsent(r.invitationId)}
+                              disabled={resendingConsent[r.invitationId] || !r.user.email}
+                              title={!r.user.email ? 'No email on file' : 'Resend consent email'}
+                              className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-[#D4AF37]/40 text-[#D4AF37] hover:bg-[rgba(212,175,55,0.1)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0 ml-3"
+                            >
+                              <Send className="w-3 h-3" />
+                              {resendingConsent[r.invitationId] ? 'Sending...' : 'Resend'}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                </div>
               </div>
 
               {/* RSVP Stats */}
@@ -269,6 +326,31 @@ const EventPage = () => {
                     </div>
                   </div>
                 </div>
+
+                {/* Consent stats */}
+                {consentRequired && (
+                  <div className="luxury-card p-6">
+                    <h3 className="text-lg font-bold text-[#FFFDD0] mb-4 flex items-center gap-2">
+                      <FileText className="w-4 h-4 text-[#D4AF37]" /> Consent
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-[rgba(255,253,208,0.6)]">Submitted</span>
+                        <span className="font-bold text-green-400">{consentSubmitted}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-[rgba(255,253,208,0.6)]">Pending</span>
+                        <span className="font-bold text-yellow-400">{consentPending}</span>
+                      </div>
+                      <div className="w-full h-2 bg-[rgba(15,0,26,0.9)] rounded-full overflow-hidden border border-[#D4AF37]/30 flex mt-2">
+                        <div
+                          style={{ width: totalInvited > 0 ? `${Math.round(consentSubmitted / totalInvited * 100)}%` : '0%' }}
+                          className="bg-green-500 h-full transition-all"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, MapPin, Check, X } from 'lucide-react';
+import { Calendar, MapPin, Check, X, FileText, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { respondToInvitation } from '@/lib/apiClient';
 
 const InvitationCard = ({ invitation, onStatusChange }) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(invitation.status || 'pending');
+  const [consentStatus, setConsentStatus] = useState(invitation.consent_status || 'not_submitted');
 
   const event = invitation.event || {};
+  const consentRequired = invitation.requires_consent || event.requires_consent;
+  const consentPending = consentRequired && consentStatus === 'not_submitted';
 
   const handleRsvp = async (newStatus) => {
     setLoading(true);
@@ -22,7 +27,15 @@ const InvitationCard = ({ invitation, onStatusChange }) => {
         description: `You marked: ${newStatus === 'interested' ? 'Interested' : 'Not Interested'}`,
       });
     } catch (err) {
-      toast({ title: err.message, variant: 'destructive' });
+      if (err.message === 'consent_required') {
+        toast({
+          title: 'Consent Required',
+          description: 'Please complete the consent form before RSVPing.',
+          variant: 'destructive',
+        });
+      } else {
+        toast({ title: err.message, variant: 'destructive' });
+      }
     } finally {
       setLoading(false);
     }
@@ -74,10 +87,21 @@ const InvitationCard = ({ invitation, onStatusChange }) => {
           <p className="text-sm text-[#FFFDD0] mb-6 line-clamp-2">{event.description}</p>
         )}
 
+        {consentPending && (
+          <button
+            onClick={() => navigate(`/consent/${invitation.id}`)}
+            className="flex items-center gap-2 mb-4 p-3 rounded-lg border border-[#D4AF37]/60 bg-[rgba(212,175,55,0.08)] text-[#D4AF37] text-sm font-medium hover:bg-[rgba(212,175,55,0.15)] transition-colors w-full text-left"
+          >
+            <FileText className="w-4 h-4 shrink-0" />
+            <span className="flex-1">Sign consent form to unlock RSVP</span>
+            <ArrowRight className="w-4 h-4 shrink-0 opacity-70" />
+          </button>
+        )}
+
         <div className="flex gap-3">
           <button
             onClick={() => handleRsvp('interested')}
-            disabled={loading || status === 'interested'}
+            disabled={loading || status === 'interested' || consentPending}
             className={`flex-1 py-2 px-4 rounded-lg flex items-center justify-center transition-all duration-300 font-semibold
               ${status === 'interested'
                 ? 'bg-green-600 text-white shadow-[0_0_15px_rgba(22,163,74,0.4)]'
@@ -87,7 +111,7 @@ const InvitationCard = ({ invitation, onStatusChange }) => {
           </button>
           <button
             onClick={() => handleRsvp('not_interested')}
-            disabled={loading || status === 'not_interested'}
+            disabled={loading || status === 'not_interested' || consentPending}
             className={`flex-1 py-2 px-4 rounded-lg flex items-center justify-center transition-all duration-300 font-semibold
               ${status === 'not_interested'
                 ? 'bg-red-600/50 text-white border-2 border-red-500'

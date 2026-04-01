@@ -80,6 +80,14 @@ export async function respondToInvitation(invitationId, status) {
   });
 }
 
+export async function getConsentInfo(invitationId) {
+  return request(`/api/invitations/${invitationId}/consent-info`);
+}
+
+export async function resendConsentEmail(invitationId) {
+  return request(`/api/invitations/${invitationId}/resend-consent`, { method: 'POST' });
+}
+
 // ─── Users (admin) ────────────────────────────────────────────────────────────
 
 export async function getUsers() {

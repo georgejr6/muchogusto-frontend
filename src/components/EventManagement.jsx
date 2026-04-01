@@ -37,6 +37,8 @@ const emptyForm = {
   invitedUsers: [],
   media: [],
   reminder_frequency_days: '',
+  requires_consent: false,
+  consent_form_id: '',
 };
 
 const EventManagement = () => {
@@ -171,6 +173,8 @@ const EventManagement = () => {
       invitedUsers: event.invitedUsers || [],
       media: event.media || [],
       reminder_frequency_days: event.reminder_frequency_days ? String(event.reminder_frequency_days) : '',
+      requires_consent: event.requires_consent || false,
+      consent_form_id: event.consent_form_id || '',
     });
     setActiveTab('create');
   };
@@ -318,6 +322,33 @@ const EventManagement = () => {
             <p className="text-xs text-muted-foreground">
               Reminders stop once the event ends. A recap / feedback email is sent automatically after.
             </p>
+          </div>
+
+          {/* Consent form */}
+          <div className="space-y-3 border border-[#D4AF37]/30 rounded-lg p-4 bg-[rgba(212,175,55,0.03)]">
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={formData.requires_consent}
+                onChange={e => setFormData(prev => ({ ...prev, requires_consent: e.target.checked, consent_form_id: e.target.checked ? prev.consent_form_id : '' }))}
+                className="w-4 h-4 rounded accent-[#D4AF37]"
+              />
+              <span className="text-sm font-medium text-[#FFFDD0]">Require consent form before RSVP</span>
+            </label>
+            {formData.requires_consent && (
+              <div className="space-y-1 pl-7">
+                <label className="text-xs text-muted-foreground">myconsent.me Form ID <span className="text-[#D4AF37]">(optional)</span></label>
+                <input
+                  type="text"
+                  name="consent_form_id"
+                  value={formData.consent_form_id}
+                  onChange={handleInputChange}
+                  placeholder="e.g. abc123 — leave blank for default form"
+                  className="luxury-input text-sm"
+                />
+                <p className="text-xs text-muted-foreground">Invited guests will receive a link to complete the consent form. They cannot RSVP until it's submitted.</p>
+              </div>
+            )}
           </div>
 
           {/* Media */}

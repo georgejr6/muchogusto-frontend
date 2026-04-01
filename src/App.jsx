@@ -15,6 +15,7 @@ import SignupPage from '@/pages/SignupPage';
 import QRCodePage from '@/pages/QRCodePage';
 import UserInbox from '@/pages/UserInbox';
 import RSVPsPage from '@/pages/RSVPsPage';
+import ConsentPage from '@/pages/ConsentPage';
 
 // User Protected Pages
 import DashboardPage from '@/pages/DashboardPage';
@@ -44,6 +45,8 @@ function App() {
             <Route path="/inbox" element={<UserInbox />} />
             {/* Public RSVPs Route (Anonymized for non-admins) */}
             <Route path="/rsvps" element={<RSVPsPage />} />
+            {/* Consent walkthrough */}
+            <Route path="/consent/:invitationId" element={<ConsentPage />} />
             
             {/* User Routes */}
             <Route 
