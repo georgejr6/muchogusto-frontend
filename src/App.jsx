@@ -16,6 +16,7 @@ import QRCodePage from '@/pages/QRCodePage';
 import UserInbox from '@/pages/UserInbox';
 import RSVPsPage from '@/pages/RSVPsPage';
 import ConsentPage from '@/pages/ConsentPage';
+import OAuthCallbackPage from '@/pages/OAuthCallbackPage';
 
 // User Protected Pages
 import DashboardPage from '@/pages/DashboardPage';
@@ -47,6 +48,8 @@ function App() {
             <Route path="/rsvps" element={<RSVPsPage />} />
             {/* Consent walkthrough */}
             <Route path="/consent/:invitationId" element={<ConsentPage />} />
+            {/* OAuth callback */}
+            <Route path="/auth/callback" element={<OAuthCallbackPage />} />
             
             {/* User Routes */}
             <Route 

@@ -86,6 +86,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const loginWithToken = async (token) => {
+    localStorage.setItem('token', token);
+    const user = await getMe().catch(() => null);
+    if (user) setUserProfile(user);
+  };
+
   const updateProfileData = async (updates) => {
     try {
       // Handle photo upload separately if new photo files present
@@ -122,6 +128,7 @@ export const AuthProvider = ({ children }) => {
     logoutAdmin,
     signupUser,
     loginUser,
+    loginWithToken,
     updateProfileData,
     logoutUser,
     isAdminAuthenticated: !!adminUser,
