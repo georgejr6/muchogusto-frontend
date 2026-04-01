@@ -279,7 +279,8 @@ const EventPage = () => {
                         ))}
                       </div>
                     )}
-                </div>
+                  </div>
+                )}
               </div>
 
               {/* RSVP Stats */}
