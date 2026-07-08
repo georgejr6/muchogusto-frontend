@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, CheckCircle } from 'lucide-react';
 import Header from '@/components/Header';
 import FormInput from '@/components/FormInput';
 import PhoneInput from '@/components/PhoneInput';
+import SocialAuthButtons from '@/components/SocialAuthButtons';
 import { useTranslation } from '@/lib/i18n.jsx';
 import { validateInstagram } from '@/lib/formValidation';
 import { useAuth } from '@/contexts/AuthContext';
@@ -113,6 +114,15 @@ const SignupPage = () => {
                   <p className="luxury-text-accent text-lg">{t('signup.subtitle')}</p>
                 </div>
 
+                <div className="luxury-card p-6 sm:p-8 mb-4">
+                  <SocialAuthButtons />
+                  <div className="flex items-center gap-3 mt-5">
+                    <div className="flex-1 h-px bg-[#D4AF37]/20" />
+                    <span className="text-xs text-muted-foreground uppercase tracking-widest">or sign up with email</span>
+                    <div className="flex-1 h-px bg-[#D4AF37]/20" />
+                  </div>
+                </div>
+
                 <form onSubmit={handleSubmit} className="luxury-card p-6 sm:p-8 space-y-6">
 
                   <FormInput
@@ -157,7 +167,12 @@ const SignupPage = () => {
                   />
 
                   {error && (
-                    <p className="text-sm text-red-400 text-center">{error}</p>
+                    <p className="text-sm text-red-400 text-center">
+                      {error}
+                      {error.toLowerCase().includes('already exists') && (
+                        <span> <Link to="/login" className="text-[#D4AF37] underline">Log in here</Link></span>
+                      )}
+                    </p>
                   )}
 
                   <button

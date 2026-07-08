@@ -30,7 +30,24 @@ const translations = {
     "signup.consent_media": "Consiento aparecer en transmisiones/videos (opcional)",
     "signup.submit": "Unirse a Mucho Gusto Xo",
     "signup.submitting": "Enviando...",
-    
+
+    // Home / Landing
+    "home.badge": "Vida nocturna en Medellín",
+    "home.tagline": "La comunidad privada detrás de las mejores noches de Medellín. Fiestas en terrazas, eventos secretos y la gente que los hace inolvidables.",
+    "home.whats_on": "Qué está pasando en Medellín",
+    "home.whats_on_sub": "Un vistazo a lo que se viene. Crea tu cuenta para ver todos los detalles, confirmar asistencia y conectar con la comunidad.",
+    "home.loading": "Cargando eventos...",
+    "home.no_events": "No hay eventos públicos ahora mismo — se anuncian nuevas noches seguido. Regístrate para ser el primero en enterarte.",
+    "home.get_title": "Qué obtienes al unirte",
+    "home.get_1": "Acceso a eventos exclusivos de vida nocturna en Medellín",
+    "home.get_2": "Confirma tu asistencia y entra a la lista de invitados",
+    "home.get_3": "Un perfil privado dentro de una comunidad curada",
+    "home.get_4": "Línea directa con el equipo de Mucho Gusto Xo",
+    "home.cta_join": "Crear mi cuenta",
+    "home.cta_login": "Ya tengo una cuenta",
+    "home.access_note": "Gratis unirse. Tú decides qué se muestra en tu perfil.",
+    "home.view_event": "Ver detalles",
+
     // Thank You & QR
     "thank_you.title": "¡Todo Listo! 🎉",
     "thank_you.subtitle": "Tu registro ha sido recibido",
@@ -174,7 +191,24 @@ const translations = {
     "signup.consent_media": "I consent to appear in livestreams/videos (optional)",
     "signup.submit": "Join Mucho Gusto Xo",
     "signup.submitting": "Submitting...",
-    
+
+    // Home / Landing
+    "home.badge": "Medellín nightlife",
+    "home.tagline": "The private community behind Medellín's best nights out. Rooftop parties, secret events, and the people who make them unforgettable.",
+    "home.whats_on": "What's on in Medellín",
+    "home.whats_on_sub": "A peek at what's coming up. Create your account to see full details, RSVP, and connect with the community.",
+    "home.loading": "Loading events...",
+    "home.no_events": "No public events right now — new nights drop often. Sign up to be the first to know.",
+    "home.get_title": "What you get when you join",
+    "home.get_1": "Access to exclusive nightlife events across Medellín",
+    "home.get_2": "RSVP to events and get on the guest list",
+    "home.get_3": "A private profile inside a curated community",
+    "home.get_4": "A direct line to the Mucho Gusto Xo team",
+    "home.cta_join": "Create your account",
+    "home.cta_login": "I already have an account",
+    "home.access_note": "Free to join. You choose what's visible on your profile.",
+    "home.view_event": "View details",
+
     "thank_you.title": "You're All Set! 🎉",
     "thank_you.subtitle": "Your signup has been received",
     "thank_you.desc": "We'll reach out if there's a fit for upcoming events or livestreams",
@@ -310,7 +344,24 @@ const translations = {
     "signup.consent_media": "ฉันยินยอมให้ปรากฏในสตรีมสด/วิดีโอ (ทางเลือก)",
     "signup.submit": "เข้าร่วม Mucho Gusto Xo",
     "signup.submitting": "กำลังส่ง...",
-    
+
+    // Home / Landing
+    "home.badge": "ชีวิตกลางคืนในเมเดยิน",
+    "home.tagline": "ชุมชนส่วนตัวเบื้องหลังค่ำคืนที่ดีที่สุดของเมเดยิน ปาร์ตี้ดาดฟ้า อีเวนต์ลับ และผู้คนที่ทำให้มันน่าจดจำ",
+    "home.whats_on": "กำลังเกิดอะไรขึ้นในเมเดยิน",
+    "home.whats_on_sub": "ดูตัวอย่างสิ่งที่กำลังจะมาถึง สร้างบัญชีเพื่อดูรายละเอียดทั้งหมด ตอบรับคำเชิญ และเชื่อมต่อกับชุมชน",
+    "home.loading": "กำลังโหลดกิจกรรม...",
+    "home.no_events": "ยังไม่มีกิจกรรมสาธารณะในตอนนี้ — มีค่ำคืนใหม่ ๆ ออกมาบ่อย ๆ สมัครเพื่อเป็นคนแรกที่รู้",
+    "home.get_title": "สิ่งที่คุณจะได้รับเมื่อเข้าร่วม",
+    "home.get_1": "เข้าถึงกิจกรรมชีวิตกลางคืนสุดพิเศษทั่วเมเดยิน",
+    "home.get_2": "ตอบรับคำเชิญและเข้าสู่รายชื่อแขก",
+    "home.get_3": "โปรไฟล์ส่วนตัวในชุมชนที่คัดสรรมาอย่างดี",
+    "home.get_4": "ช่องทางติดต่อโดยตรงกับทีม Mucho Gusto Xo",
+    "home.cta_join": "สร้างบัญชีของคุณ",
+    "home.cta_login": "ฉันมีบัญชีอยู่แล้ว",
+    "home.access_note": "เข้าร่วมฟรี คุณเลือกได้ว่าจะแสดงอะไรบนโปรไฟล์",
+    "home.view_event": "ดูรายละเอียด",
+
     "thank_you.title": "เรียบร้อย! 🎉",
     "thank_you.subtitle": "ได้รับข้อมูลการสมัครของคุณแล้ว",
     "thank_you.desc": "เราจะติดต่อกลับหากมีความเหมาะสมสำหรับกิจกรรมหรือสตรีมสดที่กำลังจะมาถึง",

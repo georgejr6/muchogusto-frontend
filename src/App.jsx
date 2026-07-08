@@ -43,7 +43,14 @@ function App() {
             <Route path="/feedback/:shareToken" element={<EventFeedbackPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/qr-code" element={<QRCodePage />} />
-            <Route path="/inbox" element={<UserInbox />} />
+            <Route
+              path="/inbox"
+              element={
+                <ProtectedRoute>
+                  <UserInbox />
+                </ProtectedRoute>
+              }
+            />
             {/* Public RSVPs Route (Anonymized for non-admins) */}
             <Route path="/rsvps" element={<RSVPsPage />} />
             {/* Consent walkthrough */}
@@ -78,7 +85,14 @@ function App() {
             />
 
             {/* Settings */}
-            <Route path="/settings" element={<SettingsPage />} />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <SettingsPage />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Login */}
             <Route path="/login" element={<LoginPage />} />

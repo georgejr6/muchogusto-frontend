@@ -1,9 +1,10 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
 const ProtectedRoute = ({ children, requireAdmin = false }) => {
   const { isUserAuthenticated, isAdminAuthenticated, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -17,12 +18,15 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
   }
 
   if (requireAdmin) {
-    if (!isAdminAuthenticated) return <Navigate to="/admin-login" replace />;
+    if (!isAdminAuthenticated) {
+      return <Navigate to="/admin-login" replace state={{ from: location.pathname }} />;
+    }
     return children;
   }
 
   if (!isUserAuthenticated) {
-    return <Navigate to="/signup" replace />;
+    // Send members to Login (not Signup) and remember where they were headed.
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
 
   return children;

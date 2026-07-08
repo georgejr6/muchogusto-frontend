@@ -7,12 +7,6 @@ import BlurToggleButton from './BlurToggleButton';
 const MemberCard = ({ member, isAdmin = false, onBlurToggle }) => {
   const navigate = useNavigate();
 
-  const getCompletionPercentage = (profile) => {
-    const requiredFields = ['dob', 'email', 'hobbies', 'bio'];
-    const completed = requiredFields.filter(f => profile[f] && String(profile[f]).trim() !== '').length;
-    return requiredFields.length > 0 ? Math.round((completed / requiredFields.length) * 100) : 0;
-  };
-
   const joinDate = member.created_at ? new Date(member.created_at).toLocaleDateString() : 'Unknown';
   const isBlurred = getBlurStatus(member);
 
@@ -48,8 +42,8 @@ const MemberCard = ({ member, isAdmin = false, onBlurToggle }) => {
     );
   }
 
-  // Admin view — full details
-  const completion = getCompletionPercentage(member);
+  // Admin view — full details (uses the server-computed completion for consistency)
+  const completion = member.profile_completion || 0;
 
   return (
     <div
