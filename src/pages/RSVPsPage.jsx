@@ -128,27 +128,31 @@ const RSVPsPage = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-4 mb-8">
-                  <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#D4AF37]" />
-                    <input
-                      type="text"
-                      placeholder="Search..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="luxury-input pl-10"
-                    />
+                {/* Public directory has no searchable member fields (names are hidden),
+                    so these controls are only useful for admins. */}
+                {isAdminAuthenticated && (
+                  <div className="flex flex-col md:flex-row gap-4 mb-8">
+                    <div className="relative flex-1">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#D4AF37]" />
+                      <input
+                        type="text"
+                        placeholder="Search by name, Instagram, or phone..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="luxury-input pl-10"
+                      />
+                    </div>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="luxury-input appearance-none bg-[rgba(15,0,26,0.9)] md:w-[200px]"
+                    >
+                      <option value="newest">Newest Joined</option>
+                      <option value="completion">Completion %</option>
+                      <option value="name">Name A-Z</option>
+                    </select>
                   </div>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="luxury-input appearance-none bg-[rgba(15,0,26,0.9)] md:w-[200px]"
-                  >
-                    <option value="newest">Newest Joined</option>
-                    <option value="completion">Completion %</option>
-                    <option value="name">Name A-Z</option>
-                  </select>
-                </div>
+                )}
 
                 {loading ? (
                   <div className="text-center py-12 luxury-text-accent">Loading members...</div>
@@ -188,13 +192,10 @@ const RSVPsPage = () => {
                       <div key={event.id} className="luxury-card p-5 space-y-3">
                         <div className="flex items-start justify-between">
                           <h3 className="text-xl font-bold text-[#FFFDD0]">{event.name}</h3>
-                          {event.visibility === 'invited_only' && (
+                          {event.visibility === 'invite_only' && (
                             <span className="text-xs bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40 px-2 py-1 rounded-full flex items-center gap-1 shrink-0 ml-2">
                               <Lock className="w-3 h-3" /> Invite Only
                             </span>
-                          )}
-                          {event.visibility === 'members_only' && (
-                            <span className="text-xs bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2 py-1 rounded-full shrink-0 ml-2">Members Only</span>
                           )}
                         </div>
                         <div className="space-y-1 text-sm luxury-text-accent">

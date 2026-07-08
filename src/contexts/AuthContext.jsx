@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { signup, adminLogin, loginUser as loginUserApi, getMe, updateMe, uploadPhoto } from '@/lib/apiClient';
+import { disconnectSocket } from '@/lib/socket';
 
 const AuthContext = createContext();
 
@@ -56,6 +57,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const { token, admin } = await adminLogin(email, password);
       localStorage.setItem('adminToken', token);
+      disconnectSocket(); // force a fresh socket that authenticates with the new token
       const session = {
         user: { ...admin, role: 'admin' },
         expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,
@@ -71,6 +73,7 @@ export const AuthProvider = ({ children }) => {
   const signupUser = async ({ name, instagram, phone, email }) => {
     const { token, user } = await signup({ name, instagram, phone, email });
     localStorage.setItem('token', token);
+    disconnectSocket();
     setUserProfile(user);
     return user;
   };
@@ -79,6 +82,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const { token, user } = await loginUserApi({ phone, email });
       localStorage.setItem('token', token);
+      disconnectSocket();
       setUserProfile(user);
       return { success: true, user };
     } catch (err) {
@@ -88,6 +92,7 @@ export const AuthProvider = ({ children }) => {
 
   const loginWithToken = async (token) => {
     localStorage.setItem('token', token);
+    disconnectSocket();
     const user = await getMe().catch(() => null);
     if (user) setUserProfile(user);
   };
@@ -112,11 +117,13 @@ export const AuthProvider = ({ children }) => {
   const logoutAdmin = () => {
     localStorage.removeItem('adminSession');
     localStorage.removeItem('adminToken');
+    disconnectSocket();
     setAdminUser(null);
   };
 
   const logoutUser = () => {
     localStorage.removeItem('token');
+    disconnectSocket();
     setUserProfile(null);
   };
 

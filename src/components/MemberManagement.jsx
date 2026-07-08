@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Users, Phone, Mail, Instagram, User, UserPlus, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import PhoneInput from '@/components/PhoneInput';
 import { getUsers, setUserBlur, inviteUser } from '@/lib/apiClient';
 
-const INVITE_DEFAULTS = { name: '', instagram: '', phone: '', email: '' };
+const INVITE_DEFAULTS = { name: '', instagram: '', phone: '', email: '', countryCode: '+57' };
 
 const MemberManagement = () => {
   const navigate = useNavigate();
@@ -32,7 +33,17 @@ const MemberManagement = () => {
     }
     setInviting(true);
     try {
-      const newMember = await inviteUser(inviteForm);
+      // Normalize phone to the same "+<code><number>" format members use at signup/login,
+      // so admin-added members can actually log in by phone and dedup checks match.
+      const payload = {
+        name: inviteForm.name,
+        instagram: inviteForm.instagram,
+        email: inviteForm.email,
+        phone: inviteForm.phone.trim()
+          ? `${inviteForm.countryCode}${inviteForm.phone.trim()}`
+          : '',
+      };
+      const newMember = await inviteUser(payload);
       setMembers(prev => [newMember, ...prev]);
       setInviteForm(INVITE_DEFAULTS);
       setShowInvite(false);
@@ -135,13 +146,12 @@ const MemberManagement = () => {
               />
             </div>
             <div>
-              <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1">Phone</label>
-              <input
-                type="tel"
-                placeholder="+1 555 000 0000"
-                value={inviteForm.phone}
-                onChange={e => setInviteForm(p => ({ ...p, phone: e.target.value }))}
-                className="luxury-input w-full"
+              <PhoneInput
+                label="Phone"
+                countryCode={inviteForm.countryCode}
+                onCountryChange={code => setInviteForm(p => ({ ...p, countryCode: code }))}
+                phone={inviteForm.phone}
+                onPhoneChange={val => setInviteForm(p => ({ ...p, phone: val }))}
               />
             </div>
             <div>

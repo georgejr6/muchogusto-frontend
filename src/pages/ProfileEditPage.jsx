@@ -33,7 +33,13 @@ const ProfileEditPage = () => {
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   
-  const { percentage } = useProfileCompletion(formData);
+  // Count a freshly-selected (not-yet-uploaded) photo toward completion so the
+  // live counter matches what the server will compute after save.
+  const hasNewPhoto = photos.some(f => f instanceof File && f.size > 0);
+  const { percentage } = useProfileCompletion({
+    ...formData,
+    photo_url: formData.photo_url || (hasNewPhoto ? 'pending' : ''),
+  });
 
   useEffect(() => {
     if (userProfile) {
@@ -41,9 +47,6 @@ const ProfileEditPage = () => {
         ...userProfile,
         interests: userProfile.interests || []
       });
-      if (userProfile.hasPhotos) {
-        setPhotos([new File([], "existing-photo.jpg", { type: "image/jpeg" })]);
-      }
     }
   }, [userProfile]);
 
@@ -77,7 +80,6 @@ const ProfileEditPage = () => {
 
   const handlePhotosChange = (newPhotos) => {
     setPhotos(newPhotos);
-    handleFieldChange('hasPhotos', newPhotos.length > 0);
   };
 
   const handleBlurSettingsUpdate = (updates) => {
@@ -242,6 +244,18 @@ const ProfileEditPage = () => {
                   Photos <span className="text-red-400">*</span>
                 </h3>
                 <div className="bg-[rgba(15,0,26,0.5)] rounded-xl p-5 border border-[#D4AF37]/50 shadow-[inset_0_0_20px_rgba(212,175,55,0.05)]">
+                  {formData.photo_url && (
+                    <div className="flex items-center gap-3 mb-4">
+                      <img
+                        src={formData.photo_url}
+                        alt="Current profile"
+                        className="w-16 h-16 rounded-full object-cover border-2 border-[#D4AF37]/60"
+                      />
+                      <p className="text-xs luxury-text-accent">
+                        Your current photo. Upload a new one below to replace it.
+                      </p>
+                    </div>
+                  )}
                   <PhotoUpload photos={photos} setPhotos={handlePhotosChange} error={null} />
                 </div>
               </div>
