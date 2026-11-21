@@ -244,15 +244,15 @@ const EventManagement = () => {
   return (
     <div className="space-y-6">
       {/* Tabs */}
-      <div className="flex border-b border-[#D4AF37]/30">
+      <div className="flex border-b border-primary/30">
         {tabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => { if (tab.id !== 'create') resetForm(); setActiveTab(tab.id); }}
-            className={`px-6 py-3 font-semibold transition-colors relative ${activeTab === tab.id ? 'text-[#D4AF37]' : 'text-muted-foreground hover:text-[#FFFDD0]'}`}
+            className={`px-6 py-3 font-semibold transition-colors relative ${activeTab === tab.id ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
           >
             {tab.label}
-            {activeTab === tab.id && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#D4AF37]" />}
+            {activeTab === tab.id && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-primary" />}
           </button>
         ))}
       </div>
@@ -264,45 +264,45 @@ const EventManagement = () => {
           {/* Basic fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[#FFFDD0]">{t('events.name')}</label>
+              <label className="text-sm font-medium text-foreground">{t('events.name')}</label>
               <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="luxury-input" placeholder={t('events.name_ph')} />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[#FFFDD0]">{t('events.location')}</label>
+              <label className="text-sm font-medium text-foreground">{t('events.location')}</label>
               <input type="text" name="location" value={formData.location} onChange={handleInputChange} className="luxury-input" placeholder={t('events.location_ph')} />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[#FFFDD0]">{t('events.date')}</label>
+              <label className="text-sm font-medium text-foreground">{t('events.date')}</label>
               <input type="date" name="date" value={formData.date} onChange={handleInputChange} className="luxury-input [color-scheme:dark]" />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[#FFFDD0]">{t('events.time')}</label>
+              <label className="text-sm font-medium text-foreground">{t('events.time')}</label>
               <input type="time" name="time" value={formData.time} onChange={handleInputChange} className="luxury-input [color-scheme:dark]" />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[#FFFDD0]">{t('events.desc')}</label>
+            <label className="text-sm font-medium text-foreground">{t('events.desc')}</label>
             <textarea name="description" value={formData.description} onChange={handleInputChange} className="luxury-input min-h-[100px]" placeholder={t('events.desc_ph')} />
           </div>
 
           {/* Visibility */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[#FFFDD0]">Visibility</label>
+            <label className="text-sm font-medium text-foreground">Visibility</label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {VISIBILITY_OPTIONS.map(opt => (
                 <label key={opt.value} className={`flex flex-col gap-1 p-3 border rounded-lg cursor-pointer transition-colors
                   ${formData.visibility === opt.value
-                    ? 'border-[#D4AF37] bg-[rgba(212,175,55,0.1)]'
-                    : 'border-[#D4AF37]/30 hover:border-[#D4AF37]/60'}`}>
+                    ? 'border-primary bg-[rgba(212,175,55,0.1)]'
+                    : 'border-primary/30 hover:border-primary/60'}`}>
                   <span className="flex items-center gap-2">
                     <input
                       type="radio" name="visibility" value={opt.value}
                       checked={formData.visibility === opt.value}
                       onChange={handleInputChange}
-                      className="accent-[#D4AF37]"
+                      className="accent-primary"
                     />
-                    <span className="text-[#FFFDD0] font-medium text-sm">{opt.label}</span>
+                    <span className="text-foreground font-medium text-sm">{opt.label}</span>
                   </span>
                   <span className="text-xs text-muted-foreground pl-5">{opt.desc}</span>
                 </label>
@@ -312,7 +312,7 @@ const EventManagement = () => {
 
           {/* Reminder frequency */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[#FFFDD0]">RSVP Reminder Frequency</label>
+            <label className="text-sm font-medium text-foreground">RSVP Reminder Frequency</label>
             <select name="reminder_frequency_days" value={formData.reminder_frequency_days} onChange={handleInputChange}
               className="luxury-input appearance-none bg-[rgba(15,0,26,0.9)]">
               {REMINDER_OPTIONS.map(opt => (
@@ -325,19 +325,19 @@ const EventManagement = () => {
           </div>
 
           {/* Consent form */}
-          <div className="space-y-3 border border-[#D4AF37]/30 rounded-lg p-4 bg-[rgba(212,175,55,0.03)]">
+          <div className="space-y-3 border border-primary/30 rounded-lg p-4 bg-[rgba(212,175,55,0.03)]">
             <label className="flex items-center gap-3 cursor-pointer">
               <input
                 type="checkbox"
                 checked={formData.requires_consent}
                 onChange={e => setFormData(prev => ({ ...prev, requires_consent: e.target.checked, consent_form_id: e.target.checked ? prev.consent_form_id : '' }))}
-                className="w-4 h-4 rounded accent-[#D4AF37]"
+                className="w-4 h-4 rounded accent-primary"
               />
-              <span className="text-sm font-medium text-[#FFFDD0]">Require consent form before RSVP</span>
+              <span className="text-sm font-medium text-foreground">Require consent form before RSVP</span>
             </label>
             {formData.requires_consent && (
               <div className="space-y-1 pl-7">
-                <label className="text-xs text-muted-foreground">myconsent.me Form ID <span className="text-[#D4AF37]">(optional)</span></label>
+                <label className="text-xs text-muted-foreground">myconsent.me Form ID <span className="text-primary">(optional)</span></label>
                 <input
                   type="text"
                   name="consent_form_id"
@@ -353,7 +353,7 @@ const EventManagement = () => {
 
           {/* Media */}
           <div className="space-y-3">
-            <label className="text-sm font-medium text-[#FFFDD0]">Media</label>
+            <label className="text-sm font-medium text-foreground">Media</label>
 
             {/* YouTube embed */}
             <div className="flex gap-2">
@@ -384,7 +384,7 @@ const EventManagement = () => {
             {formData.media.length > 0 && (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-2">
                 {formData.media.map((item, idx) => (
-                  <div key={idx} className="relative group rounded-lg overflow-hidden border border-[#D4AF37]/30 bg-[rgba(15,0,26,0.5)]">
+                  <div key={idx} className="relative group rounded-lg overflow-hidden border border-primary/30 bg-[rgba(15,0,26,0.5)]">
                     {item.type === 'youtube' ? (
                       <div className="aspect-video flex flex-col items-center justify-center gap-1 p-2">
                         <Youtube className="w-8 h-8 text-red-500" />
@@ -409,16 +409,16 @@ const EventManagement = () => {
           {/* Invited users */}
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <label className="text-sm font-medium text-[#FFFDD0]">
+              <label className="text-sm font-medium text-foreground">
                 {t('events.invite')} ({formData.invitedUsers.length} {t('events.selected')})
               </label>
               <div className="space-x-2">
-                <button type="button" onClick={selectAllUsers} className="text-xs text-[#D4AF37] hover:underline">{t('events.select_all')}</button>
+                <button type="button" onClick={selectAllUsers} className="text-xs text-primary hover:underline">{t('events.select_all')}</button>
                 <span className="text-muted-foreground">|</span>
-                <button type="button" onClick={clearUserSelection} className="text-xs text-muted-foreground hover:text-[#FFFDD0]">{t('events.clear')}</button>
+                <button type="button" onClick={clearUserSelection} className="text-xs text-muted-foreground hover:text-foreground">{t('events.clear')}</button>
               </div>
             </div>
-            <div className="border border-[#D4AF37]/30 rounded-lg max-h-48 overflow-y-auto bg-[rgba(15,0,26,0.5)] p-2">
+            <div className="border border-primary/30 rounded-lg max-h-48 overflow-y-auto bg-[rgba(15,0,26,0.5)] p-2">
               {users.length === 0 ? (
                 <p className="text-muted-foreground text-sm p-2">{t('events.no_users')}</p>
               ) : (
@@ -428,9 +428,9 @@ const EventManagement = () => {
                       type="checkbox"
                       checked={formData.invitedUsers.includes(user.id)}
                       onChange={() => handleUserSelect(user.id)}
-                      className="w-4 h-4 rounded border-[#D4AF37] accent-[#D4AF37]"
+                      className="w-4 h-4 rounded border-primary accent-primary"
                     />
-                    <span className="text-[#FFFDD0] text-sm">
+                    <span className="text-foreground text-sm">
                       @{user.instagram || 'unknown'}
                       <span className="text-muted-foreground text-xs ml-2 blur-[4px]">{user.name}</span>
                     </span>
@@ -465,7 +465,7 @@ const EventManagement = () => {
                 return (
                   <div key={event.id} className="luxury-card p-5 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button onClick={() => handleEdit(event)} className="p-2 bg-[rgba(15,0,26,0.8)] border border-[#D4AF37]/50 rounded-lg text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0f001a] transition-all" title="Edit">
+                      <button onClick={() => handleEdit(event)} className="p-2 bg-[rgba(15,0,26,0.8)] border border-primary/50 rounded-lg text-primary hover:bg-primary hover:text-primary-foreground transition-all" title="Edit">
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button onClick={() => handleDelete(event.id)} className="p-2 bg-[rgba(15,0,26,0.8)] border border-red-500/50 rounded-lg text-red-400 hover:bg-red-500 hover:text-white transition-all" title="Delete">
@@ -474,10 +474,10 @@ const EventManagement = () => {
                     </div>
 
                     <div className="flex items-start gap-2 mb-1 pr-20">
-                      <h3 className="text-xl font-bold text-[#FFFDD0] flex-1">{event.name}</h3>
+                      <h3 className="text-xl font-bold text-foreground flex-1">{event.name}</h3>
                       <span className={`text-xs px-2 py-0.5 rounded border whitespace-nowrap
                         ${event.visibility === 'public' ? 'border-green-500/40 text-green-400' :
-                          event.visibility === 'invite_only' ? 'border-[#D4AF37]/40 text-[#D4AF37]' :
+                          event.visibility === 'invite_only' ? 'border-primary/40 text-primary' :
                           'border-red-500/40 text-red-400'}`}>
                         {visLabel}
                       </span>
@@ -485,15 +485,15 @@ const EventManagement = () => {
 
                     <div className="space-y-2 mb-4 text-sm luxury-text-accent">
                       <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-[#D4AF37]" />
+                        <Calendar className="w-4 h-4 text-primary" />
                         <span>{new Date(event.date).toLocaleDateString()} at {event.time}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-[#D4AF37]" />
+                        <MapPin className="w-4 h-4 text-primary" />
                         <span>{event.location}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Users className="w-4 h-4 text-[#D4AF37]" />
+                        <Users className="w-4 h-4 text-primary" />
                         <span>{totalInvited} {t('events.invited')} • {interested} {t('events.going')}</span>
                       </div>
                     </div>
@@ -512,7 +512,7 @@ const EventManagement = () => {
                       {event.share_token && (
                         <button
                           onClick={() => copyShareLink(event.share_token)}
-                          className="px-3 py-2 border border-[#D4AF37]/40 rounded-lg text-[#D4AF37] hover:bg-[rgba(212,175,55,0.1)] transition-colors flex items-center gap-1 text-sm"
+                          className="px-3 py-2 border border-primary/40 rounded-lg text-primary hover:bg-[rgba(212,175,55,0.1)] transition-colors flex items-center gap-1 text-sm"
                           title="Copy share link"
                         >
                           {copiedToken === event.share_token ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
@@ -531,13 +531,13 @@ const EventManagement = () => {
       {activeTab === 'email' && (
         <form onSubmit={handleSendEmail} className="luxury-card p-6 space-y-6 animate-in fade-in duration-300">
           <div className="space-y-1">
-            <h3 className="text-lg font-semibold text-[#FFFDD0]">Send Email Invitation</h3>
+            <h3 className="text-lg font-semibold text-foreground">Send Email Invitation</h3>
             <p className="text-sm text-muted-foreground">Compose and send a custom email to selected members via Resend.</p>
           </div>
 
           {/* Link to event (optional) */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[#FFFDD0]">Link to Event <span className="text-muted-foreground font-normal">(optional)</span></label>
+            <label className="text-sm font-medium text-foreground">Link to Event <span className="text-muted-foreground font-normal">(optional)</span></label>
             <select
               value={emailForm.eventId}
               onChange={e => setEmailForm(prev => ({ ...prev, eventId: e.target.value }))}
@@ -551,14 +551,14 @@ const EventManagement = () => {
             {emailForm.eventId && (() => {
               const ev = events.find(e => e.id === emailForm.eventId);
               return ev?.share_token ? (
-                <p className="text-xs text-[#D4AF37]">A "View Event" button will be included in the email.</p>
+                <p className="text-xs text-primary">A "View Event" button will be included in the email.</p>
               ) : null;
             })()}
           </div>
 
           {/* Subject */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[#FFFDD0]">Subject</label>
+            <label className="text-sm font-medium text-foreground">Subject</label>
             <input
               type="text" value={emailForm.subject}
               onChange={e => setEmailForm(prev => ({ ...prev, subject: e.target.value }))}
@@ -568,7 +568,7 @@ const EventManagement = () => {
 
           {/* Body */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[#FFFDD0]">Message</label>
+            <label className="text-sm font-medium text-foreground">Message</label>
             <textarea
               value={emailForm.body}
               onChange={e => setEmailForm(prev => ({ ...prev, body: e.target.value }))}
@@ -580,28 +580,28 @@ const EventManagement = () => {
           {/* Recipients */}
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <label className="text-sm font-medium text-[#FFFDD0]">
+              <label className="text-sm font-medium text-foreground">
                 Recipients ({emailForm.userIds.length} selected)
               </label>
               <div className="space-x-2">
                 <button type="button" onClick={() => setEmailForm(prev => ({ ...prev, userIds: users.map(u => u.id) }))}
-                  className="text-xs text-[#D4AF37] hover:underline">Select All</button>
+                  className="text-xs text-primary hover:underline">Select All</button>
                 <span className="text-muted-foreground">|</span>
                 <button type="button" onClick={() => setEmailForm(prev => ({ ...prev, userIds: [] }))}
-                  className="text-xs text-muted-foreground hover:text-[#FFFDD0]">Clear</button>
+                  className="text-xs text-muted-foreground hover:text-foreground">Clear</button>
               </div>
             </div>
             <p className="text-xs text-muted-foreground">Only members with an email address on file will receive the email.</p>
-            <div className="border border-[#D4AF37]/30 rounded-lg max-h-48 overflow-y-auto bg-[rgba(15,0,26,0.5)] p-2">
+            <div className="border border-primary/30 rounded-lg max-h-48 overflow-y-auto bg-[rgba(15,0,26,0.5)] p-2">
               {users.map(user => (
                 <label key={user.id} className="flex items-center space-x-3 p-2 hover:bg-[rgba(212,175,55,0.1)] rounded cursor-pointer transition-colors">
                   <input
                     type="checkbox"
                     checked={emailForm.userIds.includes(user.id)}
                     onChange={() => toggleEmailUser(user.id)}
-                    className="w-4 h-4 accent-[#D4AF37]"
+                    className="w-4 h-4 accent-primary"
                   />
-                  <span className="text-[#FFFDD0] text-sm">
+                  <span className="text-foreground text-sm">
                     @{user.instagram || 'unknown'}
                     <span className="text-muted-foreground text-xs ml-2 blur-[4px]">{user.name}</span>
                     {user.email && <span className="text-green-400 text-xs ml-2">✓ email</span>}

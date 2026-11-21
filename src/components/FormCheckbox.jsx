@@ -18,11 +18,11 @@ const FormCheckbox = ({
           id={name}
           checked={checked}
           onCheckedChange={onChange}
-          className="mt-1 border-[2px] border-[#D4AF37] data-[state=checked]:bg-[#D4AF37] data-[state=checked]:text-[#0f001a] data-[state=checked]:shadow-[0_0_10px_rgba(212,175,55,0.5)] transition-all duration-300"
+          className="mt-1 border-[2px] border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[state=checked]:shadow-[0_0_10px_rgba(212,175,55,0.5)] transition-all duration-300"
         />
         <label
           htmlFor={name}
-          className={`text-sm text-[#FFFDD0] cursor-pointer leading-relaxed ${className}`}
+          className={`text-sm text-foreground cursor-pointer leading-relaxed ${className}`}
         >
           {label} {required && <span className="text-red-400">*</span>}
         </label>

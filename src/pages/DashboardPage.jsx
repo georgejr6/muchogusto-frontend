@@ -81,10 +81,10 @@ const DashboardPage = () => {
 
       {/* Left: Invitations */}
       <div className="lg:col-span-2 space-y-4">
-        <h2 className="text-xl font-bold text-[#FFFDD0]">Your Invitations</h2>
+        <h2 className="text-xl font-bold text-foreground">Your Invitations</h2>
         {formattedInvitations.length === 0 ? (
           <div className="luxury-card border-dashed p-10 text-center">
-            <CalendarDays className="w-10 h-10 mx-auto mb-3 text-[#D4AF37]/40" />
+            <CalendarDays className="w-10 h-10 mx-auto mb-3 text-primary/40" />
             <p className="luxury-text-accent">No invitations yet. Check back soon!</p>
           </div>
         ) : (
@@ -96,15 +96,15 @@ const DashboardPage = () => {
       <div className="space-y-4">
         <div className="luxury-card p-6">
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-full bg-[rgba(212,175,55,0.1)] border-2 border-[#D4AF37]/60 flex items-center justify-center overflow-hidden flex-shrink-0">
+            <div className="w-16 h-16 rounded-full bg-[rgba(212,175,55,0.1)] border-2 border-primary/60 flex items-center justify-center overflow-hidden flex-shrink-0">
               {userProfile?.photo_url
                 ? <img src={userProfile.photo_url} alt="Profile" className="w-full h-full object-cover" />
-                : <User className="w-8 h-8 text-[#D4AF37]" />
+                : <User className="w-8 h-8 text-primary" />
               }
             </div>
             <div className="min-w-0">
-              <h3 className="text-lg font-bold text-[#FFFDD0] truncate">{userProfile?.name || 'Anonymous VIP'}</h3>
-              {userProfile?.instagram && <p className="text-[#D4AF37] font-mono text-sm">@{userProfile.instagram}</p>}
+              <h3 className="text-lg font-bold text-foreground truncate">{userProfile?.name || 'Anonymous VIP'}</h3>
+              {userProfile?.instagram && <p className="text-primary font-mono text-sm">@{userProfile.instagram}</p>}
             </div>
           </div>
           <div className="flex gap-2">
@@ -118,20 +118,20 @@ const DashboardPage = () => {
         </div>
 
         <div className="luxury-card p-6">
-          <div className={`h-1 -mt-6 -mx-6 mb-5 rounded-t-lg ${isComplete ? 'bg-green-500' : 'bg-[#D4AF37]'}`} />
-          <h3 className="text-sm font-semibold text-[#FFFDD0] mb-3">Profile Completion</h3>
+          <div className={`h-1 -mt-6 -mx-6 mb-5 rounded-t-lg ${isComplete ? 'bg-green-500' : 'bg-primary'}`} />
+          <h3 className="text-sm font-semibold text-foreground mb-3">Profile Completion</h3>
           <div className="flex justify-between text-sm mb-1.5">
             <span className="luxury-text-accent">Progress</span>
-            <span className="font-bold text-[#D4AF37]">{percentage}%</span>
+            <span className="font-bold text-primary">{percentage}%</span>
           </div>
-          <div className="w-full bg-[rgba(15,0,26,0.9)] h-2 rounded-full overflow-hidden border border-[#D4AF37]/30 mb-4">
-            <div className="bg-[#D4AF37] h-full transition-all duration-500" style={{ width: `${percentage}%` }} />
+          <div className="w-full bg-[rgba(15,0,26,0.9)] h-2 rounded-full overflow-hidden border border-primary/30 mb-4">
+            <div className="bg-primary h-full transition-all duration-500" style={{ width: `${percentage}%` }} />
           </div>
           {!isComplete && (
             <div className="space-y-1.5 mb-4">
               {incompleteFields.slice(0, 3).map(f => (
-                <div key={f.name} className="flex items-center text-xs text-[#FFFDD0]/70">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] mr-2" /> {f.label}
+                <div key={f.name} className="flex items-center text-xs text-foreground/70">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary mr-2" /> {f.label}
                 </div>
               ))}
               {incompleteFields.length > 3 && <p className="text-xs text-muted-foreground pl-3">+{incompleteFields.length - 3} more</p>}
@@ -147,7 +147,7 @@ const DashboardPage = () => {
 
   const renderEvents = () => (
     <div className="space-y-4 animate-in fade-in duration-300">
-      <h2 className="text-xl font-bold text-[#FFFDD0]">Events</h2>
+      <h2 className="text-xl font-bold text-foreground">Events</h2>
       {loadingEvents
         ? <div className="luxury-text-accent text-center py-10">Loading events...</div>
         : events.length === 0
@@ -157,14 +157,14 @@ const DashboardPage = () => {
                 <div
                   key={ev.id}
                   onClick={() => ev.share_token && navigate(`/e/${ev.share_token}`)}
-                  className={`luxury-card p-5 space-y-2 ${ev.share_token ? 'cursor-pointer hover:border-[#D4AF37]/60 transition-colors' : ''}`}
+                  className={`luxury-card p-5 space-y-2 ${ev.share_token ? 'cursor-pointer hover:border-primary/60 transition-colors' : ''}`}
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <h3 className="font-bold text-[#FFFDD0]">{ev.name}</h3>
-                    <span className="text-xs text-[#D4AF37]/70 whitespace-nowrap">{new Date(ev.date).toLocaleDateString()}</span>
+                    <h3 className="font-bold text-foreground">{ev.name}</h3>
+                    <span className="text-xs text-primary/70 whitespace-nowrap">{new Date(ev.date).toLocaleDateString()}</span>
                   </div>
                   {ev.location && <p className="text-sm text-muted-foreground">{ev.location}</p>}
-                  {ev.description && <p className="text-sm text-[#FFFDD0]/70 line-clamp-2">{ev.description}</p>}
+                  {ev.description && <p className="text-sm text-foreground/70 line-clamp-2">{ev.description}</p>}
                 </div>
               ))}
             </div>
@@ -174,16 +174,16 @@ const DashboardPage = () => {
 
   const renderCommunity = () => (
     <div className="space-y-4 animate-in fade-in duration-300">
-      <h2 className="text-xl font-bold text-[#FFFDD0]">Community <span className="text-muted-foreground text-sm font-normal">({members.length} members)</span></h2>
+      <h2 className="text-xl font-bold text-foreground">Community <span className="text-muted-foreground text-sm font-normal">({members.length} members)</span></h2>
       {loadingMembers
         ? <div className="luxury-text-accent text-center py-10">Loading members...</div>
         : <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {members.map(m => (
               <div key={m.id} className="luxury-card p-3 flex flex-col items-center text-center gap-2">
-                <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] border border-[#D4AF37]/30 overflow-hidden flex items-center justify-center flex-shrink-0">
+                <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] border border-primary/30 overflow-hidden flex items-center justify-center flex-shrink-0">
                   {m.photo_url && !m.is_blurred && !m.user_blur_preference
                     ? <img src={m.photo_url} alt="" className="w-full h-full object-cover" />
-                    : <User className="w-7 h-7 text-[#D4AF37]/50" />
+                    : <User className="w-7 h-7 text-primary/50" />
                   }
                 </div>
                 <p className="text-xs text-muted-foreground">Member</p>
@@ -202,7 +202,7 @@ const DashboardPage = () => {
       case 'settings':  return (
         <div className="animate-in fade-in duration-300">
           <div className="luxury-card p-6 space-y-4 max-w-lg">
-            <h2 className="text-xl font-bold text-[#FFFDD0]">Settings</h2>
+            <h2 className="text-xl font-bold text-foreground">Settings</h2>
             <Link to="/settings" className="luxury-button-outline w-full py-3 flex items-center justify-center gap-2">
               <Settings className="w-4 h-4" /> Open Full Settings
             </Link>
@@ -223,16 +223,16 @@ const DashboardPage = () => {
     <>
       <Helmet><title>Dashboard | Mucho Gusto Xo</title></Helmet>
 
-      <div className="min-h-screen flex flex-col bg-[#0f001a] text-[#FFFDD0]">
+      <div className="min-h-screen flex flex-col bg-background text-foreground">
         <Header rightContent={logoutBtn} />
 
         <div className="flex flex-1 overflow-hidden">
 
           {/* Sidebar */}
-          <aside className="w-56 bg-[rgba(15,0,26,0.95)] border-r border-[#D4AF37]/30 flex-col hidden md:flex">
-            <div className="p-5 border-b border-[#D4AF37]/30 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-[#D4AF37]" />
-              <span className="font-bold text-[#D4AF37] tracking-tight">MG XO</span>
+          <aside className="w-56 bg-[rgba(15,0,26,0.95)] border-r border-primary/30 flex-col hidden md:flex">
+            <div className="p-5 border-b border-primary/30 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-primary" />
+              <span className="font-bold text-primary tracking-tight">MG XO</span>
             </div>
             <nav className="flex-1 p-3 space-y-1">
               {NAV.map(item => {
@@ -243,7 +243,7 @@ const DashboardPage = () => {
                     key={item.id}
                     onClick={() => setSection(item.id)}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all font-medium text-sm
-                      ${active ? 'bg-[#D4AF37] text-[#0f001a] shadow-[0_0_12px_rgba(212,175,55,0.3)]' : 'text-[#FFFDD0] hover:bg-[rgba(212,175,55,0.1)] hover:text-[#D4AF37]'}`}
+                      ${active ? 'bg-primary text-primary-foreground shadow-[0_0_12px_rgba(212,175,55,0.3)]' : 'text-foreground hover:bg-[rgba(212,175,55,0.1)] hover:text-primary'}`}
                   >
                     <Icon className="w-4 h-4" /> {item.label}
                   </button>
@@ -254,11 +254,11 @@ const DashboardPage = () => {
 
           <main className="flex-1 flex flex-col overflow-hidden">
             {/* Mobile nav */}
-            <div className="md:hidden p-3 border-b border-[#D4AF37]/30 bg-[rgba(15,0,26,0.95)]">
+            <div className="md:hidden p-3 border-b border-primary/30 bg-[rgba(15,0,26,0.95)]">
               <select
                 value={section}
                 onChange={e => setSection(e.target.value)}
-                className="luxury-input py-1 px-2 text-sm w-full bg-[#0f001a]"
+                className="luxury-input py-1 px-2 text-sm w-full bg-background"
               >
                 {NAV.map(i => <option key={i.id} value={i.id}>{i.label}</option>)}
               </select>

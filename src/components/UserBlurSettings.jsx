@@ -13,13 +13,13 @@ const UserBlurSettings = ({ user, onUpdate }) => {
   };
 
   return (
-    <div className="bg-[rgba(15,0,26,0.5)] rounded-xl p-5 border border-[#D4AF37]/30 shadow-[inset_0_0_20px_rgba(212,175,55,0.02)]">
+    <div className="bg-[rgba(15,0,26,0.5)] rounded-xl p-5 border border-primary/30 shadow-[inset_0_0_20px_rgba(212,175,55,0.02)]">
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-2 flex-1">
           <div className="flex items-center gap-2">
-            <h4 className="text-lg font-semibold text-[#FFFDD0]">Privacy: Profile Visibility</h4>
+            <h4 className="text-lg font-semibold text-foreground">Privacy: Profile Visibility</h4>
             {isAdminOverriding && (
-              <span className="flex items-center text-[10px] text-[#D4AF37] bg-[rgba(212,175,55,0.1)] px-2 py-0.5 rounded-full border border-[#D4AF37]/30">
+              <span className="flex items-center text-[10px] text-primary bg-[rgba(212,175,55,0.1)] px-2 py-0.5 rounded-full border border-primary/30">
                 <ShieldAlert className="w-3 h-3 mr-1" /> Admin Overridden
               </span>
             )}
@@ -31,7 +31,7 @@ const UserBlurSettings = ({ user, onUpdate }) => {
           </p>
 
           <div className="mt-4 flex items-center gap-3">
-            <div className="px-3 py-1.5 rounded-lg bg-[rgba(212,175,55,0.05)] border border-[#D4AF37]/20 text-sm flex items-center gap-2">
+            <div className="px-3 py-1.5 rounded-lg bg-[rgba(212,175,55,0.05)] border border-primary/20 text-sm flex items-center gap-2">
               <span className="text-muted-foreground">Current Public Status:</span>
               <span className={`font-bold flex items-center gap-1 ${currentActualStatus ? 'text-red-400' : 'text-green-400'}`}>
                 {currentActualStatus ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -49,7 +49,7 @@ const UserBlurSettings = ({ user, onUpdate }) => {
               checked={!!user.user_blur_preference}
               onChange={handleToggle}
             />
-            <div className="w-14 h-7 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#D4AF37]"></div>
+            <div className="w-14 h-7 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
           </label>
           <span className="text-xs text-muted-foreground mt-2 font-medium uppercase tracking-wide">
             {user.user_blur_preference ? 'Prefer Blurred' : 'Prefer Visible'}

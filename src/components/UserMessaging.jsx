@@ -62,10 +62,10 @@ const UserMessaging = ({ userProfile }) => {
     <div className="luxury-card flex flex-col" style={{ height: 'calc(100vh - 220px)', minHeight: '400px' }}>
 
       {/* Header */}
-      <div className="p-4 border-b border-[#D4AF37]/30 flex items-center gap-3">
-        <MessageSquare className="w-5 h-5 text-[#D4AF37]" />
+      <div className="p-4 border-b border-primary/30 flex items-center gap-3">
+        <MessageSquare className="w-5 h-5 text-primary" />
         <div>
-          <h3 className="font-bold text-[#FFFDD0]">Messages</h3>
+          <h3 className="font-bold text-foreground">Messages</h3>
           <p className="text-xs text-muted-foreground">Your conversation with Mucho Gusto Xo</p>
         </div>
       </div>
@@ -74,7 +74,7 @@ const UserMessaging = ({ userProfile }) => {
       <div className="flex-1 p-4 overflow-y-auto space-y-3">
         {messages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-muted-foreground opacity-50 space-y-2">
-            <MessageSquare className="w-12 h-12 text-[#D4AF37]" />
+            <MessageSquare className="w-12 h-12 text-primary" />
             <p>No messages yet.</p>
           </div>
         ) : (
@@ -95,16 +95,16 @@ const UserMessaging = ({ userProfile }) => {
                 <div className={`flex ${isFromUser ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${
                     isFromUser
-                      ? 'bg-[#D4AF37] text-[#0f001a] rounded-br-none'
-                      : 'bg-[#2D1B4E] border border-[#D4AF37]/30 text-[#FFFDD0] rounded-bl-none'
+                      ? 'bg-primary text-primary-foreground rounded-br-none'
+                      : 'bg-accent border border-primary/30 text-foreground rounded-bl-none'
                   }`}>
                     {!isFromUser && msg.admin_name && (
-                      <p className="text-[10px] text-[#D4AF37]/70 mb-1 font-medium uppercase tracking-wider">
+                      <p className="text-[10px] text-primary/70 mb-1 font-medium uppercase tracking-wider">
                         {msg.admin_name}
                       </p>
                     )}
                     <p className="text-sm leading-relaxed">{msg.content}</p>
-                    <p className={`text-[10px] mt-1 text-right ${isFromUser ? 'text-[#0f001a]/60' : 'text-muted-foreground'}`}>
+                    <p className={`text-[10px] mt-1 text-right ${isFromUser ? 'text-primary-foreground/60' : 'text-muted-foreground'}`}>
                       {formatTime(msg.created_at)}
                     </p>
                   </div>
@@ -117,7 +117,7 @@ const UserMessaging = ({ userProfile }) => {
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t border-[#D4AF37]/30 bg-[rgba(15,0,26,0.95)]">
+      <div className="p-4 border-t border-primary/30 bg-[rgba(15,0,26,0.95)]">
         <form onSubmit={handleSend} className="flex gap-2">
           <input
             type="text"

@@ -88,7 +88,7 @@ const MemberManagement = () => {
       {/* Search + Sort + Invite */}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#D4AF37]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
           <input
             type="text"
             placeholder="Search by name, Instagram, phone, or email..."
@@ -117,10 +117,10 @@ const MemberManagement = () => {
 
       {/* Invite Form */}
       {showInvite && (
-        <div className="luxury-card p-6 border border-[#D4AF37]/40">
+        <div className="luxury-card p-6 border border-primary/40">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-[#FFFDD0]">Invite New Member</h3>
-            <button onClick={() => { setShowInvite(false); setInviteForm(INVITE_DEFAULTS); }} className="text-muted-foreground hover:text-[#D4AF37]">
+            <h3 className="font-bold text-foreground">Invite New Member</h3>
+            <button onClick={() => { setShowInvite(false); setInviteForm(INVITE_DEFAULTS); }} className="text-muted-foreground hover:text-primary">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -155,7 +155,7 @@ const MemberManagement = () => {
               />
             </div>
             <div>
-              <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1">Email <span className="text-[#D4AF37]">*</span></label>
+              <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1">Email <span className="text-primary">*</span></label>
               <input
                 type="email"
                 placeholder="email@example.com"
@@ -175,7 +175,7 @@ const MemberManagement = () => {
       )}
 
       <div className="flex items-center gap-3">
-        <span className="text-2xl font-bold text-[#D4AF37]">{members.length}</span>
+        <span className="text-2xl font-bold text-primary">{members.length}</span>
         <span className="text-xs text-muted-foreground uppercase tracking-wider">Total Members</span>
       </div>
 
@@ -190,35 +190,35 @@ const MemberManagement = () => {
             <div
               key={member.id}
               onClick={() => navigate(`/user/${member.id}`)}
-              className="luxury-card p-4 flex items-center gap-4 cursor-pointer hover:border-[#D4AF37]/60 transition-colors"
+              className="luxury-card p-4 flex items-center gap-4 cursor-pointer hover:border-primary/60 transition-colors"
             >
               {/* Avatar */}
-              <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] border-2 border-[#D4AF37]/40 overflow-hidden flex-shrink-0 flex items-center justify-center">
+              <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] border-2 border-primary/40 overflow-hidden flex-shrink-0 flex items-center justify-center">
                 {member.photo_url
                   ? <img src={member.photo_url} alt="" className="w-full h-full object-cover" />
-                  : <User className="w-7 h-7 text-[#D4AF37]/50" />
+                  : <User className="w-7 h-7 text-primary/50" />
                 }
               </div>
 
               {/* Info */}
               <div className="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
                 <div>
-                  <p className="font-bold text-[#FFFDD0] truncate">{member.name || <span className="text-muted-foreground italic">No name</span>}</p>
+                  <p className="font-bold text-foreground truncate">{member.name || <span className="text-muted-foreground italic">No name</span>}</p>
                   {member.instagram && (
-                    <p className="text-sm text-[#D4AF37] flex items-center gap-1">
+                    <p className="text-sm text-primary flex items-center gap-1">
                       <Instagram className="w-3.5 h-3.5" /> @{member.instagram}
                     </p>
                   )}
                 </div>
                 <div className="space-y-0.5">
                   {member.phone && (
-                    <p className="text-sm text-[#FFFDD0]/80 flex items-center gap-1.5">
-                      <Phone className="w-3.5 h-3.5 text-[#D4AF37]" /> {member.phone}
+                    <p className="text-sm text-foreground/80 flex items-center gap-1.5">
+                      <Phone className="w-3.5 h-3.5 text-primary" /> {member.phone}
                     </p>
                   )}
                   {member.email && (
-                    <p className="text-sm text-[#FFFDD0]/80 flex items-center gap-1.5 truncate">
-                      <Mail className="w-3.5 h-3.5 text-[#D4AF37]" /> {member.email}
+                    <p className="text-sm text-foreground/80 flex items-center gap-1.5 truncate">
+                      <Mail className="w-3.5 h-3.5 text-primary" /> {member.email}
                     </p>
                   )}
                 </div>
@@ -227,7 +227,7 @@ const MemberManagement = () => {
                   {member.age_range && <span className="ml-2">· {member.age_range}</span>}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  Profile: <span className="text-[#D4AF37] font-medium">{member.profile_completion || 0}%</span>
+                  Profile: <span className="text-primary font-medium">{member.profile_completion || 0}%</span>
                   <span className="ml-2">· Joined {new Date(member.created_at).toLocaleDateString()}</span>
                 </div>
               </div>
@@ -243,7 +243,7 @@ const MemberManagement = () => {
                 </span>
                 <button
                   onClick={() => handleBlurToggle(member.id, !member.is_blurred)}
-                  className="text-xs text-muted-foreground hover:text-[#D4AF37] transition-colors"
+                  className="text-xs text-muted-foreground hover:text-primary transition-colors"
                 >
                   {member.is_blurred ? 'Unblur' : 'Blur'}
                 </button>

@@ -70,7 +70,7 @@ const EventPage = () => {
   };
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0f001a] luxury-text-accent">
+    <div className="min-h-screen flex items-center justify-center bg-background luxury-text-accent">
       Loading event...
     </div>
   );
@@ -104,7 +104,7 @@ const EventPage = () => {
         <title>{event.name} | Event Details</title>
       </Helmet>
 
-      <div className="min-h-screen flex flex-col bg-[#0f001a] relative z-10">
+      <div className="min-h-screen flex flex-col bg-background relative z-10">
         <Header />
 
         <div className="flex-1 p-4 md:p-8 w-full">
@@ -113,7 +113,7 @@ const EventPage = () => {
             <div className="flex items-center justify-between">
               <button
                 onClick={() => navigate(-1)}
-                className="flex items-center gap-2 text-[#F1E5AC] hover:text-[#D4AF37] transition-colors"
+                className="flex items-center gap-2 text-primary/90 hover:text-primary transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" /> Back
               </button>
@@ -122,7 +122,7 @@ const EventPage = () => {
                   {event.share_token && (
                     <button
                       onClick={copyShareLink}
-                      className="flex items-center gap-1.5 text-sm border border-[#D4AF37]/40 text-[#D4AF37] px-3 py-1.5 rounded-lg hover:bg-[rgba(212,175,55,0.1)] transition-colors"
+                      className="flex items-center gap-1.5 text-sm border border-primary/40 text-primary px-3 py-1.5 rounded-lg hover:bg-[rgba(212,175,55,0.1)] transition-colors"
                     >
                       {copiedLink ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                       {copiedLink ? 'Copied!' : 'Share Link'}
@@ -131,7 +131,7 @@ const EventPage = () => {
                   {isAdminAuthenticated && (
                     <button
                       onClick={() => navigate('/admin-dashboard')}
-                      className="text-sm text-[#D4AF37] hover:underline flex items-center gap-1"
+                      className="text-sm text-primary hover:underline flex items-center gap-1"
                     >
                       Manage Event <ExternalLink className="w-3 h-3" />
                     </button>
@@ -144,37 +144,37 @@ const EventPage = () => {
               {/* Event Info */}
               <div className="lg:col-span-2 space-y-6">
                 <div className="luxury-card overflow-hidden">
-                  <div className="h-48 bg-gradient-to-r from-[#2D1B4E] to-[rgba(212,175,55,0.3)] border-b border-[#D4AF37]/30 flex items-center justify-center">
-                    <Calendar className="w-16 h-16 text-[#D4AF37]/50" />
+                  <div className="h-48 bg-gradient-to-r from-accent to-[rgba(212,175,55,0.3)] border-b border-primary/30 flex items-center justify-center">
+                    <Calendar className="w-16 h-16 text-primary/50" />
                   </div>
 
                   <div className="p-8">
-                    <h1 className="text-3xl font-bold text-[#FFFDD0] mb-6">{event.name}</h1>
+                    <h1 className="text-3xl font-bold text-foreground mb-6">{event.name}</h1>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
                       <div className="flex items-center gap-3 text-sm luxury-text-accent">
                         <div className="p-2 bg-[rgba(212,175,55,0.1)] rounded-lg">
-                          <Calendar className="w-5 h-5 text-[#D4AF37]" />
+                          <Calendar className="w-5 h-5 text-primary" />
                         </div>
                         <span>{new Date(event.date).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
                       </div>
                       <div className="flex items-center gap-3 text-sm luxury-text-accent">
                         <div className="p-2 bg-[rgba(212,175,55,0.1)] rounded-lg">
-                          <Clock className="w-5 h-5 text-[#D4AF37]" />
+                          <Clock className="w-5 h-5 text-primary" />
                         </div>
                         <span>{event.time}</span>
                       </div>
                       <div className="flex items-center gap-3 text-sm luxury-text-accent sm:col-span-2">
                         <div className="p-2 bg-[rgba(212,175,55,0.1)] rounded-lg">
-                          <MapPin className="w-5 h-5 text-[#D4AF37]" />
+                          <MapPin className="w-5 h-5 text-primary" />
                         </div>
                         <span>{event.location}</span>
                       </div>
                     </div>
 
                     <div>
-                      <h3 className="text-lg font-semibold text-[#D4AF37] mb-2">About Event</h3>
-                      <p className="text-[#FFFDD0] leading-relaxed whitespace-pre-wrap">{event.description}</p>
+                      <h3 className="text-lg font-semibold text-primary mb-2">About Event</h3>
+                      <p className="text-foreground leading-relaxed whitespace-pre-wrap">{event.description}</p>
                     </div>
                   </div>
                 </div>
@@ -182,7 +182,7 @@ const EventPage = () => {
                 {/* YouTube embeds */}
                 {youtubeItems.length > 0 && (
                   <div className="luxury-card p-6 space-y-4">
-                    <h3 className="text-lg font-semibold text-[#FFFDD0] flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
                       <Youtube className="w-5 h-5 text-red-500" /> Videos
                     </h3>
                     {youtubeItems.map((item, idx) => {
@@ -204,7 +204,7 @@ const EventPage = () => {
                 {/* Image gallery */}
                 {imageItems.length > 0 && (
                   <div className="luxury-card p-6 space-y-3">
-                    <h3 className="text-lg font-semibold text-[#FFFDD0]">Photos</h3>
+                    <h3 className="text-lg font-semibold text-foreground">Photos</h3>
                     <div className="grid grid-cols-2 gap-3">
                       {imageItems.map((item, idx) => (
                         <img key={idx} src={item.url} alt="" className="rounded-lg object-cover aspect-square w-full" />
@@ -215,13 +215,13 @@ const EventPage = () => {
 
                 {/* Attendee List */}
                 <div className="luxury-card p-6">
-                  <h3 className="text-xl font-bold text-[#FFFDD0] mb-6 flex items-center gap-2">
-                    <Users className="w-5 h-5 text-[#D4AF37]" />
+                  <h3 className="text-xl font-bold text-foreground mb-6 flex items-center gap-2">
+                    <Users className="w-5 h-5 text-primary" />
                     Confirmed Attendees ({attendees.length})
                   </h3>
 
                   {attendees.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground bg-[rgba(15,0,26,0.5)] rounded-lg border border-dashed border-[#D4AF37]/30">
+                    <div className="text-center py-8 text-muted-foreground bg-[rgba(15,0,26,0.5)] rounded-lg border border-dashed border-primary/30">
                       No confirmed attendees yet.
                     </div>
                   ) : (
@@ -243,8 +243,8 @@ const EventPage = () => {
                 {/* Consent pending list — admin only */}
                 {consentRequired && isAdminAuthenticated && (
                   <div className="luxury-card p-6">
-                    <h3 className="text-xl font-bold text-[#FFFDD0] mb-4 flex items-center gap-2">
-                      <FileText className="w-5 h-5 text-[#D4AF37]" />
+                    <h3 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                      <FileText className="w-5 h-5 text-primary" />
                       Consent Pending ({consentPending})
                     </h3>
                     {consentPending === 0 ? (
@@ -252,9 +252,9 @@ const EventPage = () => {
                     ) : (
                       <div className="space-y-2">
                         {rsvps.filter(r => r.consent_status === 'not_submitted').map(r => (
-                          <div key={r.invitationId} className="flex items-center justify-between p-3 rounded-lg bg-[rgba(15,0,26,0.5)] border border-[#D4AF37]/20">
+                          <div key={r.invitationId} className="flex items-center justify-between p-3 rounded-lg bg-[rgba(15,0,26,0.5)] border border-primary/20">
                             <div className="min-w-0">
-                              <p className="text-sm font-medium text-[#FFFDD0] truncate">
+                              <p className="text-sm font-medium text-foreground truncate">
                                 {r.user.name || r.user.instagram || `User #${r.userId}`}
                               </p>
                               {r.user.email && (
@@ -270,7 +270,7 @@ const EventPage = () => {
                               onClick={() => handleResendConsent(r.invitationId)}
                               disabled={resendingConsent[r.invitationId] || !r.user.email}
                               title={!r.user.email ? 'No email on file' : 'Resend consent email'}
-                              className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-[#D4AF37]/40 text-[#D4AF37] hover:bg-[rgba(212,175,55,0.1)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0 ml-3"
+                              className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-primary/40 text-primary hover:bg-[rgba(212,175,55,0.1)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0 ml-3"
                             >
                               <Send className="w-3 h-3" />
                               {resendingConsent[r.invitationId] ? 'Sending...' : 'Resend'}
@@ -286,40 +286,40 @@ const EventPage = () => {
               {/* RSVP Stats */}
               <div className="lg:col-span-1 space-y-6">
                 <div className="luxury-card p-6 sticky top-24">
-                  <h3 className="text-lg font-bold text-[#FFFDD0] mb-6">RSVP Statistics</h3>
+                  <h3 className="text-lg font-bold text-foreground mb-6">RSVP Statistics</h3>
 
                   <div className="space-y-6">
-                    <div className="flex justify-between items-end border-b border-[#D4AF37]/20 pb-4">
+                    <div className="flex justify-between items-end border-b border-primary/20 pb-4">
                       <span className="text-muted-foreground">Total Invited</span>
-                      <span className="text-2xl font-bold text-[#FFFDD0]">{totalInvited}</span>
+                      <span className="text-2xl font-bold text-foreground">{totalInvited}</span>
                     </div>
 
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <div className="w-3 h-3 rounded-full bg-green-500" />
-                          <span className="text-sm text-[#FFFDD0]">Interested</span>
+                          <span className="text-sm text-foreground">Interested</span>
                         </div>
                         <span className="font-bold text-green-400">{interested} <span className="text-xs text-muted-foreground font-normal">({interestedPct}%)</span></span>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <div className="w-3 h-3 rounded-full bg-red-500" />
-                          <span className="text-sm text-[#FFFDD0]">Declined</span>
+                          <span className="text-sm text-foreground">Declined</span>
                         </div>
                         <span className="font-bold text-red-400">{notInterested} <span className="text-xs text-muted-foreground font-normal">({notInterestedPct}%)</span></span>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                          <span className="text-sm text-[#FFFDD0]">Pending</span>
+                          <span className="text-sm text-foreground">Pending</span>
                         </div>
                         <span className="font-bold text-yellow-400">{pending} <span className="text-xs text-muted-foreground font-normal">({pendingPct}%)</span></span>
                       </div>
                     </div>
 
                     <div className="mt-8">
-                      <div className="w-full h-4 bg-[rgba(15,0,26,0.9)] rounded-full overflow-hidden border border-[#D4AF37]/30 flex">
+                      <div className="w-full h-4 bg-[rgba(15,0,26,0.9)] rounded-full overflow-hidden border border-primary/30 flex">
                         <div style={{ width: `${interestedPct}%` }} className="bg-green-500 h-full transition-all" />
                         <div style={{ width: `${notInterestedPct}%` }} className="bg-red-500 h-full transition-all" />
                         <div style={{ width: `${pendingPct}%` }} className="bg-yellow-500 h-full transition-all" />
@@ -331,8 +331,8 @@ const EventPage = () => {
                 {/* Consent stats */}
                 {consentRequired && (
                   <div className="luxury-card p-6">
-                    <h3 className="text-lg font-bold text-[#FFFDD0] mb-4 flex items-center gap-2">
-                      <FileText className="w-4 h-4 text-[#D4AF37]" /> Consent
+                    <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+                      <FileText className="w-4 h-4 text-primary" /> Consent
                     </h3>
                     <div className="space-y-3">
                       <div className="flex justify-between items-center text-sm">
@@ -343,7 +343,7 @@ const EventPage = () => {
                         <span className="text-[rgba(255,253,208,0.6)]">Pending</span>
                         <span className="font-bold text-yellow-400">{consentPending}</span>
                       </div>
-                      <div className="w-full h-2 bg-[rgba(15,0,26,0.9)] rounded-full overflow-hidden border border-[#D4AF37]/30 flex mt-2">
+                      <div className="w-full h-2 bg-[rgba(15,0,26,0.9)] rounded-full overflow-hidden border border-primary/30 flex mt-2">
                         <div
                           style={{ width: totalInvited > 0 ? `${Math.round(consentSubmitted / totalInvited * 100)}%` : '0%' }}
                           className="bg-green-500 h-full transition-all"

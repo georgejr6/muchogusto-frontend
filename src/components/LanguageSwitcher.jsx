@@ -28,7 +28,7 @@ const LanguageSwitcher = () => {
         className="luxury-card w-12 h-12 rounded-full flex items-center justify-center p-0 shadow-[0_0_15px_rgba(212,175,55,0.3)] hover:scale-105 active:scale-95 transition-transform"
         title="Change Language"
       >
-        <Globe className="w-6 h-6 text-[#D4AF37]" />
+        <Globe className="w-6 h-6 text-primary" />
       </button>
 
       <AnimatePresence>
@@ -46,8 +46,8 @@ const LanguageSwitcher = () => {
                 onClick={() => selectLanguage(lang.code)}
                 className={`luxury-card py-2 px-4 rounded-full text-sm font-semibold transition-all duration-300 whitespace-nowrap ${
                   language === lang.code 
-                    ? 'bg-[#D4AF37] text-[#0f001a] border-[#D4AF37]' 
-                    : 'text-[#FFFDD0] hover:bg-[#D4AF37]/20 hover:text-[#F1E5AC]'
+                    ? 'bg-primary text-primary-foreground border-primary' 
+                    : 'text-foreground hover:bg-primary/20 hover:text-primary/90'
                 }`}
               >
                 {lang.label}

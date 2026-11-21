@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Moon, Mail, Bell, MessageCircle, User } from 'lucide-react';
+import { Moon, Mail, Bell, QrCode, User } from 'lucide-react';
 import { getUnreadCount } from '@/lib/apiClient';
 
 const items = [
   { to: '/tonight', label: 'Tonight', icon: Moon },
   { to: '/invites', label: 'Invites', icon: Mail },
   { to: '/notifications', label: 'Alerts', icon: Bell, badge: true },
-  { to: '/inbox', label: 'Messages', icon: MessageCircle },
+  { to: '/pass', label: 'Pass', icon: QrCode },
   { to: '/me', label: 'Me', icon: User },
 ];
 

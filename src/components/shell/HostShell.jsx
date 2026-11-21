@@ -1,11 +1,12 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Layers, CalendarDays, ShieldCheck, MapPin, UserCircle, Users, LogOut } from 'lucide-react';
+import { Layers, CalendarDays, ShieldCheck, MapPin, UserCircle, Users, LogOut, UserPlus } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const items = [
   { to: '/host', label: 'Deck', icon: Layers, end: true },
   { to: '/host/events', label: 'Events', icon: CalendarDays },
+  { to: '/host/access', label: 'Invite', icon: UserPlus },
   { to: '/host/verification', label: 'Verify', icon: ShieldCheck },
   { to: '/host/cities', label: 'Cities', icon: MapPin },
   { to: '/host/profile', label: 'Me', icon: UserCircle },

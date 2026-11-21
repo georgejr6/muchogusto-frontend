@@ -42,15 +42,15 @@ export default function ConsentPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0f001a] flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#0f001a] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <div className="text-center space-y-4">
           <p className="text-red-400">{error}</p>
           <button onClick={() => navigate('/login')} className="luxury-button px-6 py-2">Log In</button>
@@ -62,7 +62,7 @@ export default function ConsentPage() {
   const alreadyDone = info.consent_status === 'submitted' || info.consent_status === 'verified';
 
   return (
-    <div className="min-h-screen bg-[#0f001a] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -70,7 +70,7 @@ export default function ConsentPage() {
       >
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-[#D4AF37] tracking-widest uppercase mb-1">
+          <h1 className="text-2xl font-bold text-primary tracking-widest uppercase mb-1">
             Mucho Gusto Xo
           </h1>
           <p className="text-[rgba(255,253,208,0.5)] text-sm tracking-widest uppercase">
@@ -80,18 +80,18 @@ export default function ConsentPage() {
 
         {/* Event card */}
         <div className="luxury-card p-5 mb-6">
-          <p className="text-xs text-[#D4AF37] tracking-widest uppercase mb-2">Your Invitation</p>
-          <h2 className="text-xl font-bold text-[#FFFDD0] mb-3">{info.event_name}</h2>
+          <p className="text-xs text-primary tracking-widest uppercase mb-2">Your Invitation</p>
+          <h2 className="text-xl font-bold text-foreground mb-3">{info.event_name}</h2>
           <div className="space-y-1.5 text-sm text-[rgba(255,253,208,0.7)]">
             {info.event_date && (
               <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-[#D4AF37] shrink-0" />
+                <Calendar className="w-4 h-4 text-primary shrink-0" />
                 <span>{formatDate(info.event_date)}{info.event_time ? ` at ${info.event_time}` : ''}</span>
               </div>
             )}
             {info.event_location && (
               <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-[#D4AF37] shrink-0" />
+                <MapPin className="w-4 h-4 text-primary shrink-0" />
                 <span>{info.event_location}</span>
               </div>
             )}
@@ -102,7 +102,7 @@ export default function ConsentPage() {
           /* ── Already completed ── */
           <div className="luxury-card p-6 text-center space-y-4">
             <CheckCircle className="w-12 h-12 text-green-400 mx-auto" />
-            <h3 className="text-lg font-bold text-[#FFFDD0]">Consent Complete</h3>
+            <h3 className="text-lg font-bold text-foreground">Consent Complete</h3>
             <p className="text-sm text-[rgba(255,253,208,0.6)]">
               Your form has been received. Head back to the dashboard to confirm your RSVP.
             </p>
@@ -115,7 +115,7 @@ export default function ConsentPage() {
           <div className="space-y-5">
             {/* Why section */}
             <div className="luxury-card p-5">
-              <p className="text-sm font-semibold text-[#FFFDD0] mb-2">Why is this required?</p>
+              <p className="text-sm font-semibold text-foreground mb-2">Why is this required?</p>
               <p className="text-sm text-[rgba(255,253,208,0.65)] leading-relaxed">
                 To protect everyone at our events, we require a signed consent form before confirming
                 your spot. It covers media usage, personal safety, and general conduct — and takes
@@ -125,15 +125,15 @@ export default function ConsentPage() {
 
             {/* Steps */}
             <div className="luxury-card p-5 space-y-4">
-              <p className="text-sm font-semibold text-[#D4AF37] tracking-widest uppercase mb-3">How it works</p>
+              <p className="text-sm font-semibold text-primary tracking-widest uppercase mb-3">How it works</p>
               {STEPS.map(({ icon: Icon, label, desc }, i) => (
                 <div key={i} className="flex gap-3 items-start">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5
-                    ${i === 0 ? 'bg-[#D4AF37] text-[#0f001a]' : 'bg-[rgba(212,175,55,0.15)] text-[#D4AF37]'} border border-[#D4AF37]`}>
+                    ${i === 0 ? 'bg-primary text-primary-foreground' : 'bg-[rgba(212,175,55,0.15)] text-primary'} border border-primary`}>
                     <span className="text-xs font-bold">{i + 1}</span>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-[#FFFDD0]">{label}</p>
+                    <p className="text-sm font-semibold text-foreground">{label}</p>
                     <p className="text-xs text-[rgba(255,253,208,0.55)] mt-0.5">{desc}</p>
                   </div>
                 </div>
@@ -162,7 +162,7 @@ export default function ConsentPage() {
             <button
               onClick={handleCheck}
               disabled={checking}
-              className="w-full py-2.5 text-sm text-[rgba(255,253,208,0.5)] hover:text-[#FFFDD0] flex items-center justify-center gap-2 transition-colors"
+              className="w-full py-2.5 text-sm text-[rgba(255,253,208,0.5)] hover:text-foreground flex items-center justify-center gap-2 transition-colors"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${checking ? 'animate-spin' : ''}`} />
               Already signed? Check my status

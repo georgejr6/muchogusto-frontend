@@ -54,11 +54,11 @@ const InvitationCard = ({ invitation, onStatusChange }) => {
       animate={{ opacity: 1, y: 0 }}
       className="luxury-card p-5 relative overflow-hidden"
     >
-      <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#D4AF37]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative z-10">
         <div className="flex justify-between items-start mb-4">
-          <h3 className="text-xl font-bold text-[#FFFDD0]">{event.name}</h3>
+          <h3 className="text-xl font-bold text-foreground">{event.name}</h3>
           {status !== 'pending' && (
             <span className={`text-xs px-2 py-1 rounded-full border ${
               status === 'interested'
@@ -72,25 +72,25 @@ const InvitationCard = ({ invitation, onStatusChange }) => {
 
         <div className="space-y-2 mb-4 text-sm luxury-text-accent">
           <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-[#D4AF37]" />
+            <Calendar className="w-4 h-4 text-primary" />
             <span>{dateStr}{timeStr ? ` at ${timeStr}` : ''}</span>
           </div>
           {event.location && (
             <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-[#D4AF37]" />
+              <MapPin className="w-4 h-4 text-primary" />
               <span>{event.location}</span>
             </div>
           )}
         </div>
 
         {event.description && (
-          <p className="text-sm text-[#FFFDD0] mb-6 line-clamp-2">{event.description}</p>
+          <p className="text-sm text-foreground mb-6 line-clamp-2">{event.description}</p>
         )}
 
         {consentPending && (
           <button
             onClick={() => navigate(`/consent/${invitation.id}`)}
-            className="flex items-center gap-2 mb-4 p-3 rounded-lg border border-[#D4AF37]/60 bg-[rgba(212,175,55,0.08)] text-[#D4AF37] text-sm font-medium hover:bg-[rgba(212,175,55,0.15)] transition-colors w-full text-left"
+            className="flex items-center gap-2 mb-4 p-3 rounded-lg border border-primary/60 bg-[rgba(212,175,55,0.08)] text-primary text-sm font-medium hover:bg-[rgba(212,175,55,0.15)] transition-colors w-full text-left"
           >
             <FileText className="w-4 h-4 shrink-0" />
             <span className="flex-1">Sign consent form to unlock RSVP</span>
