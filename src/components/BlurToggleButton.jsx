@@ -32,7 +32,7 @@ const BlurToggleButton = ({ userId, isBlurred, onToggle, isAdmin, adminStatus })
   return (
     <div className="flex items-center gap-2">
       {isAdminOverriding && (
-        <div className="flex items-center text-[10px] text-[#D4AF37] bg-[rgba(212,175,55,0.1)] px-2 py-0.5 rounded-full border border-[#D4AF37]/30" title="Admin has explicitly set this status">
+        <div className="flex items-center text-[10px] text-primary bg-[rgba(212,175,55,0.1)] px-2 py-0.5 rounded-full border border-primary/30" title="Admin has explicitly set this status">
           <ShieldAlert className="w-3 h-3 mr-1" /> Admin
         </div>
       )}
@@ -41,8 +41,8 @@ const BlurToggleButton = ({ userId, isBlurred, onToggle, isAdmin, adminStatus })
         disabled={isLoading}
         className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-300 ${
           isBlurred
-            ? 'bg-[#D4AF37] text-black hover:bg-[#F1E5AC]'
-            : 'bg-[rgba(212,175,55,0.1)] text-[#D4AF37] border border-[#D4AF37]/50 hover:bg-[rgba(212,175,55,0.2)]'
+            ? 'bg-primary text-black hover:bg-primary/90'
+            : 'bg-[rgba(212,175,55,0.1)] text-primary border border-primary/50 hover:bg-[rgba(212,175,55,0.2)]'
         } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
         {isBlurred ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}

@@ -40,6 +40,8 @@ import WelcomePage from '@/pages/guest/WelcomePage';
 import MePage from '@/pages/guest/MePage';
 import PublicHostPage from '@/pages/PublicHostPage';
 import PrivacyPage from '@/pages/PrivacyPage';
+import PendingPage from '@/pages/guest/PendingPage';
+import PassPage from '@/pages/guest/PassPage';
 
 // v2 host pages
 import HostDeckPage from '@/pages/host/HostDeckPage';
@@ -48,6 +50,8 @@ import HostEventBoardPage from '@/pages/host/HostEventBoardPage';
 import HostCitiesPage from '@/pages/host/HostCitiesPage';
 import HostVerificationPage from '@/pages/host/HostVerificationPage';
 import HostProfilePage from '@/pages/host/HostProfilePage';
+import HostAccessPage from '@/pages/host/HostAccessPage';
+import HostScanPage from '@/pages/host/HostScanPage';
 
 function App() {
   return (
@@ -60,6 +64,7 @@ function App() {
             <Route path="/e/:shareToken" element={<PublicEventPage />} />
             <Route path="/feedback/:shareToken" element={<EventFeedbackPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/join/:code" element={<SignupPage />} />
             <Route path="/qr-code" element={<QRCodePage />} />
             <Route
               path="/inbox"
@@ -80,6 +85,8 @@ function App() {
             <Route path="/privacy" element={<PrivacyPage />} />
 
             {/* v2 member app */}
+            <Route path="/pending" element={<ProtectedRoute allowPending><PendingPage /></ProtectedRoute>} />
+            <Route path="/pass" element={<ProtectedRoute><PassPage /></ProtectedRoute>} />
             <Route path="/welcome" element={<ProtectedRoute><WelcomePage /></ProtectedRoute>} />
             <Route path="/tonight" element={<ProtectedRoute><TonightPage /></ProtectedRoute>} />
             <Route path="/invites" element={<ProtectedRoute><InvitesPage /></ProtectedRoute>} />
@@ -94,6 +101,8 @@ function App() {
             <Route path="/host/events/:id" element={<ProtectedRoute requireAdmin><HostEventBoardPage /></ProtectedRoute>} />
             <Route path="/host/cities" element={<ProtectedRoute requireAdmin><HostCitiesPage /></ProtectedRoute>} />
             <Route path="/host/verification" element={<ProtectedRoute requireAdmin><HostVerificationPage /></ProtectedRoute>} />
+            <Route path="/host/access" element={<ProtectedRoute requireAdmin><HostAccessPage /></ProtectedRoute>} />
+            <Route path="/host/events/:id/scan" element={<ProtectedRoute requireAdmin><HostScanPage /></ProtectedRoute>} />
             <Route path="/host/profile" element={<ProtectedRoute requireAdmin><HostProfilePage /></ProtectedRoute>} />
 
             {/* User Routes */}

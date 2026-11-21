@@ -50,7 +50,7 @@ const AdminLoginPage = () => {
       <div className="min-h-screen flex flex-col relative overflow-hidden">
         <Header />
 
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#D4AF37]/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="flex-1 flex items-center justify-center p-4 z-10">
           <motion.div
@@ -66,12 +66,12 @@ const AdminLoginPage = () => {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="inline-flex items-center gap-2 mb-4"
               >
-                <Sparkles className="w-8 h-8 text-[#D4AF37]" />
-                <h1 className="text-4xl font-bold text-[#FFFDD0] tracking-tight">Mucho Gusto Xo</h1>
+                <Sparkles className="w-8 h-8 text-primary" />
+                <h1 className="text-4xl font-bold text-foreground tracking-tight">Mucho Gusto Xo</h1>
               </motion.div>
               <div className="flex items-center justify-center gap-2 mb-2">
-                <Lock className="w-5 h-5 text-[#D4AF37]" />
-                <h2 className="text-xl font-semibold text-[#FFFDD0]">{t('login.title')}</h2>
+                <Lock className="w-5 h-5 text-primary" />
+                <h2 className="text-xl font-semibold text-foreground">{t('login.title')}</h2>
               </div>
               <p className="luxury-text-accent text-sm">{t('login.subtitle')}</p>
             </div>
@@ -84,7 +84,7 @@ const AdminLoginPage = () => {
               className="luxury-card p-8 space-y-6"
             >
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[#FFFDD0]">{t('login.email')}</label>
+                <label className="text-sm font-medium text-foreground">{t('login.email')}</label>
                 <input
                   type="text"
                   name="username"
@@ -97,7 +97,7 @@ const AdminLoginPage = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[#FFFDD0]">{t('login.password')}</label>
+                <label className="text-sm font-medium text-foreground">{t('login.password')}</label>
                 <input
                   type="password"
                   name="password"
@@ -119,7 +119,7 @@ const AdminLoginPage = () => {
                 className="luxury-button w-full py-4 text-lg mt-4 flex items-center justify-center gap-2"
               >
                 {loading ? (
-                  <div className="w-5 h-5 border-2 border-[#0f001a] border-t-transparent rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-background border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
                     <LogIn className="w-5 h-5" />

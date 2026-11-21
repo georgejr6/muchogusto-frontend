@@ -128,7 +128,7 @@ const UserProfilePage = () => {
   };
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0f001a] luxury-text-accent">
+    <div className="min-h-screen flex items-center justify-center bg-background luxury-text-accent">
       Loading profile...
     </div>
   );
@@ -142,7 +142,7 @@ const UserProfilePage = () => {
         <title>{isBlurred && !isAdminAuthenticated ? 'Anonymous User' : (profile.name || 'User')} | Profile</title>
       </Helmet>
 
-      <div className="min-h-screen flex flex-col bg-[#0f001a] relative z-10">
+      <div className="min-h-screen flex flex-col bg-background relative z-10">
         <Header />
 
         <div className="flex-1 p-4 md:p-8">
@@ -152,7 +152,7 @@ const UserProfilePage = () => {
             <div className="flex items-center justify-between">
               <button
                 onClick={() => navigate(-1)}
-                className="flex items-center gap-2 text-[#F1E5AC] hover:text-[#D4AF37] transition-colors"
+                className="flex items-center gap-2 text-primary/90 hover:text-primary transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" /> Back
               </button>
@@ -168,7 +168,7 @@ const UserProfilePage = () => {
                   {editing ? (
                     <button
                       onClick={() => setEditing(false)}
-                      className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-[#D4AF37] transition-colors"
+                      className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
                     >
                       <X className="w-4 h-4" /> Cancel
                     </button>
@@ -185,8 +185,8 @@ const UserProfilePage = () => {
             </div>
 
             {!isAdminAuthenticated && isBlurred && (
-              <div className="bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-lg p-4 flex items-center gap-3 text-[#F1E5AC]">
-                <EyeOff className="w-5 h-5 text-[#D4AF37]" />
+              <div className="bg-primary/10 border border-primary/30 rounded-lg p-4 flex items-center gap-3 text-primary/90">
+                <EyeOff className="w-5 h-5 text-primary" />
                 <p className="text-sm">This profile is anonymized based on privacy settings.</p>
               </div>
             )}
@@ -197,27 +197,27 @@ const UserProfilePage = () => {
               <div className="lg:col-span-1 space-y-6">
                 {editing ? (
                   <div className="luxury-card p-6">
-                    <h2 className="text-lg font-bold text-[#FFFDD0] mb-5">Edit Profile</h2>
+                    <h2 className="text-lg font-bold text-foreground mb-5">Edit Profile</h2>
 
                     {/* Photo upload */}
                     <div className="flex flex-col items-center mb-6">
                       <div className="relative">
-                        <div className="w-24 h-24 rounded-full bg-[rgba(15,0,26,0.9)] border-2 border-[#D4AF37] overflow-hidden flex items-center justify-center">
+                        <div className="w-24 h-24 rounded-full bg-[rgba(15,0,26,0.9)] border-2 border-primary overflow-hidden flex items-center justify-center">
                           {profile.photo_url
                             ? <img src={profile.photo_url} alt="Profile" className="w-full h-full object-cover" />
-                            : <User className="w-12 h-12 text-[#D4AF37]" />
+                            : <User className="w-12 h-12 text-primary" />
                           }
                         </div>
                         <button
                           type="button"
                           onClick={() => photoInputRef.current?.click()}
                           disabled={uploadingPhoto}
-                          className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-[#D4AF37] flex items-center justify-center hover:bg-[#F1E5AC] transition-colors disabled:opacity-50"
+                          className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-primary/90 transition-colors disabled:opacity-50"
                         >
                           {uploadingPhoto ? (
-                            <span className="text-[#0f001a] text-[10px] font-bold">...</span>
+                            <span className="text-primary-foreground text-[10px] font-bold">...</span>
                           ) : (
-                            <Camera className="w-4 h-4 text-[#0f001a]" />
+                            <Camera className="w-4 h-4 text-primary-foreground" />
                           )}
                         </button>
                         <input
@@ -266,37 +266,37 @@ const UserProfilePage = () => {
                   </div>
                 ) : (
                   <div className="luxury-card overflow-hidden">
-                    <div className="p-6 bg-gradient-to-b from-[rgba(212,175,55,0.1)] to-transparent border-b border-[#D4AF37]/20 flex flex-col items-center text-center">
-                      <div className={`w-24 h-24 rounded-full bg-[rgba(15,0,26,0.9)] border-2 border-[#D4AF37] flex items-center justify-center mb-4 overflow-hidden shadow-[0_0_20px_rgba(212,175,55,0.3)] ${isBlurred && !isAdminAuthenticated ? 'blur-[12px]' : ''}`}>
+                    <div className="p-6 bg-gradient-to-b from-[rgba(212,175,55,0.1)] to-transparent border-b border-primary/20 flex flex-col items-center text-center">
+                      <div className={`w-24 h-24 rounded-full bg-[rgba(15,0,26,0.9)] border-2 border-primary flex items-center justify-center mb-4 overflow-hidden shadow-[0_0_20px_rgba(212,175,55,0.3)] ${isBlurred && !isAdminAuthenticated ? 'blur-[12px]' : ''}`}>
                         {profile.photo_url
                           ? <img src={profile.photo_url} alt="Profile" className="w-full h-full object-cover" />
-                          : <User className="w-12 h-12 text-[#D4AF37]" />
+                          : <User className="w-12 h-12 text-primary" />
                         }
                       </div>
-                      <h1 className={`text-2xl font-bold text-[#FFFDD0] ${isBlurred && !isAdminAuthenticated ? 'blur-md select-none' : ''}`}>
+                      <h1 className={`text-2xl font-bold text-foreground ${isBlurred && !isAdminAuthenticated ? 'blur-md select-none' : ''}`}>
                         {profile.name || 'Anonymous User'}
                       </h1>
-                      <p className={`text-[#D4AF37] font-mono mt-1 ${isBlurred && !isAdminAuthenticated ? 'blur-md select-none' : ''}`}>
+                      <p className={`text-primary font-mono mt-1 ${isBlurred && !isAdminAuthenticated ? 'blur-md select-none' : ''}`}>
                         @{profile.instagram || 'hidden'}
                       </p>
                     </div>
 
                     <div className={`p-6 space-y-4 ${isBlurred && !isAdminAuthenticated ? 'blur-md select-none' : ''}`}>
                       <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Contact Info</h3>
-                      <div className="flex items-center gap-3 text-sm text-[#FFFDD0]">
-                        <Phone className="w-4 h-4 text-[#D4AF37]" />
+                      <div className="flex items-center gap-3 text-sm text-foreground">
+                        <Phone className="w-4 h-4 text-primary" />
                         <span>{profile.phone || 'N/A'}</span>
                       </div>
-                      <div className="flex items-center gap-3 text-sm text-[#FFFDD0]">
-                        <Mail className="w-4 h-4 text-[#D4AF37]" />
+                      <div className="flex items-center gap-3 text-sm text-foreground">
+                        <Mail className="w-4 h-4 text-primary" />
                         <span>{profile.email || 'N/A'}</span>
                       </div>
-                      <div className="flex items-center gap-3 text-sm text-[#FFFDD0]">
-                        <MapPin className="w-4 h-4 text-[#D4AF37]" />
+                      <div className="flex items-center gap-3 text-sm text-foreground">
+                        <MapPin className="w-4 h-4 text-primary" />
                         <span>{profile.city || 'Not provided'}</span>
                       </div>
-                      <div className="flex items-center gap-3 text-sm text-[#FFFDD0]">
-                        <Calendar className="w-4 h-4 text-[#D4AF37]" />
+                      <div className="flex items-center gap-3 text-sm text-foreground">
+                        <Calendar className="w-4 h-4 text-primary" />
                         <span>Joined {profile.created_at ? new Date(profile.created_at).toLocaleDateString() : 'N/A'}</span>
                       </div>
 
@@ -305,19 +305,19 @@ const UserProfilePage = () => {
                           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider pt-2">About</h3>
                           {profile.bio && (
                             <div>
-                              <span className="text-xs text-[#D4AF37] block mb-1">Bio</span>
+                              <span className="text-xs text-primary block mb-1">Bio</span>
                               <p className="text-sm luxury-text-accent leading-relaxed">{profile.bio}</p>
                             </div>
                           )}
                           {profile.hobbies && (
                             <div>
-                              <span className="text-xs text-[#D4AF37] block mb-1">Hobbies</span>
+                              <span className="text-xs text-primary block mb-1">Hobbies</span>
                               <p className="text-sm luxury-text-accent">{profile.hobbies}</p>
                             </div>
                           )}
                           {profile.age_range && (
                             <div>
-                              <span className="text-xs text-[#D4AF37] block mb-1">Age Range</span>
+                              <span className="text-xs text-primary block mb-1">Age Range</span>
                               <p className="text-sm luxury-text-accent">{profile.age_range}</p>
                             </div>
                           )}
@@ -332,15 +332,15 @@ const UserProfilePage = () => {
               {isAdminAuthenticated && (
                 <div className="lg:col-span-2">
                   <div className="luxury-card h-[600px] flex flex-col overflow-hidden">
-                    <div className="p-4 border-b border-[#D4AF37]/30 bg-[rgba(15,0,26,0.95)] flex items-center gap-3">
-                      <MessageSquare className="w-5 h-5 text-[#D4AF37]" />
-                      <h3 className="font-bold text-[#FFFDD0]">Message {profile.name || 'User'}</h3>
+                    <div className="p-4 border-b border-primary/30 bg-[rgba(15,0,26,0.95)] flex items-center gap-3">
+                      <MessageSquare className="w-5 h-5 text-primary" />
+                      <h3 className="font-bold text-foreground">Message {profile.name || 'User'}</h3>
                     </div>
 
-                    <div className="flex-1 p-6 overflow-y-auto bg-[#0f001a]/50 space-y-4">
+                    <div className="flex-1 p-6 overflow-y-auto bg-background/50 space-y-4">
                       {messages.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center text-muted-foreground space-y-2 opacity-50">
-                          <MessageSquare className="w-12 h-12 text-[#D4AF37]" />
+                          <MessageSquare className="w-12 h-12 text-primary" />
                           <p>Start a conversation with {profile.name || 'this user'}</p>
                         </div>
                       ) : (
@@ -350,12 +350,12 @@ const UserProfilePage = () => {
                             <div key={msg.id} className={`flex ${isAdmin ? 'justify-end' : 'justify-start'}`}>
                               <div className={`max-w-[70%] rounded-2xl p-4 ${
                                 isAdmin
-                                  ? 'bg-[#2D1B4E] border border-[#D4AF37]/50 text-[#FFFDD0] rounded-tr-none shadow-[0_0_15px_rgba(212,175,55,0.1)]'
-                                  : 'bg-[rgba(212,175,55,0.12)] border border-[#D4AF37]/20 text-[#FFFDD0] rounded-tl-none'
+                                  ? 'bg-accent border border-primary/50 text-foreground rounded-tr-none shadow-[0_0_15px_rgba(212,175,55,0.1)]'
+                                  : 'bg-[rgba(212,175,55,0.12)] border border-primary/20 text-foreground rounded-tl-none'
                               }`}>
-                                {!isAdmin && <p className="text-[10px] text-[#D4AF37]/70 mb-1 font-medium uppercase tracking-wider">Member</p>}
+                                {!isAdmin && <p className="text-[10px] text-primary/70 mb-1 font-medium uppercase tracking-wider">Member</p>}
                                 <p className="text-sm leading-relaxed">{msg.content}</p>
-                                <p className={`text-[10px] mt-2 text-right ${isAdmin ? 'text-[#D4AF37]/70' : 'text-muted-foreground'}`}>
+                                <p className={`text-[10px] mt-2 text-right ${isAdmin ? 'text-primary/70' : 'text-muted-foreground'}`}>
                                   {formatTime(msg.created_at)}
                                 </p>
                               </div>
@@ -366,7 +366,7 @@ const UserProfilePage = () => {
                       <div ref={messagesEndRef} />
                     </div>
 
-                    <div className="p-4 bg-[rgba(15,0,26,0.95)] border-t border-[#D4AF37]/30">
+                    <div className="p-4 bg-[rgba(15,0,26,0.95)] border-t border-primary/30">
                       <form onSubmit={handleSendMessage} className="flex gap-2">
                         <input
                           type="text"

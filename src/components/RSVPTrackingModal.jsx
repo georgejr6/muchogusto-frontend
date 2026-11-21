@@ -64,15 +64,15 @@ const RSVPTrackingModal = ({ event, onClose }) => {
           exit={{ opacity: 0, scale: 0.95 }}
           className="luxury-card w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden"
         >
-          <div className="p-6 border-b border-[#D4AF37]/30 flex justify-between items-center bg-[rgba(15,0,26,0.95)]">
+          <div className="p-6 border-b border-primary/30 flex justify-between items-center bg-[rgba(15,0,26,0.95)]">
             <div>
-              <h2 className="text-2xl font-bold text-[#FFFDD0] flex items-center gap-2">
-                <Users className="w-6 h-6 text-[#D4AF37]" />
+              <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+                <Users className="w-6 h-6 text-primary" />
                 {t('rsvp.title')}
               </h2>
               <p className="luxury-text-accent mt-1">{event.name}</p>
             </div>
-            <button onClick={onClose} className="p-2 text-[#F1E5AC] hover:text-[#D4AF37] transition-colors rounded-full hover:bg-[rgba(212,175,55,0.1)]">
+            <button onClick={onClose} className="p-2 text-primary/90 hover:text-primary transition-colors rounded-full hover:bg-[rgba(212,175,55,0.1)]">
               <X className="w-6 h-6" />
             </button>
           </div>
@@ -96,9 +96,9 @@ const RSVPTrackingModal = ({ event, onClose }) => {
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="luxury-text-accent">{t('rsvp.response_rate')}</span>
-                <span className="text-[#FFFDD0]">{interestedPct + notInterestedPct}%</span>
+                <span className="text-foreground">{interestedPct + notInterestedPct}%</span>
               </div>
-              <div className="w-full h-3 bg-[rgba(15,0,26,0.9)] rounded-full overflow-hidden border border-[#D4AF37]/30 flex">
+              <div className="w-full h-3 bg-[rgba(15,0,26,0.9)] rounded-full overflow-hidden border border-primary/30 flex">
                 <div style={{ width: `${interestedPct}%` }} className="bg-green-500 h-full" />
                 <div style={{ width: `${notInterestedPct}%` }} className="bg-red-500 h-full" />
                 <div style={{ width: `${pendingPct}%` }} className="bg-yellow-500 h-full" />
@@ -107,7 +107,7 @@ const RSVPTrackingModal = ({ event, onClose }) => {
 
             <div className="mt-8">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-[#D4AF37]">{t('rsvp.guest_list')}</h3>
+                <h3 className="text-lg font-semibold text-primary">{t('rsvp.guest_list')}</h3>
                 <button
                   onClick={handleExport}
                   className="luxury-button-outline px-4 py-2 text-sm flex items-center gap-2"
@@ -117,16 +117,16 @@ const RSVPTrackingModal = ({ event, onClose }) => {
                 </button>
               </div>
 
-              <div className="border border-[#D4AF37]/30 rounded-lg overflow-hidden">
+              <div className="border border-primary/30 rounded-lg overflow-hidden">
                 <table className="w-full text-left">
                   <thead className="bg-[rgba(212,175,55,0.1)]">
                     <tr>
-                      <th className="px-4 py-3 text-sm font-semibold text-[#D4AF37]">{t('rsvp.col_name')}</th>
-                      <th className="px-4 py-3 text-sm font-semibold text-[#D4AF37]">{t('rsvp.col_ig')}</th>
-                      <th className="px-4 py-3 text-sm font-semibold text-[#D4AF37] text-right">{t('rsvp.col_status')}</th>
+                      <th className="px-4 py-3 text-sm font-semibold text-primary">{t('rsvp.col_name')}</th>
+                      <th className="px-4 py-3 text-sm font-semibold text-primary">{t('rsvp.col_ig')}</th>
+                      <th className="px-4 py-3 text-sm font-semibold text-primary text-right">{t('rsvp.col_status')}</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#D4AF37]/20">
+                  <tbody className="divide-y divide-primary/20">
                     {guestList.length === 0 ? (
                       <tr>
                         <td colSpan="3" className="px-4 py-8 text-center text-muted-foreground">{t('rsvp.no_invited')}</td>
@@ -134,8 +134,8 @@ const RSVPTrackingModal = ({ event, onClose }) => {
                     ) : (
                       guestList.map((user, idx) => (
                         <tr key={idx} className="hover:bg-[rgba(212,175,55,0.05)] transition-colors">
-                          <td className="px-4 py-3 text-[#FFFDD0]">{user.name}</td>
-                          <td className="px-4 py-3 text-[#FFFDD0]">@{user.instagram}</td>
+                          <td className="px-4 py-3 text-foreground">{user.name}</td>
+                          <td className="px-4 py-3 text-foreground">@{user.instagram}</td>
                           <td className="px-4 py-3 text-right">{getStatusBadge(user.rsvpStatus)}</td>
                         </tr>
                       ))

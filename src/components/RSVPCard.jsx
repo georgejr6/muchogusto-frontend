@@ -40,21 +40,21 @@ const RSVPCard = ({ user, rsvpStatus, rsvpDate, isAdmin = false, onBlurToggle })
   return (
     <div
       onClick={handleClick}
-      className={`bg-[rgba(15,0,26,0.6)] border border-[#D4AF37]/30 rounded-lg p-3 group transition-colors ${
+      className={`bg-[rgba(15,0,26,0.6)] border border-primary/30 rounded-lg p-3 group transition-colors ${
         isAdmin || !isBlurred ? 'cursor-pointer hover:bg-[rgba(212,175,55,0.1)]' : ''
       }`}
     >
       <div className={`flex items-center justify-between gap-2 ${isAdmin ? 'group-hover:opacity-100 group-hover:blur-none transition-all duration-300' : ''}`}>
         <div className="flex items-center gap-3 min-w-0">
-          <div className={`w-10 h-10 rounded-full bg-[rgba(212,175,55,0.2)] border border-[#D4AF37]/50 flex items-center justify-center overflow-hidden shrink-0 ${isBlurred ? 'blur-[8px]' : ''}`}>
+          <div className={`w-10 h-10 rounded-full bg-[rgba(212,175,55,0.2)] border border-primary/50 flex items-center justify-center overflow-hidden shrink-0 ${isBlurred ? 'blur-[8px]' : ''}`}>
             {user.photoUrl ? (
               <img src={user.photoUrl} alt={user.name} className="w-full h-full object-cover" />
             ) : (
-              <User className="w-5 h-5 text-[#D4AF37]" />
+              <User className="w-5 h-5 text-primary" />
             )}
           </div>
           <div className={`min-w-0 ${isBlurred ? 'opacity-50 blur-sm select-none' : ''}`}>
-            <h4 className="font-bold text-[#FFFDD0] text-sm truncate">{user.name || 'Unknown'}</h4>
+            <h4 className="font-bold text-foreground text-sm truncate">{user.name || 'Unknown'}</h4>
             {user.nickname && <p className="text-xs luxury-text-accent">"{user.nickname}"</p>}
           </div>
         </div>

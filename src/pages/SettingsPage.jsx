@@ -65,28 +65,28 @@ const SettingsPage = () => {
     <>
       <Helmet><title>Settings | Mucho Gusto Xo</title></Helmet>
 
-      <div className="min-h-screen bg-[#0f001a] flex flex-col">
+      <div className="min-h-screen bg-background flex flex-col">
         <Header />
 
         <div className="flex-1 max-w-2xl mx-auto w-full px-4 py-8 space-y-6">
 
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate(-1)} className="text-[#D4AF37] hover:text-[#F1E5AC] transition-colors">
+            <button onClick={() => navigate(-1)} className="text-primary hover:text-primary/90 transition-colors">
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="text-2xl font-bold text-[#FFFDD0]">Settings</h1>
+            <h1 className="text-2xl font-bold text-foreground">Settings</h1>
           </div>
 
           {/* Email & Notifications (users only) */}
           {!isAdminAuthenticated && (
             <div className="luxury-card p-6 space-y-5">
-              <h2 className="text-lg font-semibold text-[#FFFDD0] flex items-center gap-2">
-                <Mail className="w-5 h-5 text-[#D4AF37]" /> Email & Notifications
+              <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                <Mail className="w-5 h-5 text-primary" /> Email & Notifications
               </h2>
 
               <form onSubmit={handleSavePrefs} className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-[#FFFDD0]">Email Address</label>
+                  <label className="text-sm font-medium text-foreground">Email Address</label>
                   <input
                     type="email"
                     value={email}
@@ -97,11 +97,11 @@ const SettingsPage = () => {
                   <p className="text-xs text-muted-foreground">Used for event reminders and messages.</p>
                 </div>
 
-                <div className="flex items-center justify-between p-4 border border-[#D4AF37]/30 rounded-lg">
+                <div className="flex items-center justify-between p-4 border border-primary/30 rounded-lg">
                   <div className="flex items-center gap-3">
-                    <Bell className="w-5 h-5 text-[#D4AF37]" />
+                    <Bell className="w-5 h-5 text-primary" />
                     <div>
-                      <p className="text-sm font-medium text-[#FFFDD0]">Email Notifications</p>
+                      <p className="text-sm font-medium text-foreground">Email Notifications</p>
                       <p className="text-xs text-muted-foreground">Event reminders and new messages</p>
                     </div>
                   </div>
@@ -109,7 +109,7 @@ const SettingsPage = () => {
                     type="button"
                     onClick={() => setEmailNotifications(p => !p)}
                     className={`relative w-12 h-6 rounded-full transition-colors ${
-                      emailNotifications ? 'bg-[#D4AF37]' : 'bg-[rgba(212,175,55,0.2)]'
+                      emailNotifications ? 'bg-primary' : 'bg-[rgba(212,175,55,0.2)]'
                     }`}
                   >
                     <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${
@@ -128,8 +128,8 @@ const SettingsPage = () => {
           {/* Admin password change */}
           {isAdminAuthenticated && (
             <div className="luxury-card p-6 space-y-5">
-              <h2 className="text-lg font-semibold text-[#FFFDD0] flex items-center gap-2">
-                <Lock className="w-5 h-5 text-[#D4AF37]" /> Change Password
+              <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                <Lock className="w-5 h-5 text-primary" /> Change Password
               </h2>
 
               <form onSubmit={handleChangePassword} className="space-y-4">
@@ -139,7 +139,7 @@ const SettingsPage = () => {
                   { label: 'Confirm New Password', key: 'confirm' },
                 ].map(({ label, key }) => (
                   <div key={key} className="space-y-2">
-                    <label className="text-sm font-medium text-[#FFFDD0]">{label}</label>
+                    <label className="text-sm font-medium text-foreground">{label}</label>
                     <input
                       type="password"
                       value={pwForm[key]}

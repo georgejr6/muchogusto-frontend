@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useNavigate } from 'react-router-dom';
-import { Bell, ChevronRight, LogOut, MapPin, Pencil, ShieldCheck, Trash2 } from 'lucide-react';
+import { Bell, MessageCircle, ChevronRight, LogOut, MapPin, Pencil, ShieldCheck, Trash2 } from 'lucide-react';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
@@ -91,6 +91,7 @@ const MePage = () => {
 
         <Row to="/profile-edit" icon={Pencil}>{t('me.edit')}</Row>
         <Row to="/notifications" icon={Bell}>{t('me.alerts')}</Row>
+        <Row to="/inbox" icon={MessageCircle}>{t('me.messages')}</Row>
 
         <div className="mg-card flex items-center justify-between gap-3 p-4">
           <div className="min-w-0">

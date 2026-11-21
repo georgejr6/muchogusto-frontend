@@ -64,12 +64,12 @@ const QRCodePage = () => {
       <div className="min-h-screen flex flex-col relative overflow-hidden z-10">
         <Header />
         
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#D4AF37]/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
         
         <div className="flex-1 py-12 px-4 sm:px-6 lg:px-8 flex flex-col w-full">
           <div className="max-w-2xl mx-auto w-full z-10">
             <button 
-              className="mb-6 luxury-text-accent hover:text-[#D4AF37] flex items-center transition-colors"
+              className="mb-6 luxury-text-accent hover:text-primary flex items-center transition-colors"
               onClick={() => navigate(-1)}
             >
               <ArrowLeft className="w-5 h-5 mr-2" />
@@ -90,8 +90,8 @@ const QRCodePage = () => {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="inline-flex items-center gap-3 mb-4"
               >
-                <Sparkles className="w-8 h-8 text-[#D4AF37]" />
-                <h1 className="text-4xl font-bold text-[#FFFDD0] tracking-tight">Mucho Gusto Xo</h1>
+                <Sparkles className="w-8 h-8 text-primary" />
+                <h1 className="text-4xl font-bold text-foreground tracking-tight">Mucho Gusto Xo</h1>
               </motion.div>
               <p className="luxury-text-accent text-xl">
                 Scan to join Mucho Gusto Xo
@@ -105,12 +105,12 @@ const QRCodePage = () => {
               className="luxury-card p-8 mb-8 inline-block shadow-[0_0_40px_rgba(212,175,55,0.3)] relative"
               ref={qrCodeRef}
             >
-              <div className="absolute top-3 left-3 w-4 h-4 border-t-[3px] border-l-[3px] border-[#D4AF37]" />
-              <div className="absolute top-3 right-3 w-4 h-4 border-t-[3px] border-r-[3px] border-[#D4AF37]" />
-              <div className="absolute bottom-3 left-3 w-4 h-4 border-b-[3px] border-l-[3px] border-[#D4AF37]" />
-              <div className="absolute bottom-3 right-3 w-4 h-4 border-b-[3px] border-r-[3px] border-[#D4AF37]" />
+              <div className="absolute top-3 left-3 w-4 h-4 border-t-[3px] border-l-[3px] border-primary" />
+              <div className="absolute top-3 right-3 w-4 h-4 border-t-[3px] border-r-[3px] border-primary" />
+              <div className="absolute bottom-3 left-3 w-4 h-4 border-b-[3px] border-l-[3px] border-primary" />
+              <div className="absolute bottom-3 right-3 w-4 h-4 border-b-[3px] border-r-[3px] border-primary" />
 
-              <div className="bg-[#FFFDD0] p-4 rounded-xl">
+              <div className="bg-foreground p-4 rounded-xl">
                 <QRCodeSVG
                   value={signupUrl}
                   size={260}
@@ -129,7 +129,7 @@ const QRCodePage = () => {
               transition={{ delay: 0.4 }}
               className="luxury-card p-6 mb-8 max-w-md mx-auto"
             >
-              <h2 className="text-[#D4AF37] text-lg font-semibold mb-2">
+              <h2 className="text-primary text-lg font-semibold mb-2">
                 {t('qr.instruction_title')}
               </h2>
               <p className="luxury-text-accent text-sm">
@@ -159,7 +159,7 @@ const QRCodePage = () => {
               <p className="luxury-text-accent text-sm max-w-md mx-auto">
                 {t('qr.footer')}
               </p>
-              <p className="text-[#FFFDD0] text-xs font-mono break-all max-w-md mx-auto bg-[rgba(15,0,26,0.8)] border border-[#D4AF37]/50 p-3 rounded-lg shadow-inner">
+              <p className="text-foreground text-xs font-mono break-all max-w-md mx-auto bg-[rgba(15,0,26,0.8)] border border-primary/50 p-3 rounded-lg shadow-inner">
                 {signupUrl}
               </p>
             </div>

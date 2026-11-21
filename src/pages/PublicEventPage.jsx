@@ -76,18 +76,18 @@ const PublicEventPage = () => {
   };
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0f001a]">
-      <div className="text-[#D4AF37] text-sm tracking-widest uppercase animate-pulse">Loading...</div>
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="text-primary text-sm tracking-widest uppercase animate-pulse">Loading...</div>
     </div>
   );
 
   if (error) return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#0f001a] gap-4 p-8">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4 p-8">
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-[#FFFDD0] mb-2">Event not found</h1>
+        <h1 className="text-2xl font-bold text-foreground mb-2">Event not found</h1>
         <p className="text-muted-foreground">This link may be invalid or the event has been removed.</p>
       </div>
-      <Link to="/" className="text-[#D4AF37] hover:underline text-sm">← Back to home</Link>
+      <Link to="/" className="text-primary hover:underline text-sm">← Back to home</Link>
     </div>
   );
 
@@ -105,14 +105,14 @@ const PublicEventPage = () => {
         <meta name="description" content={event.description?.slice(0, 160)} />
       </Helmet>
 
-      <div className="min-h-screen bg-[#0f001a]">
+      <div className="min-h-screen bg-background">
 
         {/* Header */}
-        <div className="border-b border-[#D4AF37]/20 px-6 py-4 flex items-center justify-between">
-          <Link to="/" className="text-[#D4AF37] font-bold tracking-[3px] uppercase text-sm">
+        <div className="border-b border-primary/20 px-6 py-4 flex items-center justify-between">
+          <Link to="/" className="text-primary font-bold tracking-[3px] uppercase text-sm">
             Mucho Gusto Xo
           </Link>
-          <button onClick={copyLink} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-[#D4AF37] transition-colors">
+          <button onClick={copyLink} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
             {copied ? <Check className="w-4 h-4 text-green-400" /> : <Share2 className="w-4 h-4" />}
             {copied ? 'Copied!' : 'Share'}
           </button>
@@ -125,25 +125,25 @@ const PublicEventPage = () => {
             {imageItems.length > 0 ? (
               <img src={imageItems[0].url} alt={event.name} className="w-full h-56 object-cover" />
             ) : (
-              <div className="h-40 bg-gradient-to-r from-[#2D1B4E] to-[rgba(212,175,55,0.2)] flex items-center justify-center">
-                <Calendar className="w-14 h-14 text-[#D4AF37]/40" />
+              <div className="h-40 bg-gradient-to-r from-accent to-[rgba(212,175,55,0.2)] flex items-center justify-center">
+                <Calendar className="w-14 h-14 text-primary/40" />
               </div>
             )}
 
             <div className="p-8">
-              <h1 className="text-3xl font-bold text-[#FFFDD0] mb-6">{event.name}</h1>
+              <h1 className="text-3xl font-bold text-foreground mb-6">{event.name}</h1>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
                 <div className="flex items-center gap-3 text-sm luxury-text-accent">
                   <div className="p-2 bg-[rgba(212,175,55,0.1)] rounded-lg">
-                    <Calendar className="w-5 h-5 text-[#D4AF37]" />
+                    <Calendar className="w-5 h-5 text-primary" />
                   </div>
                   <span>{eventDate}</span>
                 </div>
                 {event.time && (
                   <div className="flex items-center gap-3 text-sm luxury-text-accent">
                     <div className="p-2 bg-[rgba(212,175,55,0.1)] rounded-lg">
-                      <Clock className="w-5 h-5 text-[#D4AF37]" />
+                      <Clock className="w-5 h-5 text-primary" />
                     </div>
                     <span>{event.time}</span>
                   </div>
@@ -151,7 +151,7 @@ const PublicEventPage = () => {
                 {event.location && (
                   <div className="flex items-center gap-3 text-sm luxury-text-accent sm:col-span-2">
                     <div className="p-2 bg-[rgba(212,175,55,0.1)] rounded-lg">
-                      <MapPin className="w-5 h-5 text-[#D4AF37]" />
+                      <MapPin className="w-5 h-5 text-primary" />
                     </div>
                     <span>{event.location}</span>
                   </div>
@@ -167,8 +167,8 @@ const PublicEventPage = () => {
 
               {event.description && (
                 <div>
-                  <h3 className="text-[#D4AF37] font-semibold text-sm uppercase tracking-wider mb-3">About</h3>
-                  <p className="text-[#FFFDD0] leading-relaxed whitespace-pre-wrap">{event.description}</p>
+                  <h3 className="text-primary font-semibold text-sm uppercase tracking-wider mb-3">About</h3>
+                  <p className="text-foreground leading-relaxed whitespace-pre-wrap">{event.description}</p>
                 </div>
               )}
             </div>
@@ -177,7 +177,7 @@ const PublicEventPage = () => {
           {/* YouTube embeds */}
           {youtubeItems.length > 0 && (
             <div className="space-y-4">
-              <h3 className="text-[#D4AF37] font-semibold text-sm uppercase tracking-wider flex items-center gap-2">
+              <h3 className="text-primary font-semibold text-sm uppercase tracking-wider flex items-center gap-2">
                 <Youtube className="w-4 h-4" /> Videos
               </h3>
               {youtubeItems.map((item, idx) => {
@@ -202,7 +202,7 @@ const PublicEventPage = () => {
           {/* Image gallery */}
           {imageItems.length > 1 && (
             <div className="space-y-3">
-              <h3 className="text-[#D4AF37] font-semibold text-sm uppercase tracking-wider">Photos</h3>
+              <h3 className="text-primary font-semibold text-sm uppercase tracking-wider">Photos</h3>
               <div className="grid grid-cols-2 gap-3">
                 {imageItems.slice(1).map((item, idx) => (
                   <img key={idx} src={item.url} alt="" className="rounded-lg object-cover aspect-square w-full" />
@@ -215,10 +215,10 @@ const PublicEventPage = () => {
           <div className="luxury-card p-8">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 bg-[rgba(212,175,55,0.1)] rounded-lg">
-                <Mail className="w-5 h-5 text-[#D4AF37]" />
+                <Mail className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <h3 className="text-[#FFFDD0] font-semibold">Get Updates</h3>
+                <h3 className="text-foreground font-semibold">Get Updates</h3>
                 <p className="text-sm text-muted-foreground">Add your email to stay in the loop for this event.</p>
               </div>
             </div>
@@ -246,7 +246,7 @@ const PublicEventPage = () => {
                 </button>
                 <p className="text-xs text-muted-foreground text-center">
                   Want to RSVP?{' '}
-                  <Link to="/signup" className="text-[#D4AF37] hover:underline">Create an account</Link>
+                  <Link to="/signup" className="text-primary hover:underline">Create an account</Link>
                 </p>
               </form>
             )}
@@ -255,7 +255,7 @@ const PublicEventPage = () => {
           {/* Invite a friend */}
           <div className="luxury-card p-6 flex items-center justify-between gap-4">
             <div>
-              <h3 className="text-[#FFFDD0] font-semibold mb-1">Invite a Friend</h3>
+              <h3 className="text-foreground font-semibold mb-1">Invite a Friend</h3>
               <p className="text-sm text-muted-foreground">Share this link with someone who should be there.</p>
             </div>
             <button onClick={copyLink}

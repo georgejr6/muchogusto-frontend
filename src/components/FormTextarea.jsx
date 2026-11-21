@@ -16,7 +16,7 @@ const FormTextarea = ({
 }) => {
   return (
     <div className="space-y-2">
-      <Label htmlFor={name} className="text-sm font-medium text-[#FFFDD0]">
+      <Label htmlFor={name} className="text-sm font-medium text-foreground">
         {label} {required && <span className="text-red-400">*</span>}
       </Label>
       <textarea

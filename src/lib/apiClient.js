@@ -30,6 +30,7 @@ function isAdminRequest(path, method = 'GET') {
     return p === '/api/verification/pending' || p.startsWith('/api/verification/attempts');
   }
   if (p.startsWith('/api/safety/reports')) return true;
+  if (p.startsWith('/api/access/')) return !(p === '/api/access/redeem' || p === '/api/access/pass' || p.startsWith('/api/access/code/'));
   if (p.startsWith('/api/users')) {
     if (p === '/api/users/public' || p.startsWith('/api/users/me')) return false;
     return true;
@@ -66,10 +67,11 @@ async function request(path, options = {}) {
 
 // ─── Auth ────────────────────────────────────────────────────────────────────
 
-export async function signup({ name, instagram, phone, email, consent }) {
+// Invite-only: signing up creates a pending account and emails a code. No session until the email is verified.
+export async function signup({ name, instagram, phone, email, consent, invite_code }) {
   return request('/api/auth/signup', {
     method: 'POST',
-    body: JSON.stringify({ name, instagram, phone, email, consent }),
+    body: JSON.stringify({ name, instagram, phone, email, consent, invite_code }),
   });
 }
 
@@ -453,3 +455,16 @@ export async function uploadProfilePhoto(profileId, file) {
 export const deleteMyAccount = () => request('/api/users/me', { method: 'DELETE' });
 export const joinEventByLink = (shareToken) =>
   request(`/api/public/events/${encodeURIComponent(shareToken)}/join`, { method: 'POST' });
+
+// ─── Invite-only access ───────────────────────────────────────────────────────
+
+export const getInvitePreview = (code) => request(`/api/access/code/${encodeURIComponent(code)}`);
+export const redeemInvite = (code) => request('/api/access/redeem', { method: 'POST', body: JSON.stringify({ code }) });
+export const getPass = () => request('/api/access/pass');
+export const listInvites = () => request('/api/access/invites');
+export const createInvite = (data) => request('/api/access/invites', { method: 'POST', body: JSON.stringify(data) });
+export const revokeInvite = (id) => request(`/api/access/invites/${id}`, { method: 'DELETE' });
+export const listAccessRequests = () => request('/api/access/requests');
+export const approveAccessRequest = (id) => request(`/api/access/requests/${id}/approve`, { method: 'POST' });
+export const declineAccessRequest = (id) => request(`/api/access/requests/${id}/decline`, { method: 'POST' });
+export const hostCheckin = (data) => request('/api/host/checkin', { method: 'POST', body: JSON.stringify(data) });

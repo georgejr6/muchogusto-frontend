@@ -78,14 +78,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signupUser = async ({ name, instagram, phone, email, consent }) => {
-    const { token, user } = await signup({ name, instagram, phone, email, consent });
-    clearAdminSession();
-    localStorage.setItem('token', token);
-    disconnectSocket();
-    setUserProfile(user);
-    return user;
-  };
+  // Invite-only: creates a pending account (or an approved one when a valid invite code is supplied) and emails a code.
+  const signupUser = async ({ name, instagram, phone, email, consent, invite_code }) =>
+    signup({ name, instagram, phone, email, consent, invite_code });
 
   // Two-step verified login: email a code, then exchange it for a session.
   const sendLoginCode = async ({ phone, email }) => {

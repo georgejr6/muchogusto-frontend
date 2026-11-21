@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, BellRing, UserPlus } from 'lucide-react';
+import { ArrowLeft, BellRing, Check, ScanLine, UserPlus } from 'lucide-react';
 import HostShell from '@/components/shell/HostShell';
 import { useToast } from '@/hooks/use-toast';
-import { getEventBoard, nudgeInvitation } from '@/lib/apiClient';
+import { getEventBoard, hostCheckin, nudgeInvitation } from '@/lib/apiClient';
 
 const Avatar = ({ person }) => (
   <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-accent">
@@ -63,6 +63,15 @@ const HostEventBoardPage = () => {
     }
   };
 
+  const tick = async (invitationId) => {
+    try {
+      await hostCheckin({ event_id: id, invitation_id: invitationId });
+      load();
+    } catch (e) {
+      toast({ title: 'Could not check in', description: e.message, variant: 'destructive' });
+    }
+  };
+
   const inviteMore = () => {
     try { localStorage.setItem('mg_host_event', id); } catch { /* storage unavailable */ }
     navigate('/host');
@@ -102,19 +111,30 @@ const HostEventBoardPage = () => {
             <div className="mg-card mb-5 flex flex-wrap items-center justify-between gap-4 p-5">
               <div className="min-w-[200px] flex-1">
                 <p className="mg-eyebrow">{ev.city_name || 'Event'} · {new Date(ev.date).toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'UTC' })}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{going} going{ev.capacity ? ` of ${ev.capacity}` : ''}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{going} going{ev.capacity ? ` of ${ev.capacity}` : ''}{board.checked_in_count ? ` · ${board.checked_in_count} arrived` : ''}</p>
                 {ev.capacity && (
                   <div className="mt-2 h-2 overflow-hidden rounded-full bg-accent" role="progressbar" aria-valuenow={going} aria-valuemax={ev.capacity}>
                     <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
                   </div>
                 )}
               </div>
-              <button className="mg-btn" onClick={inviteMore}><UserPlus className="h-4 w-4" />Invite more</button>
+              <div className="flex flex-wrap gap-2">
+                <Link to={`/host/events/${id}/scan`} className="mg-btn-ghost"><ScanLine className="h-4 w-4" />Door check-in</Link>
+                <button className="mg-btn" onClick={inviteMore}><UserPlus className="h-4 w-4" />Invite more</button>
+              </div>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
               <Section title="Going" count={board.accepted.length} empty="Nobody has confirmed yet.">
-                {board.accepted.map((p) => <Row key={p.invitation_id} p={p} />)}
+                {board.accepted.map((p) => (
+                  <Row key={p.invitation_id} p={p}>
+                    {p.checked_in_at ? (
+                      <span className="mg-chip"><Check className="h-3 w-3" />Arrived</span>
+                    ) : (
+                      <button className="mg-btn-ghost px-3 py-1.5 text-xs" onClick={() => tick(p.invitation_id)}>Check in</button>
+                    )}
+                  </Row>
+                ))}
               </Section>
               <Section title="Maybe" count={board.maybe.length} empty="No maybes. We hold their spot a little longer.">
                 {board.maybe.map((p) => <Row key={p.invitation_id} p={p} />)}

@@ -63,7 +63,7 @@ const RSVPsPage = () => {
         <title>{isAdminAuthenticated ? 'All Members | Admin' : 'Community | Mucho Gusto Xo'}</title>
       </Helmet>
 
-      <div className="min-h-screen flex flex-col bg-[#0f001a] relative z-10">
+      <div className="min-h-screen flex flex-col bg-background relative z-10">
         <Header />
 
         <div className="flex-1 p-4 md:p-8">
@@ -72,14 +72,14 @@ const RSVPsPage = () => {
               {isAdminAuthenticated ? (
                 <button
                   onClick={() => navigate('/admin-dashboard')}
-                  className="flex items-center gap-2 text-[#F1E5AC] hover:text-[#D4AF37] transition-colors"
+                  className="flex items-center gap-2 text-primary/90 hover:text-primary transition-colors"
                 >
                   <ArrowLeft className="w-5 h-5" /> Back to Dashboard
                 </button>
               ) : (
                 <button
                   onClick={() => navigate('/')}
-                  className="flex items-center gap-2 text-[#F1E5AC] hover:text-[#D4AF37] transition-colors"
+                  className="flex items-center gap-2 text-primary/90 hover:text-primary transition-colors"
                 >
                   <Home className="w-5 h-5" /> Back to Home
                 </button>
@@ -88,8 +88,8 @@ const RSVPsPage = () => {
 
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
               <div>
-                <h1 className="text-3xl font-bold text-[#FFFDD0] flex items-center gap-3">
-                  <Users className="w-8 h-8 text-[#D4AF37]" />
+                <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
+                  <Users className="w-8 h-8 text-primary" />
                   {isAdminAuthenticated ? 'All Members Directory' : 'Mucho Gusto Xo Community'}
                 </h1>
                 <p className="text-muted-foreground mt-2 text-sm sm:text-base">
@@ -101,20 +101,20 @@ const RSVPsPage = () => {
             </div>
 
             {/* Tabs */}
-            <div className="flex border-b border-[#D4AF37]/30 mb-6">
+            <div className="flex border-b border-primary/30 mb-6">
               <button
                 onClick={() => setActiveTab('members')}
-                className={`px-6 py-3 font-semibold transition-colors relative ${activeTab === 'members' ? 'text-[#D4AF37]' : 'text-muted-foreground hover:text-[#FFFDD0]'}`}
+                className={`px-6 py-3 font-semibold transition-colors relative ${activeTab === 'members' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Members
-                {activeTab === 'members' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#D4AF37]" />}
+                {activeTab === 'members' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-primary" />}
               </button>
               <button
                 onClick={() => setActiveTab('events')}
-                className={`px-6 py-3 font-semibold transition-colors relative ${activeTab === 'events' ? 'text-[#D4AF37]' : 'text-muted-foreground hover:text-[#FFFDD0]'}`}
+                className={`px-6 py-3 font-semibold transition-colors relative ${activeTab === 'events' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Events
-                {activeTab === 'events' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#D4AF37]" />}
+                {activeTab === 'events' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-primary" />}
               </button>
             </div>
 
@@ -123,7 +123,7 @@ const RSVPsPage = () => {
               <>
                 <div className="flex items-center justify-between mb-4">
                   <div className="stats-card px-6 py-3">
-                    <span className="text-2xl font-bold text-[#D4AF37]">{members.length}</span>
+                    <span className="text-2xl font-bold text-primary">{members.length}</span>
                     <span className="text-xs text-muted-foreground uppercase tracking-wider ml-2">Total Users</span>
                   </div>
                 </div>
@@ -133,7 +133,7 @@ const RSVPsPage = () => {
                 {isAdminAuthenticated && (
                   <div className="flex flex-col md:flex-row gap-4 mb-8">
                     <div className="relative flex-1">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#D4AF37]" />
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
                       <input
                         type="text"
                         placeholder="Search by name, Instagram, or phone..."
@@ -191,16 +191,16 @@ const RSVPsPage = () => {
                     {events.map(event => (
                       <div key={event.id} className="luxury-card p-5 space-y-3">
                         <div className="flex items-start justify-between">
-                          <h3 className="text-xl font-bold text-[#FFFDD0]">{event.name}</h3>
+                          <h3 className="text-xl font-bold text-foreground">{event.name}</h3>
                           {event.visibility === 'invite_only' && (
-                            <span className="text-xs bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40 px-2 py-1 rounded-full flex items-center gap-1 shrink-0 ml-2">
+                            <span className="text-xs bg-primary/20 text-primary border border-primary/40 px-2 py-1 rounded-full flex items-center gap-1 shrink-0 ml-2">
                               <Lock className="w-3 h-3" /> Invite Only
                             </span>
                           )}
                         </div>
                         <div className="space-y-1 text-sm luxury-text-accent">
-                          <div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-[#D4AF37]" /><span>{new Date(event.date).toLocaleDateString()} at {event.time}</span></div>
-                          <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-[#D4AF37]" /><span>{event.location}</span></div>
+                          <div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-primary" /><span>{new Date(event.date).toLocaleDateString()} at {event.time}</span></div>
+                          <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-primary" /><span>{event.location}</span></div>
                         </div>
                         {event.description && <p className="text-sm luxury-text-accent">{event.description}</p>}
                       </div>

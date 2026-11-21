@@ -123,13 +123,13 @@ const ProfileEditPage = () => {
         <title>Edit Your Mucho Gusto Xo Profile</title>
       </Helmet>
 
-      <div className="min-h-screen bg-[#0f001a] pb-24">
+      <div className="min-h-screen bg-background pb-24">
         {/* Sticky Header */}
-        <header className="sticky top-0 z-50 bg-[rgba(15,0,26,0.85)] backdrop-blur-[12px] border-b border-[#D4AF37]/50 px-4 py-3 shadow-[0_4px_20px_rgba(212,175,55,0.1)]">
+        <header className="sticky top-0 z-50 bg-[rgba(15,0,26,0.85)] backdrop-blur-[12px] border-b border-primary/50 px-4 py-3 shadow-[0_4px_20px_rgba(212,175,55,0.1)]">
           <div className="max-w-3xl mx-auto flex items-center justify-between">
             <button 
               onClick={() => navigate('/tonight')} 
-              className="flex items-center gap-1 text-[#F1E5AC] hover:text-[#D4AF37] transition-colors"
+              className="flex items-center gap-1 text-primary/90 hover:text-primary transition-colors"
             >
               <ArrowLeft className="w-5 h-5" /> Back
             </button>
@@ -141,9 +141,9 @@ const ProfileEditPage = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
-              <div className="text-sm font-medium bg-[rgba(212,175,55,0.1)] px-3 py-1 rounded-full border border-[#D4AF37]/30">
-                <span className="text-[#FFFDD0] mr-2">Completion:</span>
-                <span className="text-[#D4AF37] font-bold">{percentage}%</span>
+              <div className="text-sm font-medium bg-[rgba(212,175,55,0.1)] px-3 py-1 rounded-full border border-primary/30">
+                <span className="text-foreground mr-2">Completion:</span>
+                <span className="text-primary font-bold">{percentage}%</span>
               </div>
             </div>
           </div>
@@ -155,7 +155,7 @@ const ProfileEditPage = () => {
               <motion.div 
                 initial={{ opacity: 0, y: -20 }} 
                 animate={{ opacity: 1, y: 0 }} 
-                className="bg-[#D4AF37]/20 border border-[#D4AF37] rounded-xl p-4 mb-6 flex items-center justify-center gap-2 text-[#D4AF37] font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)]"
+                className="bg-primary/20 border border-primary rounded-xl p-4 mb-6 flex items-center justify-center gap-2 text-primary font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)]"
               >
                 <CheckCircle2 className="w-5 h-5" /> Profile Updated! Returning to dashboard...
               </motion.div>
@@ -164,7 +164,7 @@ const ProfileEditPage = () => {
 
           <div className="luxury-card p-6 sm:p-8 space-y-8">
             <div>
-              <h1 className="text-3xl font-bold text-[#FFFDD0] mb-2 tracking-tight">Edit Profile</h1>
+              <h1 className="text-3xl font-bold text-foreground mb-2 tracking-tight">Edit Profile</h1>
               <p className="luxury-text-accent text-sm">Keep your details up to date to get the best event matches.</p>
             </div>
 
@@ -177,7 +177,7 @@ const ProfileEditPage = () => {
 
               {/* Basics */}
               <div className="space-y-5">
-                <h3 className="text-xl font-semibold text-[#D4AF37] border-b border-[#D4AF37]/30 pb-2">Basic Info</h3>
+                <h3 className="text-xl font-semibold text-primary border-b border-primary/30 pb-2">Basic Info</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <FormInput
                     label="Date of Birth"
@@ -217,7 +217,7 @@ const ProfileEditPage = () => {
 
               {/* Location & Demo */}
               <div className="space-y-5">
-                <h3 className="text-xl font-semibold text-[#D4AF37] border-b border-[#D4AF37]/30 pb-2 flex items-center gap-2">
+                <h3 className="text-xl font-semibold text-primary border-b border-primary/30 pb-2 flex items-center gap-2">
                   Details <span className="text-sm font-normal luxury-text-accent">(Optional)</span>
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -240,16 +240,16 @@ const ProfileEditPage = () => {
 
               {/* Photos */}
               <div className="space-y-5">
-                <h3 className="text-xl font-semibold text-[#D4AF37] border-b border-[#D4AF37]/30 pb-2">
+                <h3 className="text-xl font-semibold text-primary border-b border-primary/30 pb-2">
                   Photos <span className="text-red-400">*</span>
                 </h3>
-                <div className="bg-[rgba(15,0,26,0.5)] rounded-xl p-5 border border-[#D4AF37]/50 shadow-[inset_0_0_20px_rgba(212,175,55,0.05)]">
+                <div className="bg-[rgba(15,0,26,0.5)] rounded-xl p-5 border border-primary/50 shadow-[inset_0_0_20px_rgba(212,175,55,0.05)]">
                   {formData.photo_url && (
                     <div className="flex items-center gap-3 mb-4">
                       <img
                         src={formData.photo_url}
                         alt="Current profile"
-                        className="w-16 h-16 rounded-full object-cover border-2 border-[#D4AF37]/60"
+                        className="w-16 h-16 rounded-full object-cover border-2 border-primary/60"
                       />
                       <p className="text-xs luxury-text-accent">
                         Your current photo. Upload a new one below to replace it.
@@ -262,20 +262,20 @@ const ProfileEditPage = () => {
 
               {/* Preferences */}
               <div className="space-y-5">
-                <h3 className="text-xl font-semibold text-[#D4AF37] border-b border-[#D4AF37]/30 pb-2">Preferences & Consents</h3>
+                <h3 className="text-xl font-semibold text-primary border-b border-primary/30 pb-2">Preferences & Consents</h3>
                 <div className="space-y-3">
-                  <label className="text-sm font-medium text-[#FFFDD0]">What are you interested in?</label>
+                  <label className="text-sm font-medium text-foreground">What are you interested in?</label>
                   <div className="flex flex-wrap gap-4">
                     {['Events', 'Livestreams', 'Both'].map(item => (
-                      <div key={item} className="flex items-center space-x-2 bg-[rgba(212,175,55,0.05)] border border-[#D4AF37]/30 px-4 py-2 rounded-lg hover:bg-[rgba(212,175,55,0.1)] transition-colors cursor-pointer">
+                      <div key={item} className="flex items-center space-x-2 bg-[rgba(212,175,55,0.05)] border border-primary/30 px-4 py-2 rounded-lg hover:bg-[rgba(212,175,55,0.1)] transition-colors cursor-pointer">
                         <input
                           type="checkbox"
                           id={`int-${item}`}
                           checked={(formData.interests || []).includes(item)}
                           onChange={() => handleInterestToggle(item)}
-                          className="w-4 h-4 rounded border-[#D4AF37] text-[#D4AF37] focus:ring-[#D4AF37] focus:ring-offset-0 bg-transparent accent-[#D4AF37] cursor-pointer"
+                          className="w-4 h-4 rounded border-primary text-primary focus:ring-primary focus:ring-offset-0 bg-transparent accent-primary cursor-pointer"
                         />
-                        <label htmlFor={`int-${item}`} className="text-sm cursor-pointer text-[#FFFDD0]">{item}</label>
+                        <label htmlFor={`int-${item}`} className="text-sm cursor-pointer text-foreground">{item}</label>
                       </div>
                     ))}
                   </div>
@@ -284,14 +284,14 @@ const ProfileEditPage = () => {
                 <div className="space-y-4 pt-4">
                   <FormCheckbox
                     name="media_consent"
-                    label={<>Media Consent <span className="text-[#F1E5AC]/80 block text-xs mt-1">I consent to appear in background photos/videos. (Optional)</span></>}
+                    label={<>Media Consent <span className="text-primary/80 block text-xs mt-1">I consent to appear in background photos/videos. (Optional)</span></>}
                     checked={formData.media_consent || false}
                     onChange={val => handleFieldChange('media_consent', val)}
                   />
                   
                   <FormCheckbox
                     name="contact_consent"
-                    label={<>Contact Consent <span className="text-[#F1E5AC]/80 block text-xs mt-1">I agree to be contacted via WhatsApp/Email about events.</span></>}
+                    label={<>Contact Consent <span className="text-primary/80 block text-xs mt-1">I agree to be contacted via WhatsApp/Email about events.</span></>}
                     checked={formData.contact_consent || false}
                     onChange={val => handleFieldChange('contact_consent', val)}
                     required
@@ -301,7 +301,7 @@ const ProfileEditPage = () => {
 
             </div>
 
-            <div className="pt-8 border-t border-[#D4AF37]/30 flex justify-end">
+            <div className="pt-8 border-t border-primary/30 flex justify-end">
               <button 
                 onClick={handleSave} 
                 disabled={isSubmitLoading || !formData.contact_consent}
