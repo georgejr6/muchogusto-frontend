@@ -1,250 +1,229 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, CheckCircle, Lock } from 'lucide-react';
-import Header from '@/components/Header';
-import PhoneInput from '@/components/PhoneInput';
 import SocialAuthButtons from '@/components/SocialAuthButtons';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from '@/lib/i18n.jsx';
+
+const CODE_LEN = 6;
+
+// Six boxes, one hidden-feeling input each. Supports paste and iOS/Android one-time-code autofill.
+const CodeInput = ({ value, onChange, onComplete, disabled }) => {
+  const refs = useRef([]);
+  const digits = Array.from({ length: CODE_LEN }, (_, i) => value[i] || '');
+
+  const setAt = (i, ch) => {
+    const arr = digits.slice();
+    arr[i] = ch;
+    const next = arr.join('').slice(0, CODE_LEN);
+    onChange(next);
+    if (next.length === CODE_LEN && !next.includes(' ')) onComplete?.(next);
+  };
+
+  const handleChange = (i, e) => {
+    const raw = e.target.value.replace(/\D/g, '');
+    if (!raw) { setAt(i, ''); return; }
+    if (raw.length > 1) {
+      const next = raw.slice(0, CODE_LEN);
+      onChange(next);
+      refs.current[Math.min(next.length, CODE_LEN - 1)]?.focus();
+      if (next.length === CODE_LEN) onComplete?.(next);
+      return;
+    }
+    setAt(i, raw);
+    if (i < CODE_LEN - 1) refs.current[i + 1]?.focus();
+  };
+
+  const handleKey = (i, e) => {
+    if (e.key === 'Backspace' && !digits[i] && i > 0) refs.current[i - 1]?.focus();
+  };
+
+  return (
+    <div className="flex justify-between gap-2" role="group" aria-label="6-digit code">
+      {digits.map((d, i) => (
+        <input
+          key={i}
+          ref={(el) => (refs.current[i] = el)}
+          value={d}
+          onChange={(e) => handleChange(i, e)}
+          onKeyDown={(e) => handleKey(i, e)}
+          onFocus={(e) => e.target.select()}
+          inputMode="numeric"
+          autoComplete={i === 0 ? 'one-time-code' : 'off'}
+          pattern="[0-9]*"
+          maxLength={CODE_LEN}
+          disabled={disabled}
+          aria-label={`Digit ${i + 1}`}
+          className="mg-input !px-0 text-center font-display text-2xl"
+          style={{ width: '100%', minWidth: 0 }}
+        />
+      ))}
+    </div>
+  );
+};
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { loginUser, loginAdmin } = useAuth();
+  const { t } = useTranslation();
+  const { sendLoginCode, confirmLoginCode, loginAdmin } = useAuth();
   const [tab, setTab] = useState('member');
 
-  // Where to send the member after a successful login (set by ProtectedRoute).
-  const redirectTo = location.state?.from && location.state.from !== '/login'
-    ? location.state.from
-    : '/dashboard';
+  const redirectTo = location.state?.from && location.state.from !== '/login' ? location.state.from : '/tonight';
 
-  // Member login — phone OR email
-  const [phone, setPhone] = useState('');
-  const [countryCode, setCountryCode] = useState('+57');
+  // member
   const [email, setEmail] = useState('');
-  const [memberLoading, setMemberLoading] = useState(false);
-  const [memberError, setMemberError] = useState('');
-  const [memberSuccess, setMemberSuccess] = useState(false);
+  const [code, setCode] = useState('');
+  const [codeSent, setCodeSent] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
 
-  // Admin login
+  // host
   const [adminForm, setAdminForm] = useState({ email: '', password: '' });
-  const [adminLoading, setAdminLoading] = useState(false);
+  const [adminBusy, setAdminBusy] = useState(false);
   const [adminError, setAdminError] = useState('');
 
-  const handleMemberLogin = async (e) => {
-    e.preventDefault();
-    const trimmedPhone = phone.trim();
-    const trimmedEmail = email.trim();
-
-    if (!trimmedPhone && !trimmedEmail) {
-      setMemberError('Enter your phone number or email to sign in.');
-      return;
-    }
-
-    setMemberLoading(true);
-    setMemberError('');
-
-    const payload = {};
-    if (trimmedPhone) payload.phone = `${countryCode}${trimmedPhone}`;
-    if (trimmedEmail) payload.email = trimmedEmail;
-
-    const result = await loginUser(payload);
-    if (result.success) {
-      setMemberSuccess(true);
-      setTimeout(() => navigate(redirectTo, { replace: true }), 1500);
-    } else {
-      setMemberError(result.error || 'Login failed');
-    }
-    setMemberLoading(false);
+  const requestCode = async (e) => {
+    e?.preventDefault();
+    const clean = email.trim().toLowerCase();
+    if (!clean) { setError(t('auth.need_email')); return; }
+    setBusy(true);
+    setError('');
+    const r = await sendLoginCode({ email: clean });
+    setBusy(false);
+    if (r.success) { setCodeSent(true); setCode(''); }
+    else setError(r.error || t('id.err'));
   };
 
-  const handleAdminSubmit = async (e) => {
-    e.preventDefault();
-    setAdminLoading(true);
-    setAdminError('');
-    const result = await loginAdmin(adminForm.email, adminForm.password);
-    if (result.success) {
-      toast({ title: 'Welcome back.' });
-      navigate('/admin-dashboard');
+  const verify = async (finalCode) => {
+    const c = (finalCode || code).replace(/\D/g, '');
+    if (c.length !== CODE_LEN) { setError(t('auth.need_code')); return; }
+    setBusy(true);
+    setError('');
+    const r = await confirmLoginCode({ email: email.trim().toLowerCase(), code: c });
+    setBusy(false);
+    if (r.success) {
+      // Waitlisted members have no city yet; only send to onboarding if they never gave location consent.
+      const needsOnboarding = !r.user?.location_consent;
+      navigate(needsOnboarding ? '/welcome' : redirectTo, { replace: true, state: { from: redirectTo } });
     } else {
-      setAdminError(result.error || 'Invalid credentials');
+      setError(r.error || t('id.err'));
+      setCode('');
     }
-    setAdminLoading(false);
+  };
+
+  const adminSubmit = async (e) => {
+    e.preventDefault();
+    setAdminBusy(true);
+    setAdminError('');
+    const r = await loginAdmin(adminForm.email, adminForm.password);
+    setAdminBusy(false);
+    if (r.success) {
+      toast({ title: t('auth.welcome') });
+      navigate('/host', { replace: true });
+    } else {
+      setAdminError(r.error || 'Invalid credentials');
+    }
   };
 
   return (
-    <>
-      <Helmet><title>Login | Mucho Gusto Xo</title></Helmet>
+    <div className="flex min-h-screen flex-col">
+      <Helmet><title>{t('auth.signin')} | Mucho Gusto Xo</title></Helmet>
+      <header className="px-4 py-4 sm:px-6">
+        <Link to="/" className="font-display text-lg text-primary">Mucho Gusto</Link>
+      </header>
 
-      <div className="min-h-screen flex flex-col relative overflow-hidden">
-        <Header />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#D4AF37]/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="flex flex-1 items-start justify-center px-4 pb-16 pt-6">
+        <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm space-y-6">
+          <div className="space-y-1 text-center">
+            <h1 className="text-3xl">{t('auth.signin_title')}</h1>
+            <p className="text-sm text-muted-foreground">{t('auth.signin_sub')}</p>
+          </div>
 
-        <div className="flex-1 flex flex-col items-center justify-center p-4 z-10">
+          <div role="tablist" className="flex gap-1 rounded-full border border-border bg-card/60 p-1">
+            {[['member', t('auth.member')], ['admin', t('auth.host')]].map(([id, label]) => (
+              <button
+                key={id}
+                role="tab"
+                aria-selected={tab === id}
+                onClick={() => setTab(id)}
+                className={`flex-1 rounded-full py-2 text-sm font-medium transition ${tab === id ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
           <AnimatePresence mode="wait">
-            {tab === 'member' && memberSuccess ? (
-              <motion.div
-                key="success"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="flex flex-col items-center justify-center text-center"
-              >
-                <div className="w-24 h-24 bg-[rgba(15,0,26,0.85)] rounded-full flex items-center justify-center mb-6 border-[3px] border-[#D4AF37] shadow-[0_0_30px_rgba(212,175,55,0.4)]">
-                  <CheckCircle className="w-12 h-12 text-[#D4AF37]" />
-                </div>
-                <h2 className="text-3xl font-bold text-[#FFFDD0] mb-2">Welcome back!</h2>
-                <p className="luxury-text-accent text-lg">Taking you to your dashboard...</p>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="form"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="w-full max-w-md"
-              >
-                <div className="text-center mb-8">
-                  <div className="inline-flex items-center gap-2 mb-4">
-                    <Sparkles className="w-8 h-8 text-[#D4AF37]" />
-                    <h1 className="text-4xl font-bold text-[#FFFDD0]">Mucho Gusto Xo</h1>
-                  </div>
-                  <p className="luxury-text-accent text-lg">Sign in to your account</p>
-                </div>
-
-                {/* Tabs */}
-                <div className="flex border-b border-[#D4AF37]/30 mb-6">
-                  {[
-                    { id: 'member', label: 'Member Login' },
-                    { id: 'admin',  label: 'Admin Login' },
-                  ].map(t => (
-                    <button
-                      key={t.id}
-                      onClick={() => setTab(t.id)}
-                      className={`flex-1 py-3 font-semibold text-sm transition-colors relative
-                        ${tab === t.id ? 'text-[#D4AF37]' : 'text-muted-foreground hover:text-[#FFFDD0]'}`}
-                    >
-                      {t.label}
-                      {tab === t.id && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#D4AF37]" />}
-                    </button>
-                  ))}
-                </div>
-
-                {/* ── Member Login ── */}
-                {tab === 'member' && (
+            {tab === 'member' ? (
+              <motion.div key="member" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-5">
+                {!codeSent ? (
                   <>
-                    <div className="mb-4">
-                      <SocialAuthButtons />
+                    <SocialAuthButtons />
+                    <div className="flex items-center gap-3">
+                      <div className="h-px flex-1 bg-border" />
+                      <span className="text-xs text-muted-foreground">{t('auth.or_email')}</span>
+                      <div className="h-px flex-1 bg-border" />
                     </div>
-
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="flex-1 h-px bg-[#D4AF37]/20" />
-                      <span className="text-xs text-muted-foreground uppercase tracking-widest">or sign in with</span>
-                      <div className="flex-1 h-px bg-[#D4AF37]/20" />
-                    </div>
-
-                    <form onSubmit={handleMemberLogin} className="luxury-card p-6 sm:p-8 space-y-5">
-                      <p className="text-xs text-[#F1E5AC]/70">
-                        Enter the phone number <span className="text-[#D4AF37]">or</span> email address on your account.
-                      </p>
-
-                      {/* Email field */}
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-[#FFFDD0]">Email</label>
+                    <form onSubmit={requestCode} className="space-y-4">
+                      <label className="block space-y-1.5">
+                        <span className="text-sm text-muted-foreground">{t('auth.email')}</span>
                         <input
                           type="email"
+                          autoComplete="email"
                           value={email}
-                          onChange={e => { setEmail(e.target.value); setMemberError(''); }}
+                          onChange={(e) => { setEmail(e.target.value); setError(''); }}
                           placeholder="you@example.com"
-                          className="luxury-input w-full"
+                          className="mg-input"
                         />
-                      </div>
-
-                      {/* Divider */}
-                      <div className="flex items-center gap-3">
-                        <div className="flex-1 h-px bg-[#D4AF37]/20" />
-                        <span className="text-xs text-muted-foreground uppercase tracking-widest">or</span>
-                        <div className="flex-1 h-px bg-[#D4AF37]/20" />
-                      </div>
-
-                      {/* Phone field */}
-                      <PhoneInput
-                        label="Phone Number"
-                        countryCode={countryCode}
-                        onCountryChange={setCountryCode}
-                        phone={phone}
-                        onPhoneChange={val => { setPhone(val); setMemberError(''); }}
-                      />
-
-                      {memberError && (
-                        <div className="text-sm text-red-400 text-center">
-                          {memberError}
-                          {memberError.toLowerCase().includes('sign up') && (
-                            <span> <Link to="/signup" className="text-[#D4AF37] underline">Sign up here</Link></span>
-                          )}
-                        </div>
-                      )}
-
-                      <button type="submit" disabled={memberLoading} className="luxury-button w-full py-4 text-lg">
-                        {memberLoading
-                          ? <span className="flex items-center justify-center gap-2">
-                              <span className="w-5 h-5 border-2 border-[#0f001a] border-t-transparent rounded-full animate-spin" />
-                              Signing in...
-                            </span>
-                          : 'Sign In'
-                        }
-                      </button>
+                      </label>
+                      {error && <p className="text-sm text-destructive" role="alert">{error}</p>}
+                      <button type="submit" disabled={busy} className="mg-btn w-full">{busy ? t('auth.sending') : t('auth.send_code')}</button>
                     </form>
-
-                    <p className="text-center text-sm luxury-text-accent mt-4">
-                      Don't have an account?{' '}
-                      <Link to="/signup" className="text-[#D4AF37] hover:underline font-medium">
-                        Create one
-                      </Link>
+                    <p className="text-center text-sm text-muted-foreground">
+                      {t('auth.no_account')} <Link to="/signup" className="text-primary hover:underline">{t('auth.create')}</Link>
                     </p>
                   </>
-                )}
-
-                {/* ── Admin Login ── */}
-                {tab === 'admin' && (
-                  <form onSubmit={handleAdminSubmit} className="luxury-card p-6 sm:p-8 space-y-5">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Lock className="w-4 h-4 text-[#D4AF37]" />
-                      <p className="text-xs text-[#F1E5AC]/70">Admin access only.</p>
+                ) : (
+                  <div className="space-y-5">
+                    <div className="space-y-1 text-center">
+                      <h2 className="text-xl">{t('auth.code_title')}</h2>
+                      <p className="text-sm text-muted-foreground">{t('auth.code_sub')} <span className="text-foreground">{email}</span></p>
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-[#FFFDD0]">Email</label>
-                      <input
-                        type="email" value={adminForm.email}
-                        onChange={e => setAdminForm(p => ({ ...p, email: e.target.value }))}
-                        className="luxury-input" placeholder="admin@example.com" required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-[#FFFDD0]">Password</label>
-                      <input
-                        type="password" value={adminForm.password}
-                        onChange={e => setAdminForm(p => ({ ...p, password: e.target.value }))}
-                        className="luxury-input" placeholder="••••••••" required
-                      />
-                    </div>
-                    {adminError && <p className="text-sm text-red-400 text-center">{adminError}</p>}
-                    <button type="submit" disabled={adminLoading} className="luxury-button w-full py-4 text-lg flex items-center justify-center gap-2">
-                      {adminLoading
-                        ? <span className="w-5 h-5 border-2 border-[#0f001a] border-t-transparent rounded-full animate-spin" />
-                        : 'Sign In'
-                      }
+                    <CodeInput value={code} onChange={(v) => { setCode(v); setError(''); }} onComplete={verify} disabled={busy} />
+                    {error && <p className="text-center text-sm text-destructive" role="alert">{error}</p>}
+                    <button onClick={() => verify()} disabled={busy || code.length !== CODE_LEN} className="mg-btn w-full">
+                      {busy ? t('auth.verifying') : t('auth.verify')}
                     </button>
-                  </form>
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <button onClick={() => { setCodeSent(false); setCode(''); setError(''); }} className="hover:text-foreground">{t('auth.use_other')}</button>
+                      <button onClick={requestCode} disabled={busy} className="hover:text-foreground">{t('auth.resend')}</button>
+                    </div>
+                  </div>
                 )}
-
               </motion.div>
+            ) : (
+              <motion.form key="admin" onSubmit={adminSubmit} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
+                <p className="text-center text-xs text-muted-foreground">{t('auth.host_note')}</p>
+                <label className="block space-y-1.5">
+                  <span className="text-sm text-muted-foreground">{t('auth.email')}</span>
+                  <input type="email" required autoComplete="username" value={adminForm.email} onChange={(e) => setAdminForm((p) => ({ ...p, email: e.target.value }))} className="mg-input" />
+                </label>
+                <label className="block space-y-1.5">
+                  <span className="text-sm text-muted-foreground">{t('auth.password')}</span>
+                  <input type="password" required autoComplete="current-password" value={adminForm.password} onChange={(e) => setAdminForm((p) => ({ ...p, password: e.target.value }))} className="mg-input" />
+                </label>
+                {adminError && <p className="text-sm text-destructive" role="alert">{adminError}</p>}
+                <button type="submit" disabled={adminBusy} className="mg-btn w-full">{adminBusy ? t('auth.verifying') : t('auth.signin')}</button>
+              </motion.form>
             )}
           </AnimatePresence>
-        </div>
+        </motion.div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -10,12 +10,45 @@ function getAdminToken() {
   return localStorage.getItem('adminToken');
 }
 
-function getActiveToken() {
-  return getAdminToken() || getUserToken();
+// Admin (host) tokens are only ever sent to host/admin endpoints; everything else uses the member token,
+// so a host who also signs in as a member can never have one token shadow the other.
+function isAdminRequest(path, method = 'GET') {
+  const m = method.toUpperCase();
+  const p = path.split('?')[0];
+  const q = path.includes('?') ? path.split('?')[1] : '';
+  if (p.startsWith('/api/host/')) return true;
+  if (p.startsWith('/api/emails')) return true;
+  if (p.startsWith('/api/messages')) {
+    return !(p === '/api/messages/inbox' || p === '/api/messages/reply');
+  }
+  if (p.startsWith('/api/events')) return p !== '/api/events/public';
+  if (p.startsWith('/api/cities')) {
+    if (p === '/api/cities/me/locate') return false;
+    return m !== 'GET' || p === '/api/cities/demand' || /(^|&)all=1(&|$)/.test(q);
+  }
+  if (p.startsWith('/api/verification')) {
+    return p === '/api/verification/pending' || p.startsWith('/api/verification/attempts');
+  }
+  if (p.startsWith('/api/safety/reports')) return true;
+  if (p.startsWith('/api/users')) {
+    if (p === '/api/users/public' || p.startsWith('/api/users/me')) return false;
+    return true;
+  }
+  if (p === '/api/invitations/consent-webhook') return false;
+  if (/^\/api\/invitations\/[^/]+\/resend-consent$/.test(p)) return true;
+  if (p.startsWith('/api/auth/admin/')) return true;
+  return false;
+}
+
+function getActiveToken(path = '', method = 'GET') {
+  const admin = getAdminToken();
+  const user = getUserToken();
+  if (isAdminRequest(path, method)) return admin || user;
+  return user || admin;
 }
 
 async function request(path, options = {}) {
-  const token = getActiveToken();
+  const token = getActiveToken(path, options.method || 'GET');
   const headers = { ...options.headers };
 
   if (!(options.body instanceof FormData)) {
@@ -33,10 +66,10 @@ async function request(path, options = {}) {
 
 // ─── Auth ────────────────────────────────────────────────────────────────────
 
-export async function signup({ name, instagram, phone, email }) {
+export async function signup({ name, instagram, phone, email, consent }) {
   return request('/api/auth/signup', {
     method: 'POST',
-    body: JSON.stringify({ name, instagram, phone, email }),
+    body: JSON.stringify({ name, instagram, phone, email, consent }),
   });
 }
 
@@ -145,8 +178,8 @@ export async function getEvents() {
   return request('/api/events');
 }
 
-export async function getPublicEvents() {
-  return request('/api/events/public');
+export async function getPublicEvents(citySlug) {
+  return request(`/api/events/public${citySlug ? `?city=${encodeURIComponent(citySlug)}` : ''}`);
 }
 
 export async function getEvent(id) {
@@ -194,12 +227,81 @@ export async function getUserInbox() {
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
-export async function loginUser({ phone, email }) {
+// Step 1: email a 6-digit code (always answers {sent:true}). Step 2: verifyLoginCode.
+export async function requestLoginCode({ phone, email }) {
   return request('/api/auth/login', {
     method: 'POST',
     body: JSON.stringify({ phone, email }),
   });
 }
+
+export async function verifyLoginCode({ email, phone, code }) {
+  return request('/api/auth/verify-code', {
+    method: 'POST',
+    body: JSON.stringify({ email, phone, code }),
+  });
+}
+
+// ─── Cities & location ────────────────────────────────────────────────────────
+
+export const getCities = ({ all = false } = {}) => request(`/api/cities${all ? '?all=1' : ''}`);
+export const createCity = (data) => request('/api/cities', { method: 'POST', body: JSON.stringify(data) });
+export const updateCity = (id, data) => request(`/api/cities/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+export const getCityDemand = () => request('/api/cities/demand');
+export const shareLocation = (lat, lng) =>
+  request('/api/cities/me/locate', { method: 'POST', body: JSON.stringify({ lat, lng, consent: true }) });
+
+// ─── Verification ─────────────────────────────────────────────────────────────
+
+export const getVerificationStatus = () => request('/api/verification/status');
+export const startIdentityVerification = (consent = false) =>
+  request('/api/verification/start', { method: 'POST', body: JSON.stringify({ consent }) });
+export const refreshVerification = () => request('/api/verification/refresh', { method: 'POST' });
+export async function uploadVerificationSelfie(file, consent = false) {
+  const fd = new FormData();
+  fd.append('consent', consent ? 'true' : 'false');
+  fd.append('selfie', file);
+  return request('/api/verification/selfie', { method: 'POST', body: fd });
+}
+export const getPendingVerifications = () => request('/api/verification/pending');
+export const reviewVerification = (attemptId, approve) =>
+  request(`/api/verification/attempts/${attemptId}/review`, { method: 'POST', body: JSON.stringify({ approve }) });
+// Selfies are private: fetch with the admin token, return an object URL for <img src>.
+export async function fetchVerificationSelfie(attemptId) {
+  const res = await fetch(`${API_URL}/api/verification/attempts/${attemptId}/selfie`, {
+    headers: { Authorization: `Bearer ${getActiveToken('/api/verification/attempts')}` },
+  });
+  if (!res.ok) throw new Error('Could not load selfie');
+  return URL.createObjectURL(await res.blob());
+}
+
+// ─── Notifications ────────────────────────────────────────────────────────────
+
+export const getNotifications = () => request('/api/notifications');
+export const getUnreadCount = () => request('/api/notifications/unread-count');
+export const markNotificationsRead = () => request('/api/notifications/read', { method: 'POST' });
+export const updateNotificationPrefs = (data) =>
+  request('/api/notifications/prefs', { method: 'PUT', body: JSON.stringify(data) });
+export const getVapidKey = () => request('/api/notifications/vapid-key');
+
+// ─── Safety ───────────────────────────────────────────────────────────────────
+
+export const blockHost = (admin_id) => request('/api/safety/block', { method: 'POST', body: JSON.stringify({ admin_id }) });
+export const reportTarget = ({ admin_id, user_id, reason }) =>
+  request('/api/safety/report', { method: 'POST', body: JSON.stringify({ admin_id, user_id, reason }) });
+export const getReports = () => request('/api/safety/reports');
+
+// ─── Host tools ───────────────────────────────────────────────────────────────
+
+export const getHostPool = (eventId, limit = 20) => request(`/api/host/pool?event_id=${eventId}&limit=${limit}`);
+export const hostSwipe = ({ event_id, user_id, action, note }) =>
+  request('/api/host/swipe', { method: 'POST', body: JSON.stringify({ event_id, user_id, action, note }) });
+export const getShortlist = (eventId) => request(`/api/host/shortlist${eventId ? `?event_id=${eventId}` : ''}`);
+export const getEventBoard = (eventId) => request(`/api/host/events/${eventId}/board`);
+export const nudgeInvitation = (invitationId) => request(`/api/host/invitations/${invitationId}/nudge`, { method: 'POST' });
+export const getHostMe = () => request('/api/host/me');
+export const updateHostMe = (data) => request('/api/host/me', { method: 'PUT', body: JSON.stringify(data) });
+export const getPublicHost = (handle) => request(`/api/public/hosts/${encodeURIComponent(handle)}`);
 
 export async function changeAdminPassword(currentPassword, newPassword) {
   return request('/api/auth/admin/change-password', {
@@ -345,3 +447,9 @@ export async function uploadProfilePhoto(profileId, file) {
     return { data: null, error: err.message };
   }
 }
+
+// ─── Account deletion & join-by-link ──────────────────────────────────────────
+
+export const deleteMyAccount = () => request('/api/users/me', { method: 'DELETE' });
+export const joinEventByLink = (shareToken) =>
+  request(`/api/public/events/${encodeURIComponent(shareToken)}/join`, { method: 'POST' });

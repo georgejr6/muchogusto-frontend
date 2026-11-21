@@ -100,7 +100,7 @@ const ProfileEditPage = () => {
         ...(newFile ? { _newPhotoFile: newFile } : {}),
       });
       setShowSuccess(true);
-      setTimeout(() => navigate('/dashboard'), 1500);
+      setTimeout(() => navigate('/tonight'), 1500);
     } catch (err) {
       toast({ title: 'Failed to save profile. Please try again.', variant: 'destructive' });
     } finally {
@@ -128,7 +128,7 @@ const ProfileEditPage = () => {
         <header className="sticky top-0 z-50 bg-[rgba(15,0,26,0.85)] backdrop-blur-[12px] border-b border-[#D4AF37]/50 px-4 py-3 shadow-[0_4px_20px_rgba(212,175,55,0.1)]">
           <div className="max-w-3xl mx-auto flex items-center justify-between">
             <button 
-              onClick={() => navigate('/dashboard')} 
+              onClick={() => navigate('/tonight')} 
               className="flex items-center gap-1 text-[#F1E5AC] hover:text-[#D4AF37] transition-colors"
             >
               <ArrowLeft className="w-5 h-5" /> Back

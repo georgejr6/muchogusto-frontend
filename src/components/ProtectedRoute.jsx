@@ -19,14 +19,14 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
 
   if (requireAdmin) {
     if (!isAdminAuthenticated) {
-      return <Navigate to="/admin-login" replace state={{ from: location.pathname }} />;
+      return <Navigate to="/admin-login" replace state={{ from: location.pathname + location.search }} />;
     }
     return children;
   }
 
   if (!isUserAuthenticated) {
     // Send members to Login (not Signup) and remember where they were headed.
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+    return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
   }
 
   return children;

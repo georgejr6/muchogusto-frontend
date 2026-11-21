@@ -132,8 +132,8 @@ const PhoneInput = ({
 
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium text-[#FFFDD0]">
-        {label} {required && <span className="text-red-400">*</span>}
+      <label className="text-sm font-medium text-foreground">
+        {label} {required && <span className="text-destructive">*</span>}
       </label>
       <div className="flex gap-2">
         {/* Country code selector or manual input */}
@@ -151,7 +151,7 @@ const PhoneInput = ({
             <button
               type="button"
               onClick={exitManual}
-              className="text-muted-foreground hover:text-[#D4AF37] flex-shrink-0"
+              className="text-muted-foreground hover:text-primary flex-shrink-0"
               title="Back to list"
             >
               <X className="w-4 h-4" />
@@ -161,7 +161,7 @@ const PhoneInput = ({
           <select
             value={countryCode}
             onChange={handleSelectChange}
-            className="luxury-input appearance-none bg-[rgba(15,0,26,0.9)] w-[175px] flex-shrink-0 text-sm"
+            className="luxury-input appearance-none bg-input w-[175px] flex-shrink-0 text-sm"
           >
             {COUNTRY_CODES.map(c => (
               <option key={c.value} value={c.value}>{c.label}</option>
@@ -177,10 +177,10 @@ const PhoneInput = ({
           onChange={e => onPhoneChange(e.target.value)}
           placeholder="Phone number"
           autoFocus={autoFocus}
-          className={`luxury-input flex-1 ${error ? 'border-red-500 focus:shadow-[0_0_15px_rgba(239,68,68,0.4)]' : ''}`}
+          className={`luxury-input flex-1 ${error ? 'border-destructive' : ''}`}
         />
       </div>
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
     </div>
   );
 };

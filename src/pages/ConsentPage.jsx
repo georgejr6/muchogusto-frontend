@@ -106,7 +106,7 @@ export default function ConsentPage() {
             <p className="text-sm text-[rgba(255,253,208,0.6)]">
               Your form has been received. Head back to the dashboard to confirm your RSVP.
             </p>
-            <button onClick={() => navigate('/dashboard')} className="luxury-button w-full py-3">
+            <button onClick={() => navigate('/tonight')} className="luxury-button w-full py-3">
               Go to Dashboard & RSVP
             </button>
           </div>
@@ -173,7 +173,7 @@ export default function ConsentPage() {
         {/* Back link */}
         <div className="text-center mt-6">
           <button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/tonight')}
             className="text-xs text-[rgba(255,253,208,0.3)] hover:text-[rgba(255,253,208,0.6)] transition-colors"
           >
             Back to Dashboard
