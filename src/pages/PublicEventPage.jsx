@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Calendar, MapPin, Clock, Youtube, Mail, Share2, Check } from 'lucide-react';
-import { getPublicEventByToken, subscribeToEvent } from '@/lib/apiClient';
+import { getPublicEventByToken, subscribeToEvent, joinEventByLink } from '@/lib/apiClient';
+import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from '@/lib/i18n.jsx';
 
 function extractYouTubeId(url) {
   const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s?#]+)/);
@@ -11,6 +13,11 @@ function extractYouTubeId(url) {
 
 const PublicEventPage = () => {
   const { shareToken } = useParams();
+  const navigate = useNavigate();
+  const { isUserAuthenticated } = useAuth();
+  const { t } = useTranslation();
+  const [joining, setJoining] = useState(false);
+  const [joinError, setJoinError] = useState('');
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -42,6 +49,25 @@ const PublicEventPage = () => {
     }
   };
 
+  // Signed-in members ask for a spot; signed-out visitors sign in first and come straight back here.
+  const requestSpot = async () => {
+    if (!isUserAuthenticated) {
+      navigate('/login', { state: { from: `/e/${shareToken}` } });
+      return;
+    }
+    setJoining(true);
+    setJoinError('');
+    try {
+      const r = await joinEventByLink(shareToken);
+      navigate(`/invites/${r.invitation_id}`);
+    } catch (err) {
+      if (err.message === 'verification_required') navigate('/verify');
+      else setJoinError(err.message);
+    } finally {
+      setJoining(false);
+    }
+  };
+
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href).then(() => {
       setCopied(true);
@@ -66,7 +92,7 @@ const PublicEventPage = () => {
   );
 
   const eventDate = new Date(event.date).toLocaleDateString('en-US', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC',
   });
 
   const youtubeItems = (event.media || []).filter(m => m.type === 'youtube');
@@ -130,6 +156,13 @@ const PublicEventPage = () => {
                     <span>{event.location}</span>
                   </div>
                 )}
+              </div>
+
+              <div className="mb-8 space-y-2">
+                <button onClick={requestSpot} disabled={joining} className="mg-btn w-full sm:w-auto">
+                  {joining ? '...' : t('ev.request_spot')}
+                </button>
+                {joinError && <p role="alert" className="text-sm text-destructive">{joinError}</p>}
               </div>
 
               {event.description && (

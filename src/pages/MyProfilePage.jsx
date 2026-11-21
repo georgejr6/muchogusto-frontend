@@ -19,7 +19,7 @@ const MyProfilePage = () => {
         <div className="flex-1 p-4 md:p-8">
           <div className="max-w-2xl mx-auto space-y-6">
             <div className="flex items-center justify-between">
-              <button onClick={() => navigate('/dashboard')} className="flex items-center gap-2 text-[#F1E5AC] hover:text-[#D4AF37] transition-colors">
+              <button onClick={() => navigate('/tonight')} className="flex items-center gap-2 text-[#F1E5AC] hover:text-[#D4AF37] transition-colors">
                 <ArrowLeft className="w-5 h-5" /> Back
               </button>
               <button onClick={() => navigate('/profile-edit')} className="luxury-button-outline px-4 py-2 flex items-center gap-2 text-sm">

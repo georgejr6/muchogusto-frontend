@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, MessageSquare, Sparkles } from 'lucide-react';
-import Header from '@/components/Header';
+import GuestShell from '@/components/shell/GuestShell';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/lib/i18n.jsx';
 import { getUserInbox } from '@/lib/apiClient';
@@ -32,8 +32,7 @@ const UserInbox = () => {
         <title>{t('inbox.title')} | Mucho Gusto Xo</title>
       </Helmet>
 
-      <div className="min-h-screen bg-[#0f001a] relative z-10 flex flex-col">
-        <Header />
+      <GuestShell><div className="flex flex-col pb-24">
 
         <div className="flex-1 p-4 md:p-8 flex flex-col items-center">
           <div className="w-full max-w-4xl flex items-center justify-between mb-8">
@@ -89,7 +88,7 @@ const UserInbox = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div></GuestShell>
     </>
   );
 };

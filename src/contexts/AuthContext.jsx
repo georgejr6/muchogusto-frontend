@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { signup, adminLogin, loginUser as loginUserApi, getMe, updateMe, uploadPhoto } from '@/lib/apiClient';
+import { signup, adminLogin, requestLoginCode, verifyLoginCode, getMe, updateMe, uploadPhoto } from '@/lib/apiClient';
 import { disconnectSocket } from '@/lib/socket';
 
 const AuthContext = createContext();
@@ -53,10 +53,18 @@ export const AuthProvider = ({ children }) => {
     init();
   }, []);
 
+  const clearAdminSession = () => {
+    localStorage.removeItem('adminSession');
+    localStorage.removeItem('adminToken');
+    setAdminUser(null);
+  };
+
   const loginAdmin = async (email, password) => {
     try {
       const { token, admin } = await adminLogin(email, password);
       localStorage.setItem('adminToken', token);
+      localStorage.removeItem('token'); // never let the two sessions shadow each other
+      setUserProfile(null);
       disconnectSocket(); // force a fresh socket that authenticates with the new token
       const session = {
         user: { ...admin, role: 'admin' },
@@ -70,17 +78,29 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signupUser = async ({ name, instagram, phone, email }) => {
-    const { token, user } = await signup({ name, instagram, phone, email });
+  const signupUser = async ({ name, instagram, phone, email, consent }) => {
+    const { token, user } = await signup({ name, instagram, phone, email, consent });
+    clearAdminSession();
     localStorage.setItem('token', token);
     disconnectSocket();
     setUserProfile(user);
     return user;
   };
 
-  const loginUser = async ({ phone, email }) => {
+  // Two-step verified login: email a code, then exchange it for a session.
+  const sendLoginCode = async ({ phone, email }) => {
     try {
-      const { token, user } = await loginUserApi({ phone, email });
+      await requestLoginCode({ phone, email });
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  };
+
+  const confirmLoginCode = async ({ phone, email, code }) => {
+    try {
+      const { token, user } = await verifyLoginCode({ phone, email, code });
+      clearAdminSession();
       localStorage.setItem('token', token);
       disconnectSocket();
       setUserProfile(user);
@@ -91,6 +111,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginWithToken = async (token) => {
+    clearAdminSession();
     localStorage.setItem('token', token);
     disconnectSocket();
     const user = await getMe().catch(() => null);
@@ -134,8 +155,10 @@ export const AuthProvider = ({ children }) => {
     loginAdmin,
     logoutAdmin,
     signupUser,
-    loginUser,
+    sendLoginCode,
+    confirmLoginCode,
     loginWithToken,
+    refreshProfile: async () => { const u = await getMe().catch(() => null); if (u) setUserProfile(u); return u; },
     updateProfileData,
     logoutUser,
     isAdminAuthenticated: !!adminUser,

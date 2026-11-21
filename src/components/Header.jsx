@@ -43,7 +43,7 @@ const Header = ({ rightContent }) => {
 
   return (
     <header className="navbar">
-      <Link to={isAdminAuthenticated ? '/admin-dashboard' : isUserAuthenticated ? '/dashboard' : '/'} className="navbar-brand group">
+      <Link to={isAdminAuthenticated ? '/host' : isUserAuthenticated ? '/tonight' : '/'} className="navbar-brand group">
         <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-[#D4AF37] group-hover:scale-110 transition-transform" />
         <span className="font-bold text-[#FFFDD0] hidden sm:block tracking-tight text-lg">Mucho Gusto Xo</span>
       </Link>
@@ -100,7 +100,7 @@ const Header = ({ rightContent }) => {
         {/* Auth Button */}
         {isLoggedIn ? (
           <div className="flex items-center gap-2">
-            <Link to={isAdminAuthenticated ? '/admin-dashboard' : '/dashboard'} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <Link to={isAdminAuthenticated ? '/host' : '/me'} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               {userProfile?.photo_url ? (
                 <img
                   src={userProfile.photo_url}

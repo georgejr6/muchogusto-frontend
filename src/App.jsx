@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
+import { Navigate, Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { LanguageProvider } from '@/lib/i18n.jsx';
 import { Toaster } from '@/components/ui/toaster';
@@ -19,7 +19,6 @@ import ConsentPage from '@/pages/ConsentPage';
 import OAuthCallbackPage from '@/pages/OAuthCallbackPage';
 
 // User Protected Pages
-import DashboardPage from '@/pages/DashboardPage';
 import ProfileEditPage from '@/pages/ProfileEditPage';
 import MyProfilePage from '@/pages/MyProfilePage';
 
@@ -30,6 +29,25 @@ import AdminDashboard from '@/pages/AdminDashboard';
 import EventPage from '@/pages/EventPage';
 import UserProfilePage from '@/pages/UserProfilePage';
 import SettingsPage from '@/pages/SettingsPage';
+
+// v2 member pages
+import TonightPage from '@/pages/guest/TonightPage';
+import InvitesPage from '@/pages/guest/InvitesPage';
+import InviteDetailPage from '@/pages/guest/InviteDetailPage';
+import NotificationsPage from '@/pages/guest/NotificationsPage';
+import VerifyPage from '@/pages/guest/VerifyPage';
+import WelcomePage from '@/pages/guest/WelcomePage';
+import MePage from '@/pages/guest/MePage';
+import PublicHostPage from '@/pages/PublicHostPage';
+import PrivacyPage from '@/pages/PrivacyPage';
+
+// v2 host pages
+import HostDeckPage from '@/pages/host/HostDeckPage';
+import HostEventsPage from '@/pages/host/HostEventsPage';
+import HostEventBoardPage from '@/pages/host/HostEventBoardPage';
+import HostCitiesPage from '@/pages/host/HostCitiesPage';
+import HostVerificationPage from '@/pages/host/HostVerificationPage';
+import HostProfilePage from '@/pages/host/HostProfilePage';
 
 function App() {
   return (
@@ -58,15 +76,28 @@ function App() {
             {/* OAuth callback */}
             <Route path="/auth/callback" element={<OAuthCallbackPage />} />
             
+            <Route path="/h/:handle" element={<PublicHostPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+
+            {/* v2 member app */}
+            <Route path="/welcome" element={<ProtectedRoute><WelcomePage /></ProtectedRoute>} />
+            <Route path="/tonight" element={<ProtectedRoute><TonightPage /></ProtectedRoute>} />
+            <Route path="/invites" element={<ProtectedRoute><InvitesPage /></ProtectedRoute>} />
+            <Route path="/invites/:id" element={<ProtectedRoute><InviteDetailPage /></ProtectedRoute>} />
+            <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
+            <Route path="/verify" element={<ProtectedRoute><VerifyPage /></ProtectedRoute>} />
+            <Route path="/me" element={<ProtectedRoute><MePage /></ProtectedRoute>} />
+
+            {/* v2 host app */}
+            <Route path="/host" element={<ProtectedRoute requireAdmin><HostDeckPage /></ProtectedRoute>} />
+            <Route path="/host/events" element={<ProtectedRoute requireAdmin><HostEventsPage /></ProtectedRoute>} />
+            <Route path="/host/events/:id" element={<ProtectedRoute requireAdmin><HostEventBoardPage /></ProtectedRoute>} />
+            <Route path="/host/cities" element={<ProtectedRoute requireAdmin><HostCitiesPage /></ProtectedRoute>} />
+            <Route path="/host/verification" element={<ProtectedRoute requireAdmin><HostVerificationPage /></ProtectedRoute>} />
+            <Route path="/host/profile" element={<ProtectedRoute requireAdmin><HostProfilePage /></ProtectedRoute>} />
+
             {/* User Routes */}
-            <Route 
-              path="/dashboard" 
-              element={
-                <ProtectedRoute>
-                  <DashboardPage />
-                </ProtectedRoute>
-              } 
-            />
+            <Route path="/dashboard" element={<Navigate to="/tonight" replace />} />
             <Route
               path="/profile-edit"
               element={

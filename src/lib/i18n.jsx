@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { guestEn, guestEs } from './i18nGuest';
 
 const translations = {
   es: {
@@ -471,6 +472,10 @@ const translations = {
     "val.invalid_email": "รูปแบบอีเมลไม่ถูกต้อง"
   }
 };
+
+// v2 member app strings (Thai falls back to Spanish)
+Object.assign(translations.en, guestEn);
+Object.assign(translations.es, guestEs);
 
 const LanguageContext = createContext();
 

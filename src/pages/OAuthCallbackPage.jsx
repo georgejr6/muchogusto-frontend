@@ -19,14 +19,14 @@ export default function OAuthCallbackPage() {
       return;
     }
 
-    loginWithToken(token).then(() => navigate('/dashboard'));
+    loginWithToken(token).then(() => navigate('/tonight', { replace: true }));
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0f001a] flex items-center justify-center">
+    <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="text-center space-y-4">
-        <div className="w-10 h-10 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-[rgba(255,253,208,0.5)] text-sm tracking-widest uppercase">Signing you in...</p>
+        <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="text-muted-foreground text-sm tracking-widest uppercase">Signing you in...</p>
       </div>
     </div>
   );

@@ -17,8 +17,8 @@ const FormInput = ({
 }) => {
   return (
     <div className="space-y-2">
-      <Label htmlFor={name} className="text-sm font-medium text-[#FFFDD0]">
-        {label} {required && <span className="text-red-400">*</span>}
+      <Label htmlFor={name} className="text-sm font-medium text-foreground">
+        {label} {required && <span className="text-destructive">*</span>}
       </Label>
       <input
         id={name}
@@ -28,11 +28,11 @@ const FormInput = ({
         onChange={onChange}
         placeholder={placeholder}
         maxLength={maxLength}
-        className={`luxury-input ${error ? 'border-red-500 focus:shadow-[0_0_15px_rgba(239,68,68,0.4)]' : ''} ${className}`}
+        className={`luxury-input ${error ? 'border-destructive focus:ring-destructive/30' : ''} ${className}`}
         {...props}
       />
       {error && (
-        <p className="text-sm text-red-400 mt-1">{error}</p>
+        <p className="text-sm text-destructive mt-1">{error}</p>
       )}
     </div>
   );
