@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CalendarPlus, Navigation, MapPin, Shirt, ShieldCheck, Moon } from 'lucide-react';
 import GuestShell from '@/components/shell/GuestShell';
@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/lib/i18n.jsx';
 import useMyInvitations from '@/hooks/useMyInvitations';
 import { getCities } from '@/lib/apiClient';
+import AroundList from '@/components/AroundList';
 import { downloadIcs, eventStart, fmtDay, isPast, mapsUrl, normStatus } from '@/lib/guestUtils';
 
 const TonightPage = () => {
@@ -17,6 +18,8 @@ const TonightPage = () => {
   const { invites, loading, error, reload } = useMyInvitations();
   const [cityName, setCityName] = useState('');
   const navigate = useNavigate();
+  const [params, setParams] = useSearchParams();
+  const tab = params.get('tab') === 'around' ? 'around' : 'mine';
 
   // First visit without a shared location -> onboarding (once per session so "skip" sticks).
   useEffect(() => {
@@ -53,6 +56,14 @@ const TonightPage = () => {
           {cityName && <span className="mg-chip"><MapPin className="h-3 w-3" />{cityName}</span>}
         </div>
 
+        <div role="tablist" className="flex w-fit gap-1 rounded-full border border-border bg-card/60 p-1">
+          {[['mine', t('ton.tab_mine')], ['around', t('ton.tab_around')]].map(([id, label]) => (
+            <button key={id} role="tab" aria-selected={tab === id} onClick={() => setParams(id === 'around' ? { tab: 'around' } : {}, { replace: true })}
+              className={`rounded-full px-5 py-2 text-sm font-medium ${tab === id ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}>{label}</button>
+          ))}
+        </div>
+
+        {tab === 'around' ? <AroundList /> : (<>
         {!verified && userProfile && (
           <Link to="/verify" className="mg-card mg-card-hover flex items-center gap-3 p-4">
             <ShieldCheck className="h-5 w-5 shrink-0 text-primary" />
@@ -125,6 +136,7 @@ const TonightPage = () => {
             )}
           </>
         )}
+        </>)}
       </div>
     </GuestShell>
   );

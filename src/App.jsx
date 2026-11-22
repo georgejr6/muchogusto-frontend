@@ -32,6 +32,7 @@ import SettingsPage from '@/pages/SettingsPage';
 
 // v2 member pages
 import TonightPage from '@/pages/guest/TonightPage';
+import HostAroundPage from '@/pages/host/HostAroundPage';
 import InvitesPage from '@/pages/guest/InvitesPage';
 import InviteDetailPage from '@/pages/guest/InviteDetailPage';
 import NotificationsPage from '@/pages/guest/NotificationsPage';
@@ -101,6 +102,7 @@ function App() {
             <Route path="/host/events/:id" element={<ProtectedRoute requireAdmin><HostEventBoardPage /></ProtectedRoute>} />
             <Route path="/host/cities" element={<ProtectedRoute requireAdmin><HostCitiesPage /></ProtectedRoute>} />
             <Route path="/host/verification" element={<ProtectedRoute requireAdmin><HostVerificationPage /></ProtectedRoute>} />
+            <Route path="/host/around" element={<ProtectedRoute requireAdmin><HostAroundPage /></ProtectedRoute>} />
             <Route path="/host/access" element={<ProtectedRoute requireAdmin><HostAccessPage /></ProtectedRoute>} />
             <Route path="/host/events/:id/scan" element={<ProtectedRoute requireAdmin><HostScanPage /></ProtectedRoute>} />
             <Route path="/host/profile" element={<ProtectedRoute requireAdmin><HostProfilePage /></ProtectedRoute>} />

@@ -30,6 +30,7 @@ function isAdminRequest(path, method = 'GET') {
     return p === '/api/verification/pending' || p.startsWith('/api/verification/attempts');
   }
   if (p.startsWith('/api/safety/reports')) return true;
+  if (p.startsWith('/api/around')) return p !== '/api/around';
   if (p.startsWith('/api/access/')) return !(p === '/api/access/redeem' || p === '/api/access/pass' || p.startsWith('/api/access/code/'));
   if (p.startsWith('/api/users')) {
     if (p === '/api/users/public' || p.startsWith('/api/users/me')) return false;
@@ -468,3 +469,8 @@ export const listAccessRequests = () => request('/api/access/requests');
 export const approveAccessRequest = (id) => request(`/api/access/requests/${id}/approve`, { method: 'POST' });
 export const declineAccessRequest = (id) => request(`/api/access/requests/${id}/decline`, { method: 'POST' });
 export const hostCheckin = (data) => request('/api/host/checkin', { method: 'POST', body: JSON.stringify(data) });
+export const getAround = () => request('/api/around');
+export const listAroundAdmin = (cityId) => request(`/api/around/admin${cityId ? `?city_id=${cityId}` : ''}`);
+export const scanAround = () => request('/api/around/scan', { method: 'POST' });
+export const importAround = (data) => request('/api/around/import', { method: 'POST', body: JSON.stringify(data) });
+export const hideAround = (id, hidden) => request(`/api/around/${id}`, { method: 'PATCH', body: JSON.stringify({ hidden }) });
